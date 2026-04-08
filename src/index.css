@@ -1,35 +1,57 @@
+/* Typography */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
 
+/* Theme tokens */
 :root {
+  --page-bg: #050505;
+  --page-bg-accent: #1a1a1a;
+  --surface: #060606;
+  --surface-elevated: #121a2e;
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #93a0bd;
+  --text-tertiary: #7e8da9;
+  --imdb-yellow: #f5c518;
+  --content-width: 1180px;
+  --content-gutter: clamp(18px, 3vw, 28px);
+  --header-height: 54px;
   font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
-  color: #ffffff;
-  background: #1a1a1a;
+  color: var(--text-primary);
+  background: var(--page-bg-accent);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Global reset */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
+html {
   min-height: 100%;
+  background: var(--page-bg);
 }
 
+body,
+#root {
+  min-height: 100vh;
+}
+
+/* Base document */
 body {
   margin: 0;
   min-width: 320px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 140px),
-    #1a1a1a;
+    var(--page-bg-accent);
+  color: var(--text-primary);
 }
 
+/* Form controls */
 button,
 input {
   font: inherit;
@@ -39,6 +61,7 @@ button {
   cursor: pointer;
 }
 
+/* Accessibility helper */
 .sr-only {
   position: absolute;
   width: 1px;
