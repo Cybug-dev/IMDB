@@ -2,13 +2,13 @@ import HeaderLeft from "./HeaderLeft";
 import HeaderSearch from "./HeaderSearch";
 import HeaderRight from "./HeaderRight";
 
-function Header() {
+function Header({ onNavigate, currentPage }) {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <HeaderLeft />
+        <HeaderLeft onNavigate={onNavigate} currentPage={currentPage} />
         <HeaderSearch />
-        <HeaderRight />
+        <HeaderRight onNavigate={onNavigate} currentPage={currentPage} />
       </div>
     </header>
   );

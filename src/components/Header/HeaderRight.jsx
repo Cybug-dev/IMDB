@@ -3,16 +3,23 @@ import { faHeart, faStar } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
 
 const actions = [
-  { label: "Watchlist", icon: faStar },
-  { label: "Favorites", icon: faHeart },
-  { label: "Sign In", icon: faArrowRightToBracket },
+  { label: "Watchlist", icon: faStar, page: "watchlist" },
+  { label: "Favorites", icon: faHeart, page: "favorites" },
+  { label: "Sign In", icon: faArrowRightToBracket, page: null },
 ];
 
-function HeaderRight() {
+
+function HeaderRight({ onNavigate, currentPage }) {
   return (
     <div className="header-right">
-      {actions.map(({ label, icon }) => (
-        <button key={label} type="button" className="header-action">
+      {actions.map(({ label, icon, page }) => (
+        <button
+          key={label}
+          type="button"
+          className={`header-action${currentPage === page ? " is-active" : ""}`}
+          onClick={() => page && onNavigate(page)}
+          aria-current={currentPage === page ? "page" : undefined}
+        >
           <FontAwesomeIcon icon={icon} className="header-action__icon" />
           <span>{label}</span>
         </button>

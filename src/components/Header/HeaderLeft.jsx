@@ -2,28 +2,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 
 const navItems = [
-  { label: "Home", active: true, icon: faHouse },
-  { label: "Movies", active: false },
-  { label: "TV Shows", active: false },
-  { label: "Celebrities", active: false },
+  { label: "Home", icon: faHouse, page: "home" },
+  { label: "Movies", page: "movies" },
+  { label: "TV Shows", page: "tvshows" },
+  { label: "Celebrities", page: "celebrities" },
 ];
 
-function HeaderLeft() {
+function HeaderLeft({ onNavigate, currentPage }) {
   return (
     <div className="header-left">
-      <button className="imdb-logo" type="button" aria-label="IMDb home">
-        IMDb
+      <button className="imdb-logo" type="button" aria-label="IMDB home"
+      onClick={() => onNavigate("home")}>
+        IMDB
       </button>
 
       <nav className="header-nav" aria-label="Primary">
-        {navItems.map(({ label, active, icon }) => (
+        {navItems.map(({ label, page, icon }) => (
           <button
             key={label}
             type="button"
-            className={`header-nav__link${active ? " is-active" : ""}`}
-            aria-current={active ? "page" : undefined}
+            className={`header-nav__link${currentPage === page ? " is-active" : ""}`}
+            aria-current={currentPage === page ? "page" : undefined}
+            onClick={() => onNavigate(page)}
           >
-            {icon ? <FontAwesomeIcon icon={icon} className="header-nav__icon" /> : null}
+            {icon ? (
+              <FontAwesomeIcon icon={icon} className="header-nav__icon" />
+            ) : null}
             <span>{label}</span>
           </button>
         ))}
