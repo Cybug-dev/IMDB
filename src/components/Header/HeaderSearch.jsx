@@ -11,6 +11,7 @@ function HeaderSearch() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+      // TODO: wire to search results page
   };
 
   return (

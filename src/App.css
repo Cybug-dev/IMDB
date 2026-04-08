@@ -1,6 +1,12 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .app-shell {
   min-height: 100vh;
-  padding: 8px 12px 0;
+  max-width: 100%;
 }
 
 .site-header {
@@ -213,5 +219,209 @@
     width: 32px;
     justify-content: center;
     padding: 0;
+  }
+}
+
+.header-right .header-action:first-child {
+  background: rgba(245, 197, 24, 0.14);
+  color: #f5c518;
+}
+
+.header-right .header-action:first-child:hover {
+  background: rgba(245, 197, 24, 0.18);
+}
+
+.header-right .header-action:first-child .header-action__icon {
+  color: #f5c518;
+}
+
+.watchlist-page {
+  width: min(1340px, 100%);
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+  border-inline: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.02), transparent 22%),
+    #050505;
+}
+
+.watchlist-page__inner {
+  min-height: calc(100vh - 70px);
+  padding: 28px 116px 72px;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.watchlist-page__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.watchlist-page__heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.watchlist-page__heading h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.7vw, 2rem);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.watchlist-page__star {
+  color: #f5c518;
+  font-size: 1.15rem;
+}
+
+.watchlist-page__subtitle {
+  margin: 18px 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #93a0bd;
+}
+
+.watchlist-clear {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #cfd4df;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: color 0.18s ease, opacity 0.18s ease;
+}
+
+.watchlist-clear:hover:not(:disabled) {
+  color: #ffffff;
+}
+
+.watchlist-clear:disabled {
+  opacity: 0.72;
+  color: #b3bac7;
+}
+
+.watchlist-empty {
+  min-height: clamp(360px, 56vh, 520px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 0 72px;
+}
+
+.watchlist-empty__icon {
+  font-size: clamp(3.2rem, 4vw, 4.2rem);
+  color: #4d5973;
+  margin-bottom: 26px;
+}
+
+.watchlist-empty__title {
+  margin: 0;
+  font-size: clamp(1.8rem, 2vw, 2.15rem);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.watchlist-empty__description,
+.watchlist-empty__desc {
+  width: min(100%, 500px);
+  margin: 18px auto 0;
+  font-size: 1.03rem;
+  line-height: 1.65;
+  color: #7e8da9;
+}
+
+.watchlist-empty__cta {
+  margin-top: 28px;
+  min-width: 136px;
+  height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #f5c518;
+  color: #101010;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+  transition: transform 0.16s ease, filter 0.16s ease;
+}
+
+.watchlist-empty__cta:hover {
+  filter: brightness(1.02);
+  transform: translateY(-1px);
+}
+
+.watchlist-empty__cta:active {
+  transform: translateY(0);
+}
+
+.watchlist-grid {
+  padding-top: 32px;
+}
+
+.watchlist-empty__cta:focus-visible,
+.watchlist-clear:focus-visible {
+  outline: 2px solid rgba(245, 197, 24, 0.55);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1024px) {
+  .watchlist-page__inner {
+    padding-inline: 56px;
+  }
+}
+
+@media (max-width: 768px) {
+  .watchlist-page__inner {
+    padding: 24px 28px 56px;
+  }
+
+  .watchlist-page__topbar {
+    align-items: flex-start;
+  }
+
+  .watchlist-page__subtitle {
+    max-width: 44ch;
+  }
+
+  .watchlist-empty {
+    min-height: 48vh;
+    padding-bottom: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .watchlist-page__inner {
+    padding-inline: 18px;
+  }
+
+  .watchlist-page__topbar {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .watchlist-page__heading {
+    gap: 10px;
+  }
+
+  .watchlist-page__subtitle {
+    font-size: 0.94rem;
+  }
+
+  .watchlist-empty__description,
+  .watchlist-empty__desc {
+    font-size: 0.96rem;
   }
 }
