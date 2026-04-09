@@ -26,6 +26,7 @@ const config = {
 function CollectionPage({ type }) {
   const [items, setItems] = useState([]);
   const { icon, heading, subtitle, emptyTitle, emptyDesc } = config[type];
+  const iconColor = type === "watchlist" ? "var(--imdb-yellow)" : "var(--heart-color)";
   const handleClear = () => setItems([]);
   const handleBrowse = () => {
     // TODO: navigate to Movies page when routing is added
@@ -36,7 +37,11 @@ function CollectionPage({ type }) {
       <div className="collection-page__inner">
         <div className="collection-page__topbar">
           <div className="collection-page__heading">
-            <FontAwesomeIcon icon={icon} className="collection-page__icon" />
+            <FontAwesomeIcon
+              icon={icon}
+              className="collection-page__icon"
+              style={{ color: iconColor }}
+            />
             <h1 className="heading">{heading}</h1>
           </div>
 
@@ -58,6 +63,7 @@ function CollectionPage({ type }) {
               title={emptyTitle}
               desc={emptyDesc}
               icon={icon}
+              iconColor={iconColor}
               onBrowse={handleBrowse}
             />
           </>
