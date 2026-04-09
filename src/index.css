@@ -1,6 +1,33 @@
 /* Typography */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
 
+/* Custom class given to your Lucide icon */
+.lucide-icon {
+  stroke: var(--imdb-yellow); 
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5px;
+  margin-right: 12px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.lucide-sparkles {
+  height: 1.10rem;
+  width: 1.10rem; 
+  stroke-width: 2px;
+  color: #facc15; 
+  margin-left: 10px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 /* Theme tokens */
 :root {
   --page-bg: #050505;
@@ -9,12 +36,22 @@
   --surface-elevated: #121a2e;
   --border-subtle: rgba(255, 255, 255, 0.1);
   --text-primary: #ffffff;
+  --text-dark: #050505;
   --text-secondary: #93a0bd;
   --text-tertiary: #7e8da9;
   --imdb-yellow: #f5c518;
   --content-width: 1180px;
   --content-gutter: clamp(18px, 3vw, 28px);
+  --content-rail: max(var(--content-gutter), calc((100vw - var(--content-width)) / 2 + var(--content-gutter)));
   --header-height: 54px;
+  --hero-height: clamp(420px, 42vw, 560px);
+  --hero-content-width: 540px;
+  --hero-title-size: clamp(2.9rem, 5.3vw, 4.4rem);
+  --hero-copy-size: clamp(0.98rem, 1.05vw, 1.06rem);
+  --hero-meta-size: 0.96rem;
+  --hero-button-height: 36px;
+  --hero-button-font: 0.92rem;
+  --section-spacing: 42px;
   font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
   color: var(--text-primary);
   background: var(--page-bg-accent);
