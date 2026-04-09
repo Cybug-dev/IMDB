@@ -37,7 +37,7 @@ function CollectionPage({ type }) {
         <div className="collection-page__topbar">
           <div className="collection-page__heading">
             <FontAwesomeIcon icon={icon} className="collection-page__icon" />
-            <h1>{heading}</h1>
+            <h1 className="heading">{heading}</h1>
           </div>
 
           <button
