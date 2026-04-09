@@ -26,7 +26,8 @@ const config = {
 function CollectionPage({ type }) {
   const [items, setItems] = useState([]);
   const { icon, heading, subtitle, emptyTitle, emptyDesc } = config[type];
-  const iconColor = type === "watchlist" ? "var(--imdb-yellow)" : "var(--heart-color)";
+  const iconColor =
+    type === "watchlist" ? "var(--imdb-yellow)" : "var(--heart-color)";
   const handleClear = () => setItems([]);
   const handleBrowse = () => {
     // TODO: navigate to Movies page when routing is added
@@ -72,7 +73,6 @@ function CollectionPage({ type }) {
             {/* TODO: Add collection movie cards here */}
           </div>
         )}
-        
       </div>
     </main>
   );

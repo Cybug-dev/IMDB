@@ -11,7 +11,11 @@ function CollectionEmpty({ title, desc, icon, iconColor, onBrowse }) {
       <h2 className="collection-empty__title heading">{title}</h2>
       <p className="collection-empty__desc">{desc}</p>
 
-      <button type="button" className="collection-empty__cta" onClick={onBrowse}>
+      <button
+        type="button"
+        className="collection-empty__cta"
+        onClick={onBrowse}
+      >
         Browse Movies
       </button>
     </div>
