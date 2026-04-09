@@ -186,8 +186,8 @@
   color: currentColor;
 }
 
-/* Watchlist page shell */
-.watchlist-page {
+/* Collection page shell */
+.collection-page {
   width: 100%;
   min-height: calc(100vh - var(--header-height));
   background:
@@ -195,8 +195,8 @@
     var(--page-bg);
 }
 
-/* Watchlist inner alignment */
-.watchlist-page__inner {
+/* Collection inner alignment */
+.collection-page__inner {
   width: 100%;
   max-width: var(--content-width);
   min-height: calc(100vh - var(--header-height));
@@ -206,22 +206,22 @@
   grid-template-rows: auto auto 1fr;
 }
 
-/* Watchlist top row */
-.watchlist-page__topbar {
+/* Collection top row */
+.collection-page__topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 }
 
-/* Watchlist heading */
-.watchlist-page__heading {
+/* Collection heading */
+.collection-page__heading {
   display: inline-flex;
   align-items: center;
   gap: 12px;
 }
 
-.watchlist-page__heading h1 {
+.collection-page__heading h1 {
   margin: 0;
   font-size: clamp(1.75rem, 1.7vw, 2rem);
   line-height: 1.15;
@@ -230,13 +230,13 @@
   color: var(--text-primary);
 }
 
-.watchlist-page__star {
+.collection-page__icon {
   color: var(--imdb-yellow);
   font-size: 1.15rem;
 }
 
-/* Watchlist subtitle */
-.watchlist-page__subtitle {
+/* Collection subtitle */
+.collection-page__subtitle {
   margin: 18px 0 0;
   font-size: 1rem;
   line-height: 1.6;
@@ -244,7 +244,7 @@
 }
 
 /* Clear button */
-.watchlist-clear {
+.collection-clear {
   border: 0;
   background: transparent;
   padding: 0;
@@ -257,17 +257,17 @@
   transition: color 0.18s ease, opacity 0.18s ease;
 }
 
-.watchlist-clear:hover:not(:disabled) {
+.collection-clear:hover:not(:disabled) {
   color: var(--text-primary);
 }
 
-.watchlist-clear:disabled {
+.collection-clear:disabled {
   opacity: 0.72;
   color: #b3bac7;
 }
 
 /* Empty state layout */
-.watchlist-empty {
+.collection-empty {
   min-height: clamp(360px, 56vh, 520px);
   display: flex;
   flex-direction: column;
@@ -278,14 +278,14 @@
 }
 
 /* Empty state icon */
-.watchlist-empty__icon {
+.collection-empty__icon {
   font-size: clamp(3.2rem, 4vw, 4.2rem);
   color: #4d5973;
   margin-bottom: 26px;
 }
 
 /* Empty state title */
-.watchlist-empty__title {
+.collection-empty__title {
   margin: 0;
   font-size: clamp(1.8rem, 2vw, 2.15rem);
   line-height: 1.15;
@@ -295,8 +295,7 @@
 }
 
 /* Empty state description */
-.watchlist-empty__description,
-.watchlist-empty__desc {
+.collection-empty__desc {
   width: min(100%, 500px);
   margin: 18px auto 0;
   font-size: 1.03rem;
@@ -305,7 +304,7 @@
 }
 
 /* Empty state CTA */
-.watchlist-empty__cta {
+.collection-empty__cta {
   margin-top: 28px;
   min-width: 136px;
   height: 40px;
@@ -321,23 +320,23 @@
   transition: transform 0.16s ease, filter 0.16s ease;
 }
 
-.watchlist-empty__cta:hover {
+.collection-empty__cta:hover {
   filter: brightness(1.02);
   transform: translateY(-1px);
 }
 
-.watchlist-empty__cta:active {
+.collection-empty__cta:active {
   transform: translateY(0);
 }
 
-/* Future watchlist grid */
-.watchlist-grid {
+/* Future collection grid */
+.collection-grid {
   padding-top: 32px;
 }
 
 /* Shared focus states */
-.watchlist-empty__cta:focus-visible,
-.watchlist-clear:focus-visible {
+.collection-empty__cta:focus-visible,
+.collection-clear:focus-visible {
   outline: 2px solid rgba(245, 197, 24, 0.55);
   outline-offset: 4px;
 }
@@ -352,7 +351,7 @@
     flex-basis: 300px;
   }
 
-  .watchlist-page__inner {
+  .collection-page__inner {
     padding-bottom: 64px;
   }
 }
@@ -380,20 +379,20 @@
 
 /* Mobile layout */
 @media (max-width: 768px) {
-  .watchlist-page__inner {
+  .collection-page__inner {
     padding-top: 24px;
     padding-bottom: 56px;
   }
 
-  .watchlist-page__topbar {
+  .collection-page__topbar {
     align-items: flex-start;
   }
 
-  .watchlist-page__subtitle {
+  .collection-page__subtitle {
     max-width: 44ch;
   }
 
-  .watchlist-empty {
+  .collection-empty {
     min-height: 48vh;
     padding-bottom: 32px;
   }
@@ -423,21 +422,20 @@
 
 /* Compact mobile layout */
 @media (max-width: 520px) {
-  .watchlist-page__topbar {
+  .collection-page__topbar {
     flex-wrap: wrap;
     gap: 14px;
   }
 
-  .watchlist-page__heading {
+  .collection-page__heading {
     gap: 10px;
   }
 
-  .watchlist-page__subtitle {
+  .collection-page__subtitle {
     font-size: 0.94rem;
   }
 
-  .watchlist-empty__description,
-  .watchlist-empty__desc {
+  .collection-empty__desc {
     font-size: 0.96rem;
   }
 }
