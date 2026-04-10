@@ -5,7 +5,7 @@ import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("home");
+  const [currentPage, setCurrentPage]= useState("home");
   const handleNavigate = (page) => setCurrentPage(page);
 
   return (
