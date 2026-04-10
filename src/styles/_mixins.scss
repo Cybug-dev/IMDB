@@ -1,0 +1,52 @@
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}
+
+@mixin floating-control($size) {
+  width: $size;
+  height: $size;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease;
+}
+
+@mixin chip($background, $color, $border: transparent) {
+  min-height: var(--card-chip-height);
+  padding: 0 10px;
+  border: 1px solid $border;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $background;
+  color: $color;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@mixin interactive-card {
+  border-radius: var(--card-radius);
+  background: var(--surface-elevated);
+  border: 1px solid rgba(122, 138, 173, 0.16);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    background-color 0.22s ease;
+}
