@@ -4,7 +4,7 @@ import { Award, TrendingUp, Star, Sparkles } from "lucide-react";
 import HeroBanner from "./HeroBanner";
 import FeaturedMovies from "./FeatureMovies";
 
-function HomePage() {
+function HomePage({ onToggleWatchlist, onToggleFavorite, watchlist, favorites }) {
   const [trending, setTrending] = useState([]);
   const [topRated, setTopRated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ function HomePage() {
       RightIcon: Sparkles,
     },
     {
-      title: "Trending Movies",
+      title: "Trending Now",
       movies: trending,
       LeftIcon: TrendingUp,
       RightIcon: Star,
@@ -55,11 +55,15 @@ function HomePage() {
       <HeroBanner movie={heroMovie} />
       {sections.map((section) => (
         <FeaturedMovies
-          key={section.title}
+          // key={section.title}
           title={section.title}
           movies={section.movies}
           LeftIcon={section.LeftIcon}
           RightIcon={section.RightIcon}
+          onToggleWatchlist={onToggleWatchlist}
+          onToggleFavorite={onToggleFavorite}
+          watchlist={watchlist}
+          favorites={favorites}
         />
       ))}
     </main>

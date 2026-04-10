@@ -4,6 +4,7 @@ import {
   faClock,
   faPlus,
   faStar,
+  faHeart as faHeartSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
@@ -31,7 +32,13 @@ const GENRE_MAP = {
   10752: "War",
 };
 
-function MovieCard({ movie }) {
+function MovieCard({
+  movie,
+  onToggleWatchlist,
+  onToggleFavorite,
+  isInWatchlist,
+  isInFavorites,
+}) {
   const posterPath = movie.poster_path || movie.backdrop_path;
   const releaseYear = movie.release_date?.split("-")[0] || "TBA";
   const displayGenres =
@@ -42,7 +49,9 @@ function MovieCard({ movie }) {
           .filter(Boolean)
           .slice(0, 3);
   const rating =
-    typeof movie.vote_average === "number" ? movie.vote_average.toFixed(1) : "N/A";
+    typeof movie.vote_average === "number"
+      ? movie.vote_average.toFixed(1)
+      : "N/A";
 
   return (
     <div className="movie-card ui-surface-card">
@@ -62,18 +71,24 @@ function MovieCard({ movie }) {
         <div className="movie-card__quick-actions">
           <button
             type="button"
-            className="movie-card__action ui-icon-button"
-            aria-label="Add to watchlist"
+            className={`movie-card__action ui-icon-button ${isInWatchlist ? "active movie-card__action--watchlist" : ""}`}
+            aria-label={
+              isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
+            }
+            onClick={() => onToggleWatchlist(movie)}
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>
 
           <button
             type="button"
-            className="movie-card__action ui-icon-button"
-            aria-label="Add to favorites"
+            className={`movie-card__action ui-icon-button ${isInFavorites ? "active movie-card__action--favorite" : ""}`}
+            aria-label={
+              isInFavorites ? "Remove from favorites" : "Add to favorites"
+            }
+            onClick={() => onToggleFavorite(movie)}
           >
-            <FontAwesomeIcon icon={faHeart} />
+            <FontAwesomeIcon icon={isInFavorites ? faHeartSolid : faHeart} />
           </button>
         </div>
       </div>

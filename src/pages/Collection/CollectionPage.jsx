@@ -1,8 +1,9 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import CollectionEmpty from "./CollectionEmpty";
+
 
 const config = {
   watchlist: {
@@ -23,12 +24,12 @@ const config = {
   },
 };
 
-function CollectionPage({ type }) {
-  const [items, setItems] = useState([]);
+function CollectionPage({ type, items, onClear }) {
+  // const [items, setItems] = useState([]);
   const { icon, heading, subtitle, emptyTitle, emptyDesc } = config[type];
   const iconColor =
     type === "watchlist" ? "var(--imdb-yellow)" : "var(--heart-color)";
-  const handleClear = () => setItems([]);
+  // const handleClear = () => setItems([]);
   const handleBrowse = () => {
     // TODO: navigate to Movies page when routing is added
   };
@@ -49,7 +50,7 @@ function CollectionPage({ type }) {
           <button
             type="button"
             className="collection-clear"
-            onClick={handleClear}
+            onClick={onClear}
             disabled={items.length === 0}
           >
             <FontAwesomeIcon icon={faXmark} />
@@ -70,9 +71,12 @@ function CollectionPage({ type }) {
           </>
         ) : (
           <div className="collection-grid">
-            {/* TODO: Add collection movie cards here */}
+            {items.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+            ))}
           </div>
         )}
+
       </div>
     </main>
   );

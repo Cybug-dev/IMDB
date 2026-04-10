@@ -489,15 +489,15 @@
 
 .featured-movies__head .lucide-icon,
 .featured-movies__head .lucide-sparkels {
-   height: 1.10rem;
-  width: 1.10rem; 
+  height: 1.1rem;
+  width: 1.1rem;
   stroke-width: 2px;
-  color: #facc15; 
+  color: #facc15;
   margin-left: 10px;
   color: var(--imdb-yellow);
 }
 
-.featured-movies__head .lucide-sparkels{
+.featured-movies__head .lucide-sparkels {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -505,37 +505,32 @@
   border: 0;
   background: transparent;
   color: var(--imdb-yellow);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
 }
 
-/* Featured movies horizontal rail */
+/* Featured movies grid layout */
 .featured-movies__grid {
-  display: flex;
+  display: grid;
   gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-  scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(245, 197, 24, 0.35) transparent;
+  padding-bottom: 0;
+  overflow: visible;
 }
 
 .featured-movies__grid > * {
-  flex: 0 0 min(350px, 82vw);
-  scroll-snap-align: start;
+  min-width: 0;
 }
 
-.featured-movies__grid::-webkit-scrollbar {
-  height: 10px;
+.featured-movies--featured .featured-movies__grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.featured-movies__grid::-webkit-scrollbar-thumb {
-  background: rgba(245, 197, 24, 0.34);
-  border-radius: 999px;
-}
-
-.featured-movies__grid::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+.featured-movies--trending .featured-movies__grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 /* Movie card shell */
@@ -550,6 +545,7 @@
 
 .movie-card:hover,
 .movie-card:focus-within {
+  background: linear-gradient(180deg, #16213a 0%, #121a2e 100%);
   border-color: rgba(245, 197, 24, 0.7);
   box-shadow:
     0 24px 44px rgba(0, 0, 0, 0.38),
@@ -584,13 +580,15 @@
   display: block;
   transition:
     transform 0.32s ease,
-    filter 0.32s ease;
+    filter 0.32s ease,
+    opacity 0.32s ease;
 }
 
 .movie-card:hover .movie-card__poster,
 .movie-card:focus-within .movie-card__poster {
   transform: scale(1.035);
-  filter: saturate(1.02);
+  filter: saturate(1.04);
+  opacity: 0.98;
 }
 
 /* Movie card floating badges */
@@ -609,6 +607,7 @@
   color: var(--text-primary);
   font-size: 0.88rem;
   font-weight: 800;
+  font-family: var(--font-display);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
 }
 
@@ -653,6 +652,25 @@
   transform: translateY(-1px);
 }
 
+.movie-card__action.active {
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+.movie-card__action.active.movie-card__action--watchlist {
+  background: var(--imdb-yellow);
+  color: #111111;
+}
+
+.movie-card__action.active.movie-card__action--favorite {
+  background: rgba(255, 58, 58, 0.95);
+  color: #ffffff;
+}
+
+.movie-card__action.active svg {
+  color: currentColor;
+}
+
 /* Movie card body */
 .movie-card__info {
   display: flex;
@@ -664,10 +682,11 @@
 
 .movie-card__title {
   margin: 0;
-  min-height: calc(var(--card-title-size) * 2.4);
   font-size: var(--card-title-size);
   line-height: 1.18;
   font-weight: 800;
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   transition: color 0.2s ease;
 }
@@ -722,7 +741,7 @@
   margin: 0;
   color: rgba(255, 255, 255, 0.95);
   font-size: var(--card-copy-size);
-  line-height: 1.52;
+  line-height: 1.58;
 }
 
 .movie-card__director {
@@ -901,6 +920,14 @@
     max-width: 10ch;
   }
 
+  .featured-movies--featured .featured-movies__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .featured-movies--trending .featured-movies__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .collection-page__inner {
     padding-bottom: 64px;
   }
@@ -924,6 +951,10 @@
   .header-search {
     flex: 1 0 100%;
     order: 3;
+  }
+
+  .featured-movies__grid {
+    gap: 18px;
   }
 }
 
@@ -958,8 +989,9 @@
     padding-top: 34px;
   }
 
-  .featured-movies__grid > * {
-    flex-basis: min(310px, 84vw);
+  .featured-movies--featured .featured-movies__grid,
+  .featured-movies--trending .featured-movies__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .movie-card__poster-wrap {
@@ -1000,6 +1032,11 @@
     width: 32px;
     justify-content: center;
     padding: 0;
+  }
+
+  .featured-movies--featured .featured-movies__grid,
+  .featured-movies--trending .featured-movies__grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1045,7 +1082,6 @@
   }
 
   .movie-card__info {
-    padding: 14px;
     gap: 10px;
   }
 
