@@ -19,15 +19,6 @@
   }
 }
 
-.lucide-sparkles {
-  height: 1.10rem;
-  width: 1.10rem; 
-  stroke-width: 2px;
-  color: #facc15; 
-  margin-left: 10px;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
 /* Theme tokens */
 :root {
   --page-bg: #050505;
@@ -118,5 +109,9 @@ button {
   font-size: var(--header-text);
   font-weight: 800;
   color: var(--text-primary);
+
+  @media (max-width: 400px) {
+    font-size: 1.2rem;
+  }
 }
 
