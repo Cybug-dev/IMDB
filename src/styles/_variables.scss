@@ -1,0 +1,36 @@
+:root {
+  --page-bg: #050505;
+  --page-bg-accent: #1a1a1a;
+  --surface: #060606;
+  --surface-elevated: #121a2e;
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-dark: #050505;
+  --text-secondary: #93a0bd;
+  --text-tertiary: #7e8da9;
+  --imdb-yellow: #f5c518;
+  --heart-color: #ff3a3a;
+  --content-width: 1180px;
+  --content-gutter: clamp(18px, 3vw, 28px);
+  --content-rail: max(
+    var(--content-gutter),
+    calc((100vw - var(--content-width)) / 2 + var(--content-gutter))
+  );
+  --header-height: 54px;
+  --hero-height: clamp(420px, 42vw, 560px);
+  --hero-content-width: 540px;
+  --hero-title-size: clamp(2.9rem, 5.3vw, 4.4rem);
+  --header-text: 1.3rem;
+  --hero-copy-size: clamp(0.98rem, 1.05vw, 1.06rem);
+  --hero-meta-size: 0.96rem;
+  --hero-button-height: 36px;
+  --hero-button-font: 0.92rem;
+  --section-spacing: 42px;
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  background: var(--page-bg-accent);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

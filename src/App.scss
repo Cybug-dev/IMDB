@@ -351,7 +351,7 @@
   max-width: 40ch;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-size: var(--hero-copy-size);
@@ -471,8 +471,11 @@
   stroke-width: 2px;
   color: #facc15; 
   margin-left: 10px;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   color: var(--imdb-yellow);
+}
+
+.featured-movies__head .lucide-sparkels{
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .featured-movies__see-all {

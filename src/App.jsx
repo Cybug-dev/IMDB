@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.scss";
 import { useState } from "react";
 import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
@@ -13,7 +13,7 @@ function App() {
       <Header onNavigate={handleNavigate} currentPage={currentPage} />
       {currentPage === "watchlist" && <CollectionPage type="watchlist" />}
       {currentPage === "favorites" && <CollectionPage type="favorites" />}
-     {currentPage === "home" && <HomePage />}
+      {currentPage === "home" && <HomePage />}
     </div>
   );
 }
