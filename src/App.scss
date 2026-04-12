@@ -501,6 +501,42 @@
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.featured-movies__trending-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: 10px;
+}
+
+.featured-movies__trend-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--imdb-yellow);
+  animation: featured-movies__dot-pulse 1.8s ease-in-out infinite;
+}
+
+.featured-movies__trend-dot--delay-1 {
+  animation-delay: 0.1s;
+}
+
+.featured-movies__trend-dot--delay-2 {
+  animation-delay: 0.2s;
+}
+
+@keyframes featured-movies__dot-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
 .featured-movies__see-all {
   border: 0;
   background: transparent;

@@ -2,10 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
   faClock,
-  faPlus,
   faStar,
   faHeart as faHeartSolid,
 } from "@fortawesome/free-solid-svg-icons";
+import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
@@ -77,7 +77,8 @@ function MovieCard({
             }
             onClick={() => onToggleWatchlist(movie)}
           >
-            <FontAwesomeIcon icon={faPlus} />
+          {isInWatchlist ? <Check/> : <Plus />}
+    
           </button>
 
           <button

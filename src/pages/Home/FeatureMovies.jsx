@@ -31,7 +31,15 @@ function FeaturedMovies({
         <div className="featured-movies__head">
           {LeftIcon ? <LeftIcon className="lucide-icon" /> : null}
           <h2 className="heading">{title}</h2>
-          {RightIcon ? <RightIcon className="lucide-sparkels" /> : null}
+          {sectionVariant === "trending" ? (
+            <div className="featured-movies__trending-dots">
+              <span className="featured-movies__trend-dot" />
+              <span className="featured-movies__trend-dot featured-movies__trend-dot--delay-1" />
+              <span className="featured-movies__trend-dot featured-movies__trend-dot--delay-2" />
+            </div>
+          ) : RightIcon ? (
+            <RightIcon className="lucide-sparkels" />
+          ) : null}
         </div>
 
         <button type="button" className="featured-movies__see-all">
