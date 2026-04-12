@@ -55,7 +55,7 @@ function HomePage({ onToggleWatchlist, onToggleFavorite, watchlist, favorites })
       <HeroBanner movie={heroMovie} />
       {sections.map((section) => (
         <FeaturedMovies
-          // key={section.title}
+          key={section.title}
           title={section.title}
           movies={section.movies}
           LeftIcon={section.LeftIcon}
