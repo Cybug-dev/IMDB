@@ -543,8 +543,7 @@
   transform-origin: center bottom;
 }
 
-.movie-card:hover,
-.movie-card:focus-within {
+.movie-card:hover {
   background: linear-gradient(180deg, #16213a 0%, #121a2e 100%);
   border-color: rgba(245, 197, 24, 0.7);
   box-shadow:
@@ -577,6 +576,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  // object-position: center center;
   display: block;
   transition:
     transform 0.32s ease,
@@ -632,6 +632,11 @@
     transform 0.18s ease;
 }
 
+.movie-card__quick-actions .movie-card__action:hover:last-child {
+  background: var(--heart-color);
+  color: var(--text-primary);
+}
+
 .movie-card:hover .movie-card__quick-actions,
 .movie-card:focus-within .movie-card__quick-actions {
   opacity: 1;
@@ -644,11 +649,9 @@
   color: var(--text-primary);
 }
 
-.movie-card__action:hover,
-.movie-card__action:focus-visible {
+.movie-card__action:hover {
   border-color: rgba(245, 197, 24, 0.52);
   background: rgba(245, 197, 24, 0.94);
-  color: #111111;
   transform: translateY(-1px);
 }
 

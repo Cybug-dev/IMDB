@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 
-const IMG_BASE = "https://image.tmdb.org/t/p/w500";
+const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 750'%3E%3Crect width='500' height='750' fill='%23111a2d'/%3E%3Ctext x='50%25' y='50%25' fill='%2393a0bd' font-family='Arial' font-size='34' text-anchor='middle' dominant-baseline='middle'%3ENo Poster%3C/text%3E%3C/svg%3E";
 const GENRE_MAP = {

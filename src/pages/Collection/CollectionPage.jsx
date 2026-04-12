@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import CollectionEmpty from "./CollectionEmpty";
-
+import MovieCard from "../Home/MovieCard";
 
 const config = {
   watchlist: {
@@ -24,7 +24,13 @@ const config = {
   },
 };
 
-function CollectionPage({ type, items, onClear }) {
+function CollectionPage({
+  type,
+  items,
+  onClear,
+  onToggleWatchlist,
+  onToggleFavorite,
+}) {
   // const [items, setItems] = useState([]);
   const { icon, heading, subtitle, emptyTitle, emptyDesc } = config[type];
   const iconColor =
@@ -72,11 +78,17 @@ function CollectionPage({ type, items, onClear }) {
         ) : (
           <div className="collection-grid">
             {items.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                isInWatchlist={type === "watchlist"}
+                isInFavorites={type === "favorites"}
+                onToggleWatchlist={onToggleWatchlist}
+                onToggleFavorite={onToggleFavorite}
+              />
             ))}
           </div>
         )}
-
       </div>
     </main>
   );
