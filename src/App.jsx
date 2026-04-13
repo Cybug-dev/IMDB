@@ -27,7 +27,9 @@ function App() {
 
   return (
     <div className="app-shell">
-      <Header onNavigate={handleNavigate} currentPage={currentPage} />
+      <Header onNavigate={handleNavigate}
+       currentPage={currentPage} 
+       watchlistCount={watchlist.length}/>
       {currentPage === "home" && (
         <HomePage
           onToggleWatchlist={handleToggleWatchlist}

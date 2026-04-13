@@ -1,9 +1,9 @@
-// import { useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import CollectionEmpty from "./CollectionEmpty";
-import MovieCard from "../Home/MovieCard";
+import CollectionItem from "./CollectionItem";
 
 const config = {
   watchlist: {
@@ -31,6 +31,9 @@ function CollectionPage({
   onToggleWatchlist,
   onToggleFavorite,
 }) {
+  const [visibleCount, setVisibleCount] = useState(10);
+  const visibleItems = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
   // const [items, setItems] = useState([]);
   const { icon, heading, subtitle, emptyTitle, emptyDesc } = config[type];
   const iconColor =
@@ -39,6 +42,7 @@ function CollectionPage({
   const handleBrowse = () => {
     // TODO: navigate to Movies page when routing is added
   };
+  const handleLoadMore = () => setVisibleCount((prev) => prev + 5);
 
   return (
     <main className="collection-page">
@@ -76,18 +80,40 @@ function CollectionPage({
             />
           </>
         ) : (
-          <div className="collection-grid">
-            {items.map((movie) => (
-              <MovieCard
-                key={movie.id}
-                movie={movie}
-                isInWatchlist={type === "watchlist"}
-                isInFavorites={type === "favorites"}
-                onToggleWatchlist={onToggleWatchlist}
-                onToggleFavorite={onToggleFavorite}
-              />
-            ))}
-          </div>
+          <>
+            <div className="collection-page__count">
+              <span>Showing {visibleItems.length} movies</span>
+              <span className="collection-page__count-dot">•</span>
+              <span>
+                {items.length} total{" "}
+                {type === "watchlist" ? "in watchlist" : "favorites"}
+              </span>
+            </div>
+
+            <div className="collection-grid">
+              {visibleItems.map((movie) => (
+                <CollectionItem
+                  key={movie.id}
+                  movie={movie}
+                  type={type}
+                  onToggleWatchlist={onToggleWatchlist}
+                  onToggleFavorite={onToggleFavorite}
+                />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="collection">
+                <button
+                  type="button"
+                  className="collection-load-more"
+                  onClick={handleLoadMore}
+                >
+                  Load More ({items.length - visibleCount} remaining)
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>

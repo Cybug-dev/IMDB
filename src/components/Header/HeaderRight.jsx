@@ -9,7 +9,7 @@ const actions = [
 ];
 
 
-function HeaderRight({ onNavigate, currentPage }) {
+function HeaderRight({ onNavigate, currentPage, watchlistCount }) {
   return (
     <div className="header-right">
       {actions.map(({ label, icon, page }) => (
@@ -22,6 +22,9 @@ function HeaderRight({ onNavigate, currentPage }) {
         >
           <FontAwesomeIcon icon={icon} className="header-action__icon" />
           <span>{label}</span>
+          {label === "Watchlist" && watchlistCount > 0 && (
+            <span className="header-action__badge">{watchlistCount}</span>
+          )}
         </button>
       ))}
     </div>
