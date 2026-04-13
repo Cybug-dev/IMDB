@@ -9,33 +9,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
-const GENRE_MAP = {
-  12: "Adventure",
-  14: "Fantasy",
-  16: "Animation",
-  18: "Drama",
-  27: "Horror",
-  28: "Action",
-  35: "Comedy",
-  36: "History",
-  37: "Western",
-  53: "Thriller",
-  80: "Crime",
-  87: "Talk",
-  99: "Documentary",
-  878: "Sci-Fi",
-  9648: "Mystery",
-  10402: "Music",
-  10749: "Romance",
-  10751: "Family",
-  10752: "War",
-};
 
-function HeroBanner({ movie }) {
+function HeroBanner({ movie, onToggleWatchlist, onToggleFavorite }) {
   if (!movie) return null;
 
   const backdropPath = movie.backdrop_path || movie.poster_path;
-  const primaryGenre = GENRE_MAP[movie.genre_ids?.[0]] || "Feature Film";
+  const primaryGenre = movie.genre_ids?.[0]?.name ?? "Feature Film";
+  const runtime = movie.runtime ? `${movie.runtime} min` : null;
+  const director = movie.director ?? null;
+  const boxOffice = movie.revenue
+    ? `$${(movie.revenue / 1_000_000).toFixed(1)}M`
+    : "N/A";
 
   return (
     <section
@@ -46,8 +30,8 @@ function HeroBanner({ movie }) {
       <div className="hero-banner__content">
         <div className="hero-banner__rating">
           <div className="hero-banner__vote">
-             <FontAwesomeIcon icon={faStar} className="hero-banner__star" />
-          <span>{movie.vote_average.toFixed(1)}</span>
+            <FontAwesomeIcon icon={faStar} className="hero-banner__star" />
+            <span>{movie.vote_average.toFixed(1)}</span>
           </div>
           <span>IMDB Rating</span>
         </div>
@@ -56,11 +40,19 @@ function HeroBanner({ movie }) {
 
         <div className="hero-banner__meta">
           <span>{movie.release_date?.split("-")[0]}</span>
-          <span className="hero-banner__dot">.</span>
+          <span className="hero-banner__dot">•</span>
+          {runtime && <span>{runtime}</span>}
+          {runtime && <span className="hero-banner__dot">•</span>}
           <span className="hero-banner__genre">{primaryGenre}</span>
         </div>
 
         <p className="hero-banner__overview">{movie.overview}</p>
+
+        {director && (
+          <p className="hero-banner__director">
+            <span>Director:</span> {director}
+            </p>
+        )}
 
         <div className="hero-banner__actions">
           <button type="button" className="hero-banner__trailer">
@@ -68,12 +60,14 @@ function HeroBanner({ movie }) {
             <span>Watch Trailer</span>
           </button>
 
-          <button type="button" className="hero-banner__watchlist">
+          <button type="button" className="hero-banner__watchlist"
+          onClick={() => onToggleWatchlist(movie)}>
             <FontAwesomeIcon icon={faPlus} />
             <span>Add toWatchlist</span>
           </button>
 
-          <button type="button" className="hero-banner__favourites">
+          <button type="button" className="hero-banner__favourites"
+          onClick={() => onToggleFavorite(movie)}>
             <FontAwesomeIcon icon={faHeart} />
             <span>Add to Favourites</span>
           </button>
@@ -90,7 +84,7 @@ function HeroBanner({ movie }) {
             <span>Released {movie.release_date}</span>
           </div>
           <div className="hero-banner__footer-item">
-            <span>Box Office: N/A</span>
+            <span>Box Office: {boxOffice}</span>
           </div>
         </div>
       </div>

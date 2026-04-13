@@ -11,26 +11,6 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 750'%3E%3Crect width='500' height='750' fill='%23111a2d'/%3E%3Ctext x='50%25' y='50%25' fill='%2393a0bd' font-family='Arial' font-size='34' text-anchor='middle' dominant-baseline='middle'%3ENo Poster%3C/text%3E%3C/svg%3E";
-const GENRE_MAP = {
-  12: "Adventure",
-  14: "Fantasy",
-  16: "Animation",
-  18: "Drama",
-  27: "Horror",
-  28: "Action",
-  35: "Comedy",
-  36: "History",
-  37: "Western",
-  53: "Thriller",
-  80: "Crime",
-  99: "Documentary",
-  878: "Sci-Fi",
-  9648: "Mystery",
-  10402: "Music",
-  10749: "Romance",
-  10751: "Family",
-  10752: "War",
-};
 
 function MovieCard({
   movie,
@@ -41,13 +21,9 @@ function MovieCard({
 }) {
   const posterPath = movie.poster_path || movie.backdrop_path;
   const releaseYear = movie.release_date?.split("-")[0] || "TBA";
-  const displayGenres =
-    movie.genres?.length > 0
-      ? movie.genres.slice(0, 3).map((genre) => genre.name)
-      : (movie.genre_ids ?? [])
-          .map((genreId) => GENRE_MAP[genreId])
-          .filter(Boolean)
-          .slice(0, 3);
+  const displayGenres = (movie.genres ?? []).slice(0, 3).map((g) => g.name);
+  
+
   const rating =
     typeof movie.vote_average === "number"
       ? movie.vote_average.toFixed(1)
@@ -129,7 +105,7 @@ function MovieCard({
 
         {movie.director && (
           <p className="movie-card__director">
-            <span className="movie-card__director-label">Director:</span>{" "}
+            <span className="movie-card__director-label">Director:</span>
             {movie.director}
           </p>
         )}
