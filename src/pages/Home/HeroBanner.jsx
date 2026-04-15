@@ -5,16 +5,23 @@ import {
   faCircleInfo,
   faHeart,
   faPlay,
-  faPlus,
+  faHeart as faHeartSolid,
 } from "@fortawesome/free-solid-svg-icons";
+import { Plus, Check } from "lucide-react";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 
-function HeroBanner({ movie, onToggleWatchlist, onToggleFavorite }) {
+function HeroBanner({
+  movie,
+  onToggleWatchlist,
+  onToggleFavorite,
+  isInWatchlist,
+  isInFavorites,
+}) {
   if (!movie) return null;
 
   const backdropPath = movie.backdrop_path || movie.poster_path;
-  const primaryGenre = movie.genre_ids?.[0]?.name ?? "Feature Film";
+  const primaryGenre = movie.genres?.[0]?.name ?? "Feature Film";
   const runtime = movie.runtime ? `${movie.runtime} min` : null;
   const director = movie.director ?? null;
   const boxOffice = movie.revenue
@@ -51,7 +58,7 @@ function HeroBanner({ movie, onToggleWatchlist, onToggleFavorite }) {
         {director && (
           <p className="hero-banner__director">
             <span>Director:</span> {director}
-            </p>
+          </p>
         )}
 
         <div className="hero-banner__actions">
@@ -60,16 +67,26 @@ function HeroBanner({ movie, onToggleWatchlist, onToggleFavorite }) {
             <span>Watch Trailer</span>
           </button>
 
-          <button type="button" className="hero-banner__watchlist"
-          onClick={() => onToggleWatchlist(movie)}>
-            <FontAwesomeIcon icon={faPlus} />
-            <span>Add toWatchlist</span>
+          <button
+            type="button"
+            className="hero-banner__watchlist"
+            aria-label={
+              isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
+            }
+            onClick={() => onToggleWatchlist(movie)}
+          >
+           {isInWatchlist ? <Check/> : <Plus/>}
+            {isInWatchlist ? <span>Remove from Watchlist</span> : <span>Add to Watchlist</span>}
           </button>
 
-          <button type="button" className="hero-banner__favourites"
-          onClick={() => onToggleFavorite(movie)}>
-            <FontAwesomeIcon icon={faHeart} />
-            <span>Add to Favourites</span>
+          <button
+            type="button"
+            className="hero-banner__favourites"
+            aria-label={isInFavorites ? "Remove from favorites" : "Add to favorites"} 
+            onClick={() => onToggleFavorite(movie)}
+          >
+            <FontAwesomeIcon icon={isInFavorites ? faHeartSolid : faHeart} />
+            {isInFavorites ? <span>Remove from Favourites</span> : <span>Add to Favourites</span>}
           </button>
 
           <button type="button" className="hero-banner__more-info">

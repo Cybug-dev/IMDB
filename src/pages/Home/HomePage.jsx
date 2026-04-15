@@ -114,7 +114,13 @@ function HomePage({
 
   return (
     <main className="home-page">
-      <HeroBanner movie={heroMovie} />
+      <HeroBanner
+        movie={heroMovie}
+        onToggleWatchlist={onToggleWatchlist}
+        onToggleFavorite={onToggleFavorite}
+        isInWatchlist={watchlist.some((m) => m.id === heroMovie?.id)}
+        isInFavorites={favorites.some((m) => m.id === heroMovie?.id)}
+      />
       {sections.map((section) => (
         <FeaturedMovies
           key={section.title}

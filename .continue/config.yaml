@@ -1,0 +1,25 @@
+name: Continue Workspace Config
+version: 1.0.0
+schema: v1
+
+models:
+  - name: Qwen2.5-Coder 1.5B
+    uses: ollama/qwen2.5-coder:1.5b-base
+    roles:
+      - autocomplete
+  - name: Qwen2.5-Coder 3B
+    uses: ollama/qwen2.5-coder:3b
+  - name: Qwen2.5-Coder 7B
+    uses: ollama/qwen2.5-coder:7b
+  - name: Autodetect
+    uses: ollama/AUTODETECT
+  - name: Nomic Embed
+    uses: ollama/nomic-embed-text:latest
+    roles:
+      - embed
+
+# Recommended autocomplete model in the tab completion UI
+# Use the available local Ollama model and restart Continue if needed.
+tabAutocompleteModel:
+  title: Qwen2.5-Coder 3B (Autocomplete)
+  uses: ollama/qwen2.5-coder:3b
