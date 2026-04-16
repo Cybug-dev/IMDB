@@ -17,7 +17,7 @@ function HomePage({
 }) {
   const [trending, setTrending] = useState([]);
   const [topRated, setTopRated] = useState([]);
-  const [heroMovie, setHeroMovie] = useState(null);
+  const [heroMovies, setHeroMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -81,7 +81,7 @@ function HomePage({
 
         setTrending(detailedTrending);
         setTopRated(detailedTopRated);
-        setHeroMovie(detailedTrending[0] || detailedTopRated[0] || null);
+        setHeroMovies(detailedTrending.slice(0, 5));
       } catch (loadError) {
         setError(
           loadError.message || "Failed to load movies. Please try again later.",
@@ -115,11 +115,9 @@ function HomePage({
   return (
     <main className="home-page">
       <HeroBanner
-        movie={heroMovie}
+        movies={heroMovies}
         onToggleWatchlist={onToggleWatchlist}
         onToggleFavorite={onToggleFavorite}
-        isInWatchlist={watchlist.some((m) => m.id === heroMovie?.id)}
-        isInFavorites={favorites.some((m) => m.id === heroMovie?.id)}
       />
       {sections.map((section) => (
         <FeaturedMovies
@@ -130,8 +128,6 @@ function HomePage({
           RightIcon={section.RightIcon}
           onToggleWatchlist={onToggleWatchlist}
           onToggleFavorite={onToggleFavorite}
-          isInWatchlist={watchlist.some((m) => m.id === heroMovie?.id)}
-          isInFavorites={favorites.some((m) => m.id === heroMovie?.id)}
           watchlist={watchlist}
           favorites={favorites}
         />

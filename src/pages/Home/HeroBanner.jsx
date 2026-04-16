@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -5,20 +6,38 @@ import {
   faCircleInfo,
   faHeart,
   faPlay,
-  faHeart as faHeartSolid,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Plus, Check } from "lucide-react";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
+const INTERVAL_MS = 5000;
 
 function HeroBanner({
-  movie,
+  movies,
   onToggleWatchlist,
   onToggleFavorite,
   isInWatchlist,
   isInFavorites,
 }) {
-  if (!movie) return null;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const movieCount = movies?.length 
+  ?? 0;
+
+  // --- Auto-rotation logic ---
+  useEffect(() => {
+    if (movieCount === 0) return;
+
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % movieCount);
+    }, INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [movieCount]);
+
+  if (!movies || movieCount === 0) return null;
+  const movie = movies[activeIndex];
 
   const backdropPath = movie.backdrop_path || movie.poster_path;
   const primaryGenre = movie.genres?.[0]?.name ?? "Feature Film";
@@ -28,12 +47,55 @@ function HeroBanner({
     ? `$${(movie.revenue / 1_000_000).toFixed(1)}M`
     : "N/A";
 
+  const watchlistLabel = isInWatchlist ? "In Watchlist" : "Add to Watchlist";
+  const favoritesLabel = isInFavorites ? "In Favorites" : "Add to Favorites";
+  const watchlistIcon = isInWatchlist ? <Check /> : <Plus />;
+
+  // --- Manual controls ---
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + movieCount) % movieCount);
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % movieCount);
+  };
+
   return (
     <section
       className="hero-banner"
       style={{ backgroundImage: `url(${IMG_BASE}${backdropPath})` }}
     >
       <div className="hero-banner__overlay" />
+
+      {/* Left/Right controls */}
+      <button
+        type="button"
+        className="hero-banner__nav hero-banner__nav--prev"
+        onClick={handlePrev}
+        aria-label="Previous Movie"
+      >
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
+      <button
+        type="button"
+        className="hero-banner__nav hero-banner__nav--next"
+        onClick={handleNext}
+        aria-label="Next Movie"
+      >
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
+
+      {/* Dot indicators */}
+      <div className="hero-banner__dots">
+        {movies.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`hero-banner__dot-btn${i === activeIndex ? " is-active" : ""}`}
+            aria-label={`Go to movie ${i + 1}`}
+          />
+        ))}
+      </div>
       <div className="hero-banner__content">
         <div className="hero-banner__rating">
           <div className="hero-banner__vote">
@@ -75,18 +137,20 @@ function HeroBanner({
             }
             onClick={() => onToggleWatchlist(movie)}
           >
-           {isInWatchlist ? <Check/> : <Plus/>}
-            {isInWatchlist ? <span>Remove from Watchlist</span> : <span>Add to Watchlist</span>}
+            {watchlistIcon}
+            <span>{watchlistLabel}</span>
           </button>
 
           <button
             type="button"
             className="hero-banner__favourites"
-            aria-label={isInFavorites ? "Remove from favorites" : "Add to favorites"} 
+            aria-label={
+              isInFavorites ? "Remove from favorites" : "Add to favorites"
+            }
             onClick={() => onToggleFavorite(movie)}
           >
-            <FontAwesomeIcon icon={isInFavorites ? faHeartSolid : faHeart} />
-            {isInFavorites ? <span>Remove from Favourites</span> : <span>Add to Favourites</span>}
+            <FontAwesomeIcon icon={faHeart} />
+            <span>{favoritesLabel}</span>
           </button>
 
           <button type="button" className="hero-banner__more-info">
