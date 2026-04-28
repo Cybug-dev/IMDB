@@ -118,6 +118,8 @@ function HomePage({
         movies={heroMovies}
         onToggleWatchlist={onToggleWatchlist}
         onToggleFavorite={onToggleFavorite}
+        watchlist={watchlist}
+        favorites={favorites}
       />
       {sections.map((section) => (
         <FeaturedMovies

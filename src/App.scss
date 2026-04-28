@@ -239,24 +239,54 @@
 .hero-banner {
   position: relative;
   width: 100%;
-  /* height: min(70vh, 500px); */
+  min-height: var(--hero-height);
   padding: 36px var(--content-rail) 35px;
   display: flex;
   align-items: center;
   justify-content: start;
   background-color: #0d0d0d;
-  background-repeat: no-repeat;
-  background: center center;
-  background-size: cover;
   overflow: hidden;
   isolation: isolate;
+}
+
+/* Hero banner background media */
+.hero-banner__media,
+.hero-banner__backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-banner__media {
+  z-index: 0;
+}
+
+.hero-banner__backdrop {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: opacity, transform;
+}
+
+.hero-banner__backdrop--current {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero-banner__backdrop--current.is-entering {
+  animation: hero-banner-backdrop-in var(--hero-transition-duration)
+    var(--hero-transition-ease) both;
+}
+
+.hero-banner__backdrop--previous {
+  animation: hero-banner-backdrop-out var(--hero-transition-duration)
+    var(--hero-transition-ease) both;
 }
 
 /* Hero banner overlay */
 .hero-banner__overlay {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   background:
     linear-gradient(
       90deg,
@@ -267,13 +297,39 @@
     ),
     linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.7) 100%);
   backdrop-filter: blur(0.4px);
+  pointer-events: none;
 }
 
+@keyframes hero-banner-backdrop-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: saturate(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: saturate(1);
+  }
+}
+
+@keyframes hero-banner-backdrop-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
 
 .hero-banner__nav {
   position: absolute;
   top: 50%;
-  z-index: 2;
+  z-index: 3;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -284,6 +340,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transform: translateY(-50%);
   transition:
     transform 0.18s ease,
     background 0.18s ease;
@@ -307,7 +364,7 @@
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
   display: inline-flex;
   gap: 0.6rem;
 }
@@ -336,12 +393,71 @@
 /* Hero banner content */
 .hero-banner__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: min(100%, var(--hero-content-width));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 18px;
+  animation: hero-banner-content-in var(--hero-transition-duration)
+    var(--hero-transition-ease) both;
+}
+
+.hero-banner__content > * {
+  opacity: 0;
+  animation: hero-banner-copy-in 460ms var(--hero-transition-ease) forwards;
+}
+
+.hero-banner__content > *:nth-child(1) {
+  animation-delay: 40ms;
+}
+
+.hero-banner__content > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.hero-banner__content > *:nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.hero-banner__content > *:nth-child(4) {
+  animation-delay: 190ms;
+}
+
+.hero-banner__content > *:nth-child(5) {
+  animation-delay: 240ms;
+}
+
+.hero-banner__content > *:nth-child(6) {
+  animation-delay: 290ms;
+}
+
+.hero-banner__content > *:nth-child(7) {
+  animation-delay: 340ms;
+}
+
+@keyframes hero-banner-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-banner-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Hero banner rating row */
@@ -472,9 +588,10 @@
   white-space: nowrap;
   transition:
     transform 0.16s ease,
-    background-color 0.16s ease,
-    color 0.16s ease,
-    border-color 0.16s ease;
+    background-color var(--hero-toggle-duration) var(--hero-transition-ease),
+    color var(--hero-toggle-duration) var(--hero-transition-ease),
+    border-color var(--hero-toggle-duration) var(--hero-transition-ease),
+    box-shadow var(--hero-toggle-duration) var(--hero-transition-ease);
 }
 
 .hero-banner__trailer {
@@ -488,11 +605,99 @@
   padding: 0 15px;
   background: rgba(255, 255, 255, 0.95);
   color: #111111;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .hero-banner__favourites {
   background: var(--heart-color);
   color: var(--text-primary);
+}
+
+.hero-banner__toggle-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner__watchlist.is-active {
+  background: rgba(245, 197, 24, 0.98);
+  color: #111111;
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.06);
+}
+
+.hero-banner__favourites.is-active {
+  background: rgba(255, 58, 58, 0.92);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.hero-banner__toggle-button.is-toggling {
+  animation: hero-banner-toggle-bounce var(--hero-toggle-duration)
+    var(--hero-transition-ease);
+}
+
+.hero-banner__toggle-icon-stack,
+.hero-banner__toggle-label-stack {
+  display: grid;
+  align-items: center;
+}
+
+.hero-banner__toggle-icon-stack > *,
+.hero-banner__toggle-label-stack > * {
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--hero-toggle-duration) var(--hero-transition-ease),
+    transform var(--hero-toggle-duration) var(--hero-transition-ease);
+}
+
+.hero-banner__toggle-icon-stack {
+  min-width: 1.25rem;
+}
+
+.hero-banner__toggle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-banner__toggle-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.hero-banner__toggle-label-stack {
+  min-width: 8.75rem;
+}
+
+.hero-banner__toggle-button .hero-banner__toggle-icon--active,
+.hero-banner__toggle-button .hero-banner__toggle-label--active {
+  opacity: 0;
+  transform: translateY(38%);
+}
+
+.hero-banner__toggle-button.is-active .hero-banner__toggle-icon--inactive,
+.hero-banner__toggle-button.is-active .hero-banner__toggle-label--inactive {
+  opacity: 0;
+  transform: translateY(-38%);
+}
+
+.hero-banner__toggle-button.is-active .hero-banner__toggle-icon--active,
+.hero-banner__toggle-button.is-active .hero-banner__toggle-label--active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes hero-banner-toggle-bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  55% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .hero-banner__more-info {

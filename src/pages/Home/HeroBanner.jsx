@@ -1,102 +1,200 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import {
   faCalendar,
-  faCircleInfo,
-  faHeart,
-  faPlay,
   faChevronLeft,
   faChevronRight,
+  faCircleInfo,
+  faHeart as faHeartSolid,
+  faPlay,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
-import { Plus, Check } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
-const INTERVAL_MS = 5000;
+const INTERVAL_MS = 7000;
+const TRANSITION_MS = 560;
 
 function HeroBanner({
   movies,
   onToggleWatchlist,
   onToggleFavorite,
-  isInWatchlist,
-  isInFavorites,
+  watchlist,
+  favorites,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const movieCount = movies?.length 
-  ?? 0;
+  const [previousMovie, setPreviousMovie] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isWatchlistAnimating, setIsWatchlistAnimating] = useState(false);
+  const [isFavoritesAnimating, setIsFavoritesAnimating] = useState(false);
+  const activeIndexRef = useRef(0);
+  const watchlistTimeoutRef = useRef(null);
+  const favoritesTimeoutRef = useRef(null);
+  const movieCount = movies?.length ?? 0;
+  const safeActiveIndex = movieCount === 0 ? 0 : activeIndex % movieCount;
 
-  // --- Auto-rotation logic ---
   useEffect(() => {
-    if (movieCount === 0) return;
+    activeIndexRef.current = safeActiveIndex;
+  }, [safeActiveIndex]);
+
+  useEffect(() => {
+    if (!isTransitioning) return undefined;
+
+    const timeout = setTimeout(() => {
+      setPreviousMovie(null);
+      setIsTransitioning(false);
+    }, TRANSITION_MS);
+
+    return () => clearTimeout(timeout);
+  }, [isTransitioning]);
+
+  useEffect(() => {
+    if (movieCount === 0) return undefined;
 
     const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % movieCount);
+      const currentIndex = activeIndexRef.current;
+      const nextIndex = (currentIndex + 1) % movieCount;
+
+      if (nextIndex === currentIndex) return;
+
+      setPreviousMovie(movies[currentIndex] ?? null);
+      setActiveIndex(nextIndex);
+      setIsTransitioning(true);
     }, INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [movieCount]);
+  }, [movieCount, movies]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(watchlistTimeoutRef.current);
+      clearTimeout(favoritesTimeoutRef.current);
+    },
+    [],
+  );
 
   if (!movies || movieCount === 0) return null;
-  const movie = movies[activeIndex];
+  const movie = movies[safeActiveIndex] ?? movies[0];
+
+  const isInWatchlist = watchlist.some((item) => item.id === movie.id);
+  const isInFavorites = favorites.some((item) => item.id === movie.id);
 
   const backdropPath = movie.backdrop_path || movie.poster_path;
+  const previousBackdropPath =
+    previousMovie?.backdrop_path || previousMovie?.poster_path;
   const primaryGenre = movie.genres?.[0]?.name ?? "Feature Film";
   const runtime = movie.runtime ? `${movie.runtime} min` : null;
   const director = movie.director ?? null;
   const boxOffice = movie.revenue
     ? `$${(movie.revenue / 1_000_000).toFixed(1)}M`
     : "N/A";
-
   const watchlistLabel = isInWatchlist ? "In Watchlist" : "Add to Watchlist";
-  const favoritesLabel = isInFavorites ? "In Favorites" : "Add to Favorites";
-  const watchlistIcon = isInWatchlist ? <Check /> : <Plus />;
 
-  // --- Manual controls ---
+  const handleMovieChange = (nextIndex) => {
+    const currentIndex = activeIndexRef.current;
+
+    if (
+      movieCount === 0 ||
+      nextIndex === currentIndex ||
+      nextIndex < 0 ||
+      nextIndex >= movieCount
+    ) {
+      return;
+    }
+
+    setPreviousMovie(movies[currentIndex] ?? null);
+    setActiveIndex(nextIndex);
+    setIsTransitioning(true);
+  };
+
+  const triggerButtonAnimation = (type) => {
+    const isWatchlist = type === "watchlist";
+    const setAnimating = isWatchlist
+      ? setIsWatchlistAnimating
+      : setIsFavoritesAnimating;
+    const timeoutRef = isWatchlist ? watchlistTimeoutRef : favoritesTimeoutRef;
+
+    clearTimeout(timeoutRef.current);
+    setAnimating(true);
+    timeoutRef.current = setTimeout(() => {
+      setAnimating(false);
+    }, 320);
+  };
+
   const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + movieCount) % movieCount);
+    handleMovieChange((activeIndexRef.current - 1 + movieCount) % movieCount);
   };
 
   const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % movieCount);
+    handleMovieChange((activeIndexRef.current + 1) % movieCount);
+  };
+
+  const handleWatchlistClick = () => {
+    triggerButtonAnimation("watchlist");
+    onToggleWatchlist(movie);
+  };
+
+  const handleFavoriteClick = () => {
+    triggerButtonAnimation("favorite");
+    onToggleFavorite(movie);
   };
 
   return (
-    <section
-      className="hero-banner"
-      style={{ backgroundImage: `url(${IMG_BASE}${backdropPath})` }}
-    >
+    <section className="hero-banner">
+      <div className="hero-banner__media" aria-hidden="true">
+        {previousBackdropPath ? (
+          <div
+            className="hero-banner__backdrop hero-banner__backdrop--previous"
+            style={{
+              backgroundImage: `url(${IMG_BASE}${previousBackdropPath})`,
+            }}
+          />
+        ) : null}
+        <div
+          className={`hero-banner__backdrop hero-banner__backdrop--current${
+            isTransitioning ? " is-entering" : ""
+          }`}
+          style={{ backgroundImage: `url(${IMG_BASE}${backdropPath})` }}
+        />
+      </div>
+
       <div className="hero-banner__overlay" />
 
-      {/* Left/Right controls */}
       <button
         type="button"
         className="hero-banner__nav hero-banner__nav--prev"
         onClick={handlePrev}
-        aria-label="Previous Movie"
+        aria-label="Previous movie"
       >
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
+
       <button
         type="button"
         className="hero-banner__nav hero-banner__nav--next"
         onClick={handleNext}
-        aria-label="Next Movie"
+        aria-label="Next movie"
       >
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
 
-      {/* Dot indicators */}
       <div className="hero-banner__dots">
-        {movies.map((_, i) => (
+        {movies.map((_, index) => (
           <button
-            key={i}
+            key={index}
             type="button"
-            className={`hero-banner__dot-btn${i === activeIndex ? " is-active" : ""}`}
-            aria-label={`Go to movie ${i + 1}`}
+            className={`hero-banner__dot-btn${
+              index === safeActiveIndex ? " is-active" : ""
+            }`}
+            aria-label={`Go to movie ${index + 1}`}
+            aria-pressed={index === safeActiveIndex}
+            onClick={() => handleMovieChange(index)}
           />
         ))}
       </div>
-      <div className="hero-banner__content">
+
+      <div key={movie.id} className="hero-banner__content">
         <div className="hero-banner__rating">
           <div className="hero-banner__vote">
             <FontAwesomeIcon icon={faStar} className="hero-banner__star" />
@@ -109,9 +207,9 @@ function HeroBanner({
 
         <div className="hero-banner__meta">
           <span>{movie.release_date?.split("-")[0]}</span>
-          <span className="hero-banner__dot">•</span>
+          <span className="hero-banner__dot" aria-hidden="true" />
           {runtime && <span>{runtime}</span>}
-          {runtime && <span className="hero-banner__dot">•</span>}
+          {runtime && <span className="hero-banner__dot" aria-hidden="true" />}
           <span className="hero-banner__genre">{primaryGenre}</span>
         </div>
 
@@ -131,26 +229,66 @@ function HeroBanner({
 
           <button
             type="button"
-            className="hero-banner__watchlist"
+            className={`hero-banner__watchlist hero-banner__toggle-button${
+              isInWatchlist ? " is-active" : ""
+            }${isWatchlistAnimating ? " is-toggling" : ""}`}
             aria-label={
               isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
             }
-            onClick={() => onToggleWatchlist(movie)}
+            onClick={handleWatchlistClick}
           >
-            {watchlistIcon}
-            <span>{watchlistLabel}</span>
+            <span className="hero-banner__toggle-icon-stack" aria-hidden="true">
+              <span className="hero-banner__toggle-icon hero-banner__toggle-icon--inactive">
+                <Plus />
+              </span>
+              <span className="hero-banner__toggle-icon hero-banner__toggle-icon--active">
+                <Check />
+              </span>
+            </span>
+
+            <span
+              className="hero-banner__toggle-label-stack"
+              aria-hidden="true"
+            >
+              <span className="hero-banner__toggle-label hero-banner__toggle-label--inactive">
+                Add to Watchlist
+              </span>
+              <span className="hero-banner__toggle-label hero-banner__toggle-label--active">
+                {watchlistLabel}
+              </span>
+            </span>
           </button>
 
           <button
             type="button"
-            className="hero-banner__favourites"
+            className={`hero-banner__favourites hero-banner__toggle-button${
+              isInFavorites ? " is-active" : ""
+            }${isFavoritesAnimating ? " is-toggling" : ""}`}
             aria-label={
               isInFavorites ? "Remove from favorites" : "Add to favorites"
             }
-            onClick={() => onToggleFavorite(movie)}
+            onClick={handleFavoriteClick}
           >
-            <FontAwesomeIcon icon={faHeart} />
-            <span>{favoritesLabel}</span>
+            <span className="hero-banner__toggle-icon-stack" aria-hidden="true">
+              <span className="hero-banner__toggle-icon hero-banner__toggle-icon--inactive">
+                <FontAwesomeIcon icon={faHeartRegular} />
+              </span>
+              <span className="hero-banner__toggle-icon hero-banner__toggle-icon--active">
+                <FontAwesomeIcon icon={faHeartSolid} />
+              </span>
+            </span>
+
+            <span
+              className="hero-banner__toggle-label-stack"
+              aria-hidden="true"
+            >
+              <span className="hero-banner__toggle-label hero-banner__toggle-label--inactive">
+                Add to Favorites
+              </span>
+              <span className="hero-banner__toggle-label hero-banner__toggle-label--active">
+                {isInFavorites ? "In Favorites" : "Add to Favorites"}
+              </span>
+            </span>
           </button>
 
           <button type="button" className="hero-banner__more-info">
