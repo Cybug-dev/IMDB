@@ -31,6 +31,7 @@ function HeroBanner({
   const activeIndexRef = useRef(0);
   const watchlistTimeoutRef = useRef(null);
   const favoritesTimeoutRef = useRef(null);
+  const intervalRef = useRef(null);
   const movieCount = movies?.length ?? 0;
   const safeActiveIndex = movieCount === 0 ? 0 : activeIndex % movieCount;
 
@@ -50,9 +51,15 @@ function HeroBanner({
   }, [isTransitioning]);
 
   useEffect(() => {
-    if (movieCount === 0) return undefined;
+    if (movieCount === 0) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+      return undefined;
+    }
 
-    const interval = setInterval(() => {
+    clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
       const currentIndex = activeIndexRef.current;
       const nextIndex = (currentIndex + 1) % movieCount;
 
@@ -63,13 +70,14 @@ function HeroBanner({
       setIsTransitioning(true);
     }, INTERVAL_MS);
 
-    return () => clearInterval(interval);
-  }, [movieCount, movies]);
+    return () => clearInterval(intervalRef.current);
+  }, [movieCount, movies, activeIndex]);
 
   useEffect(
     () => () => {
       clearTimeout(watchlistTimeoutRef.current);
       clearTimeout(favoritesTimeoutRef.current);
+      clearInterval(intervalRef.current);
     },
     [],
   );
