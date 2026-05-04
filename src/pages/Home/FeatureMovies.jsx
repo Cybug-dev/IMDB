@@ -13,20 +13,32 @@ function FeaturedMovies({
   favorites,
 }) {
   const normalizedTitle = title.toLowerCase();
+  const isTopRatedSection = normalizedTitle.includes("top rated");
+  const isTrendingSection = normalizedTitle.includes("trending");
   const sectionVariant = normalizedTitle.includes("featured")
     ? "featured"
-    : normalizedTitle.includes("trending")
+    : isTrendingSection
       ? "trending"
-      : "default";
+      : isTopRatedSection
+        ? "top-rated"
+        : "default";
+  const isCompactSection = isTrendingSection || isTopRatedSection;
+
   const visibleMovies =
     sectionVariant === "featured"
-      ? movies.slice(0, 4)
-      : sectionVariant === "trending"
-        ? movies.slice(0, 3)
-        : movies;
+      ? movies.slice(0, 3)
+      : isTrendingSection
+        ? movies.slice(0, 4) 
+        : isTopRatedSection
+          ? movies.slice(4, 10)
+          : movies;
 
   return (
-    <section className={`featured-movies featured-movies--${sectionVariant}`}>
+    <section
+      className={`featured-movies featured-movies--${sectionVariant}${
+        isCompactSection ? " featured-movies--compact" : ""
+      }`}
+    >
       <div className="featured-movies__header">
         <div className="featured-movies__head">
           {LeftIcon ? <LeftIcon className="lucide-icon" /> : null}

@@ -30,6 +30,7 @@ function App() {
       <Header onNavigate={handleNavigate}
        currentPage={currentPage} 
        watchlistCount={watchlist.length}/>
+
       {currentPage === "home" && (
         <HomePage
           onToggleWatchlist={handleToggleWatchlist}
@@ -38,6 +39,7 @@ function App() {
           favorites={favorites}
         />
       )}
+      
       {currentPage === "watchlist" && (
         <CollectionPage
           type="watchlist"

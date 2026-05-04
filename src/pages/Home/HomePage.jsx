@@ -43,8 +43,10 @@ function HomePage({
             // spread existing movie data, then override genre_ids
             // with a resolved genres array
             genres: (movie.genre_ids ?? [])
-              .map((id) => ({ id, name: genreMap[id] }))
-              .filter((g) => g.name),
+              .map((id) => ({ id, 
+            // If genreMap[id] is null or undefined, use 'Unknown'
+                name: genreMap[id] ?? "Unknown",
+               })),
           }));
 
         const enrichedTrending = enrichWithGenres(trendingData);
@@ -108,8 +110,12 @@ function HomePage({
       title: "Trending Now",
       movies: trending,
       LeftIcon: TrendingUp,
-      RightIcon: Star,
     },
+    {
+      title: "Top Rated Movies",
+      movies: topRated,
+      LeftIcon: Star,
+    }
   ];
 
   return (
@@ -121,6 +127,7 @@ function HomePage({
         watchlist={watchlist}
         favorites={favorites}
       />
+
       {sections.map((section) => (
         <FeaturedMovies
           key={section.title}

@@ -834,7 +834,7 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.featured-movies--trending .featured-movies__grid {
+.featured-movies--compact .featured-movies__grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1349,7 +1349,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .featured-movies--trending .featured-movies__grid {
+  .featured-movies--compact .featured-movies__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1415,7 +1415,7 @@
   }
 
   .featured-movies--featured .featured-movies__grid,
-  .featured-movies--trending .featured-movies__grid {
+  .featured-movies--compact .featured-movies__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1460,7 +1460,7 @@
   }
 
   .featured-movies--featured .featured-movies__grid,
-  .featured-movies--trending .featured-movies__grid {
+  .featured-movies--compact .featured-movies__grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }
