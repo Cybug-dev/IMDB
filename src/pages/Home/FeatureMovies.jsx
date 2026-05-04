@@ -13,20 +13,21 @@ function FeaturedMovies({
   favorites,
 }) {
   const normalizedTitle = title.toLowerCase();
+  const isFeaturedSection = normalizedTitle.includes("featured");
   const isTopRatedSection = normalizedTitle.includes("top rated");
   const isTrendingSection = normalizedTitle.includes("trending");
-  const sectionVariant = normalizedTitle.includes("featured")
+  const sectionVariant = isFeaturedSection
     ? "featured"
     : isTrendingSection
       ? "trending"
       : isTopRatedSection
         ? "top-rated"
         : "default";
-  const isCompactSection = isTrendingSection || isTopRatedSection;
+  const isCompactSection = isFeaturedSection || isTopRatedSection;
 
   const visibleMovies =
     sectionVariant === "featured"
-      ? movies.slice(0, 3)
+      ? movies.slice(8, 11)
       : isTrendingSection
         ? movies.slice(0, 4) 
         : isTopRatedSection
