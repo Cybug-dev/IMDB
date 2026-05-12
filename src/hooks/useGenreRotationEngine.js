@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 const DEFAULT_MAX_IMAGES = 5;
-const DEFAULT_ROTATION_MS = 5000;
+const DEFAULT_ROTATION_MS = 10000;
 
 const normalizeGenres = (genres, maxImagesPerGenre) =>
   genres.map((genre) => ({
@@ -17,6 +17,20 @@ const buildInitialIndexes = (genres) =>
     acc[genre.id] = 0;
     return acc;
   }, {});
+
+const findNextLoadedIndex = (posters, currentIndex, imageStatusRef) => {
+  for (let step = 1; step <= posters.length; step += 1) {
+    const candidateIndex = (currentIndex + step) % posters.length;
+    const candidateUrl = posters[candidateIndex];
+
+    if (imageStatusRef.current.get(candidateUrl) === "loaded") {
+      return candidateIndex;
+    }
+  }
+
+  return currentIndex;
+};
+
 export function useGenreRotationEngine({
   genres,
   maxImagesPerGenre = DEFAULT_MAX_IMAGES,
@@ -90,42 +104,57 @@ export function useGenreRotationEngine({
 
   useEffect(() => {
     const activeGenres = normalizeGenres(genres, maxImagesPerGenre);
+    const timeoutIds = [];
+    const intervalIds = [];
 
-    const intervalId = window.setInterval(() => {
+    const advanceGenre = (genre) => {
       setPosterIndexes((previousIndexes) => {
-        let changed = false;
-        const nextIndexes = { ...previousIndexes };
+        const posters = genre.posters;
 
-        for (const genre of activeGenres) {
-          const posters = genre.posters;
-
-          if (posters.length <= 1) {
-            continue;
-          }
-
-          const currentIndex = previousIndexes[genre.id] ?? 0;
-
-          for (let step = 1; step <= posters.length; step += 1) {
-            const candidateIndex = (currentIndex + step) % posters.length;
-            const candidateUrl = posters[candidateIndex];
-
-            if (imageStatusRef.current.get(candidateUrl) === "loaded") {
-              if (candidateIndex !== currentIndex) {
-                nextIndexes[genre.id] = candidateIndex;
-                changed = true;
-              }
-
-              break;
-            }
-          }
+        if (posters.length <= 1) {
+          return previousIndexes;
         }
 
-        return changed ? nextIndexes : previousIndexes;
+        const currentIndex = previousIndexes[genre.id] ?? 0;
+        const nextIndex = findNextLoadedIndex(
+          posters,
+          currentIndex,
+          imageStatusRef,
+        );
+
+        if (nextIndex === currentIndex) {
+          return previousIndexes;
+        }
+
+        return {
+          ...previousIndexes,
+          [genre.id]: nextIndex,
+        };
       });
-    }, rotationMs);
+    };
+
+    for (const genre of activeGenres) {
+      if (genre.posters.length <= 1) {
+        continue;
+      }
+
+      const initialDelay = Math.random() * rotationMs;
+      const timeoutId = window.setTimeout(() => {
+        advanceGenre(genre);
+
+        const intervalId = window.setInterval(() => {
+          advanceGenre(genre);
+        }, rotationMs);
+
+        intervalIds.push(intervalId);
+      }, initialDelay);
+
+      timeoutIds.push(timeoutId);
+    }
 
     return () => {
-      window.clearInterval(intervalId);
+      timeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
+      intervalIds.forEach((intervalId) => window.clearInterval(intervalId));
     };
   }, [genres, maxImagesPerGenre, rotationMs]);
 
