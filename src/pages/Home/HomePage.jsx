@@ -2,18 +2,20 @@ import { useState, useEffect } from "react";
 import {
   fetchTrendingMovies,
   fetchTopRated,
-  fetchGenres,
+  fetchGenresListOnly,
   fetchMovieDetails,
 } from "../../services/tmdb";
 import { Award, TrendingUp, Star, Sparkles } from "lucide-react";
 import HeroBanner from "./HeroBanner";
 import FeaturedMovies from "./FeatureMovies";
+import BrowseByGenre from "./BrowseByGenre";
 
 function HomePage({
   onToggleWatchlist,
   onToggleFavorite,
   watchlist,
   favorites,
+  onNavigate,
 }) {
   const [trending, setTrending] = useState([]);
   const [topRated, setTopRated] = useState([]);
@@ -27,7 +29,7 @@ function HomePage({
         const [trendingData, topRatedData, genreList] = await Promise.all([
           fetchTrendingMovies(),
           fetchTopRated(),
-          fetchGenres(),
+          fetchGenresListOnly(),
         ]);
 
         const genreMap = {};
@@ -141,6 +143,7 @@ function HomePage({
           favorites={favorites}
         />
       ))}
+      <BrowseByGenre onNavigate={onNavigate} />
     </main>
   );
 }

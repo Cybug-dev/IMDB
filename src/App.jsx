@@ -2,13 +2,21 @@ import "./App.scss";
 import { useState } from "react";
 import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
+import GenrePage from "./pages/Genre/GenrePage";
 import HomePage from "./pages/Home/HomePage";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");
+  const [selectedGenre, setSelectedGenre] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  const handleNavigate = (page) => setCurrentPage(page);
+  const handleNavigate = (page, payload = null) => {
+    setCurrentPage(page);
+
+    if (page === "genre") {
+      setSelectedGenre(payload);
+    }
+  };
   const handleToggleWatchlist = (movie) => {
     setWatchlist((prev) => {
       const exists = prev.some((m) => m.id === movie.id);
@@ -37,6 +45,7 @@ function App() {
           onToggleFavorite={handleToggleFavorite}
           watchlist={watchlist}
           favorites={favorites}
+          onNavigate={handleNavigate}
         />
       )}
       
@@ -56,6 +65,16 @@ function App() {
           onClear={() => handleClearCollection("favorites")}
           onToggleWatchlist={handleToggleWatchlist}
           onToggleFavorite={handleToggleFavorite}
+        />
+      )}
+      {currentPage === "genre" && selectedGenre && (
+        <GenrePage
+          genre={selectedGenre}
+          onNavigate={handleNavigate}
+          onToggleWatchlist={handleToggleWatchlist}
+          onToggleFavorite={handleToggleFavorite}
+          watchlist={watchlist}
+          favorites={favorites}
         />
       )}
     </div>
