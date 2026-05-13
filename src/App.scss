@@ -367,6 +367,11 @@
   z-index: 3;
   display: inline-flex;
   gap: 0.6rem;
+
+  @media (max-width: 700px) {
+      bottom: 0px;
+  }
+
 }
 
 .hero-banner__dot-btn {
@@ -506,9 +511,8 @@
 /* Hero banner title */
 .hero-banner__title {
   margin: 0;
-  max-width: 9.5ch;
+  width: 12ch;
   font-size: var(--hero-title-size);
-  line-height: 0.94;
   font-weight: 800;
   letter-spacing: -0.055em;
   text-wrap: balance;
@@ -758,7 +762,7 @@
 }
 
 .featured-movies__head .lucide-icon,
-.featured-movies__head .lucide-sparkels {
+.featured-movies__head .lucide-sparkels, .film-icon {
   height: 1.1rem;
   width: 1.1rem;
   stroke-width: 2px;
@@ -1341,10 +1345,6 @@
     width: min(100%, 500px);
   }
 
-  .hero-banner__title {
-    max-width: 10ch;
-  }
-
   .featured-movies--featured .featured-movies__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1397,7 +1397,6 @@
   }
 
   .hero-banner__title {
-    max-width: 10ch;
     font-size: clamp(2.55rem, 10.5vw, 3.9rem);
   }
 
@@ -1535,3 +1534,118 @@
     font-size: 0.96rem;
   }
 }
+
+/* Browse by Genre */
+.browse-by-genre {
+  padding: var(--section-spacing) var(--content-rail) 0;
+  overflow: hidden;
+}
+
+.browse-by-genre .description {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0 0 24px 0;
+}
+
+.genre-list {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: none;
+  flex-wrap: nowrap;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-inline: var(--content-gutter);
+  margin-left: calc(-1 * (var(--content-rail) - var(--content-gutter)));
+  margin-right: calc(-1 * (var(--content-rail) - var(--content-gutter)));
+}
+
+.genre-list::-webkit-scrollbar {
+  display: none;
+}
+
+.genre-list {
+  scrollbar-width: none;
+}
+
+.genre-card {
+  position: relative;
+  flex: 0 0 clamp(210px, 18vw, 272px);
+  min-width: clamp(210px, 18vw, 272px);
+  aspect-ratio: 3.5 / 5.35;
+  border-radius: var(--card-radius);
+  border: none;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    filter 0.22s ease,
+    box-shadow 0.22s ease;
+  overflow: hidden;
+  isolation: isolate;
+  scroll-snap-align: start;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.24);
+}
+
+.genre-card:hover {
+  transform: translateY(-6px) scale(1.012);
+  filter: brightness(1.08);
+  box-shadow: 0 28px 46px rgba(0, 0, 0, 0.34);
+}
+
+.genre-card__image-stack {
+  position: absolute;
+  inset: 0;
+  background: #111;
+  contain: paint;
+}
+
+.genre-card__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.75s ease-in-out;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: opacity;
+  z-index: 0;
+}
+
+.genre-card__image.is-top {
+  z-index: 1;
+}
+
+.genre-card__image.is-visible {
+  opacity: 1;
+}
+
+.genre-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.62) 100%),
+    rgba(0, 0, 0, 0.2);
+  transition: background 0.5s ease;
+  z-index: 2;
+}
+
+.genre-name {
+  position: absolute;
+  // bottom: 0;
+  top: 25px;
+  left: 16px;
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+}
+

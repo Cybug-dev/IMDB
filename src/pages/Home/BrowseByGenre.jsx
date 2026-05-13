@@ -28,7 +28,7 @@ function BrowseByGenre({ onNavigate }) {
   const genreEngine = useGenreRotationEngine({
     genres,
     maxImagesPerGenre: 5,
-    rotationMs: 5000,
+    rotationMs: 11000,
   });
 
   const handleGenreClick = (genre) => {
@@ -42,7 +42,7 @@ function BrowseByGenre({ onNavigate }) {
   return (
     <div className="browse-by-genre">
       <h2 className="heading">
-        <Film className="icon" />
+        <Film className="lucide-icon film-icon" />
         Browse by Genre
       </h2>
       <p className="description">Discover movies by your favorite genres</p>
