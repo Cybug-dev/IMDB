@@ -7,6 +7,7 @@ import {
 } from "../../services/tmdb";
 import { Award, TrendingUp, Star, Sparkles } from "lucide-react";
 import HeroBanner from "./HeroBanner";
+import WhatToWatch from "./WhatToWatch";
 import FeaturedMovies from "./FeatureMovies";
 import BrowseByGenre from "./BrowseByGenre";
 
@@ -118,7 +119,7 @@ function HomePage({
       title: "Top Rated Movies",
       movies: topRated,
       LeftIcon: Star,
-    }
+    },
   ];
 
   return (
@@ -130,6 +131,12 @@ function HomePage({
         watchlist={watchlist}
         favorites={favorites}
         contentBoundaryRef={heroContentBoundaryRef}
+      />
+      <WhatToWatch
+        onToggleWatchlist={onToggleWatchlist}
+        onToggleFavorite={onToggleFavorite}
+        watchlist={watchlist}
+        favorites={favorites}
       />
 
       <div className="home-page__main-content">

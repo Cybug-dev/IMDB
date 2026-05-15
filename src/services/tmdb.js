@@ -44,10 +44,75 @@ export const fetchGenresListOnly = async () => {
 const posterUrl = (path, size = "w500") =>
   path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
 
+const withMediaType = (items, mediaType) =>
+  items.map((item) => ({
+    ...item,
+    media_type: item.media_type ?? mediaType,
+  }));
+
+const uniqueById = (items) => {
+  const seen = new Set();
+
+  return items.filter((item) => {
+    const key = `${item.media_type ?? "movie"}-${item.id}`;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+};
+
 export const fetchMoviesByGenre = async (genreId) => {
   return readResults(
     `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc`,
   );
+};
+
+const fallbackMoviePaths = [
+  "/movie/popular",
+  "/movie/now_playing",
+  "/movie/upcoming",
+  "/movie/top_rated",
+];
+
+const fetchRandomMovieFallback = async () => {
+  const randomIndex = Math.floor(Math.random() * fallbackMoviePaths.length);
+  const fallbackMovies = await readResults(fallbackMoviePaths[randomIndex]);
+
+  return withMediaType(fallbackMovies, "movie");
+};
+
+export const fetchWhatToWatchDataset = async (tabId) => {
+  let results = [];
+
+  if (tabId === "movie") {
+    const [trendingMovies, actionMovies] = await Promise.all([
+      fetchTrendingMovies(),
+      fetchMoviesByGenre(28),
+    ]);
+
+    results = uniqueById([
+      ...withMediaType(trendingMovies, "movie"),
+      ...withMediaType(actionMovies, "movie"),
+    ]);
+  } else if (tabId === "tv") {
+    const tvShows = await readResults("/trending/tv/week");
+    results = withMediaType(tvShows, "tv");
+  } else {
+    const mixedResults = await readResults("/trending/all/week");
+    results = mixedResults.filter(
+      (item) => item.media_type === "movie" || item.media_type === "tv",
+    );
+  }
+
+  if (results.length > 0) {
+    return results;
+  }
+
+  return fetchRandomMovieFallback();
 };
 
 export const fetchGenresWithImages = async (limit = 6, maxPosters = 5) => {
