@@ -22,6 +22,7 @@ function HeroBanner({
   onToggleFavorite,
   watchlist,
   favorites,
+  contentBoundaryRef,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [previousMovie, setPreviousMovie] = useState(null);
@@ -201,6 +202,12 @@ function HeroBanner({
           />
         ))}
       </div>
+
+      <div
+        ref={contentBoundaryRef}
+        className="hero-banner__content-boundary"
+        aria-hidden="true"
+      />
 
       <div key={movie.id} className="hero-banner__content">
         <div className="hero-banner__rating">

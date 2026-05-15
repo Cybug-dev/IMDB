@@ -16,6 +16,7 @@ function HomePage({
   watchlist,
   favorites,
   onNavigate,
+  heroContentBoundaryRef,
 }) {
   const [trending, setTrending] = useState([]);
   const [topRated, setTopRated] = useState([]);
@@ -128,22 +129,25 @@ function HomePage({
         onToggleFavorite={onToggleFavorite}
         watchlist={watchlist}
         favorites={favorites}
+        contentBoundaryRef={heroContentBoundaryRef}
       />
 
-      {sections.map((section) => (
-        <FeaturedMovies
-          key={section.title}
-          title={section.title}
-          movies={section.movies}
-          LeftIcon={section.LeftIcon}
-          RightIcon={section.RightIcon}
-          onToggleWatchlist={onToggleWatchlist}
-          onToggleFavorite={onToggleFavorite}
-          watchlist={watchlist}
-          favorites={favorites}
-        />
-      ))}
-      <BrowseByGenre onNavigate={onNavigate} />
+      <div className="home-page__main-content">
+        {sections.map((section) => (
+          <FeaturedMovies
+            key={section.title}
+            title={section.title}
+            movies={section.movies}
+            LeftIcon={section.LeftIcon}
+            RightIcon={section.RightIcon}
+            onToggleWatchlist={onToggleWatchlist}
+            onToggleFavorite={onToggleFavorite}
+            watchlist={watchlist}
+            favorites={favorites}
+          />
+        ))}
+        <BrowseByGenre onNavigate={onNavigate} />
+      </div>
     </main>
   );
 }

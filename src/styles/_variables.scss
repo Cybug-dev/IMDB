@@ -17,6 +17,7 @@
     calc((100vw - var(--content-width)) / 2 + var(--content-gutter))
   );
   --header-height: 54px;
+  --runtime-header-height: var(--header-height);
   --hero-height: clamp(420px, 42vw, 560px);
   --hero-content-width: 540px;
   --hero-title-size: clamp(2.9rem, 5.3vw, 4.4rem);
