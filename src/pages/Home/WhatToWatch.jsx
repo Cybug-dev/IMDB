@@ -46,38 +46,46 @@ function WhatToWatch({
     };
   }, [activeTab]);
 
-  const isLoading = requestState.tabId !== activeTab;
+  // const isLoading = requestState.tabId !== activeTab;
   const currentError =
     requestState.tabId === activeTab ? requestState.error : null;
   const visibleMovies = requestState.movies.slice(0, 10);
 
   return (
     <section className="what-to-watch">
-      <h2 className="heading">What to Watch</h2>
+      <div className="what-to-watch__header">
+        <h2 className="heading what-to-watch__title">What to Watch</h2>
+      </div>
 
-      <FilterTabs
-        tabs={WATCH_FILTERS}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        className="what-to-watch-tabs"
-      />
+      <div className="what-to-watch__panel">
+        <div className="what-to-watch__intro">
+          <p className="what-to-watch__eyebrow">Top picks just for you</p>
 
-      {isLoading && <div className="what-to-watch-status">Loading...</div>}
-      {currentError && (
-        <div className="what-to-watch-status">{currentError}</div>
-      )}
-
-      <div className="what-to-watch-grid">
-        {visibleMovies.map((movie) => (
-          <MovieCard2
-            key={movie.id}
-            movie={movie}
-            onToggleWatchlist={onToggleWatchlist}
-            onToggleFavorite={onToggleFavorite}
-            isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-            isInFavorites={favorites.some((m) => m.id === movie.id)}
+          <FilterTabs
+            tabs={WATCH_FILTERS}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            className="what-to-watch__tabs"
           />
-        ))}
+        </div>
+
+        <div className="what-to-watch__rail">
+          {visibleMovies.map((movie) => (
+            <MovieCard2
+              key={movie.id}
+              movie={movie}
+              onToggleWatchlist={onToggleWatchlist}
+              onToggleFavorite={onToggleFavorite}
+              isInWatchlist={watchlist.some((m) => m.id === movie.id)}
+              isInFavorites={favorites.some((m) => m.id === movie.id)}
+            />
+            
+          ))
+                      }
+        </div>
+        {currentError && (
+          <div className="what-to-watch__status">{currentError}</div>
+        )}
       </div>
     </section>
   );

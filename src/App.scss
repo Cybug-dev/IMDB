@@ -1688,3 +1688,140 @@
   z-index: 3;
 }
 
+/* Filter tabs */
+.filter-tabs {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 34px;
+}
+
+.filter-tabs__button {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  padding: 0 0 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 0.94rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.filter-tabs__button:hover,
+.filter-tabs__button.is-active {
+  color: var(--text-primary);
+}
+
+.filter-tabs__indicator {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--imdb-yellow);
+  opacity: 0;
+  transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 120ms ease;
+}
+
+.filter-tabs__indicator.is-ready {
+  opacity: 1;
+}
+
+/* What to watch section */
+.what-to-watch {
+  width: 100%;
+  padding: calc(var(--section-spacing) + 12px) var(--content-rail) 0;
+}
+
+.what-to-watch__header {
+  margin-bottom: 18px;
+}
+
+.what-to-watch__title {
+  margin: 0 0 0 14px;
+}
+
+.what-to-watch__panel {
+  position: relative;
+  padding: 10px 0 8px 18px;
+}
+
+.what-to-watch__panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--imdb-yellow) 0%, #0c88ff 100%);
+}
+
+.what-to-watch__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.what-to-watch__eyebrow {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.2rem;
+}
+
+.what-to-watch__tabs {
+  margin-left: -2px;
+}
+
+.what-to-watch__status {
+  padding: 12px 4px 18px;
+  color: var(--text-secondary);
+  font-size: 0.96rem;
+}
+
+.what-to-watch__rail {
+  display: flex;
+  align-items: stretch;
+  gap: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 2px 18px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
+.what-to-watch__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.what-to-watch__rail > * {
+  flex: 0 0 clamp(170px, 17vw, 208px);
+  min-width: clamp(170px, 17vw, 208px);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+
+  .what-to-watch__panel {
+    padding-top: 18px;
+    padding-left: 16px;
+  }
+
+  .what-to-watch__eyebrow {
+    font-size: 1.2rem;
+  }
+
+  .what-to-watch__rail > * {
+    flex-basis: min(190px, 54vw);
+    min-width: min(190px, 54vw);
+  }
+}
+
