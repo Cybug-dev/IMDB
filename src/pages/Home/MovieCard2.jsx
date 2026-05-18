@@ -3,6 +3,7 @@ import {
   faStar,
   faHeart as faHeartSolid,
   faCircleInfo,
+  faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
@@ -26,19 +27,22 @@ function MovieCard2({
   const displayGenres = (movie.genres ?? []).slice(0, 2).map((g) => g.name);
 
   return (
-    <div className="movie-card ui-surface-card">
-      <div className="movie-card__poster-wrap">
+    <article className="movie-card2 ui-surface-card">
+      <div className="movie-card__poster">
         <img
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
           alt={movie.title}
-          className="movie-card__poster"
+          className="movie-card2__poster"
           loading="lazy"
         />
+        <div className="movie-card2__media-overlay" />
 
-        <div className="movie-card__quick-actions">
+        <div className="movie-card2__quick-actions">
           <button
             type="button"
-            className={`movie-card__action ui-icon-button ${isInWatchlist ? "active movie-card2__action--watchlist" : ""}`}
+            className={`movie-card2__action ui-icon-button ${
+              isInWatchlist ? "is-active movie-card2__action--watchlist" : ""
+            }`}
             aria-label={
               isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
             }
@@ -49,7 +53,9 @@ function MovieCard2({
 
           <button
             type="button"
-            className={`movie-card__action ui-icon-button ${isInFavorites ? "active movie-card__action--favorite" : ""}`}
+            className={`movie-card2__action ui-icon-button ${
+              isInFavorites ? "is-active movie-card2__action--favorite" : ""
+            }`}
             aria-label={
               isInFavorites ? "Remove from favorites" : "Add to favorites"
             }
@@ -62,9 +68,13 @@ function MovieCard2({
 
       <div className="movie-card2__info">
         <h3 className="movie-card2__title">
-          {movie.title || movie.name || "Untitled Movie"}
-
-          <FontAwesomeIcon icon={faCircleInfo} />
+          <span className="movie-card2__title-text">
+            {movie.title || movie.name || "Untitled Movie"}
+          </span>
+          <FontAwesomeIcon
+            icon={faCircleInfo}
+            className="movie-card2__info-icon"
+          />
         </h3>
 
         {displayGenres.length > 0 && (
@@ -82,9 +92,20 @@ function MovieCard2({
           <span>{rating}</span>
         </div>
 
-        <button className="movie-card2_trailer_btn">Watch Trailer</button>
+        <button type="button" className="movie-card2__trailer-button">
+          <FontAwesomeIcon icon={faPlay} />
+          <span>Watch trailer</span>
+        </button>
+
+        <div className="movie-card2__watch-on">
+          <span className="movie-card2__watch-on-label">Watch on</span>
+          <span className="movie-card2__watch-on-dots" aria-hidden="true">
+            <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--violet" />
+            <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--red" />
+          </span>
+        </div>
       </div>
-    </div>
+    </article>
   );
 }
 export default MovieCard2;
