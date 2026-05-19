@@ -6,6 +6,7 @@
   --border-subtle: rgba(255, 255, 255, 0.1);
   --text-primary: #ffffff;
   --text-dark: #050505;
+  --dark-bg-color: linear-gradient(180deg, #1f1f1f 0%, #171717 100%);
   --text-secondary: #93a0bd;
   --text-tertiary: #7e8da9;
   --imdb-yellow: #f5c518;
@@ -31,7 +32,7 @@
   --hero-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --section-spacing: 42px;
   --card-radius: 18px;
-  --card-poster-height: 200px;
+  --card-poster-height: 350px;
   --card-body-padding: 15px 15px 30px;
   --card-copy-size: 0.94rem;
   --card-meta-size: 0.86rem;
