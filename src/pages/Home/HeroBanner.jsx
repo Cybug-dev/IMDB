@@ -11,6 +11,7 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { Check, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
@@ -24,6 +25,7 @@ function HeroBanner({
   favorites,
   contentBoundaryRef,
 }) {
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [previousMovie, setPreviousMovie] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -147,6 +149,10 @@ function HeroBanner({
   const handleFavoriteClick = () => {
     triggerButtonAnimation("favorite");
     onToggleFavorite(movie);
+  };
+
+  const handleDetailsClick = () => {
+    navigate(`/movie/${movie.id}`);
   };
 
   return (
@@ -306,7 +312,11 @@ function HeroBanner({
             </span>
           </button>
 
-          <button type="button" className="hero-banner__more-info">
+          <button
+            type="button"
+            className="hero-banner__more-info"
+            onClick={handleDetailsClick}
+          >
             <FontAwesomeIcon icon={faCircleInfo} />
             <span>More Info</span>
           </button>

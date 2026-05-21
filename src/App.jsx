@@ -1,12 +1,24 @@
 import "./App.scss";
 import { useCallback, useEffect, useState } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
-import GenrePage from "./pages/Genre/GenrePage";
 import HomePage from "./pages/Home/HomePage";
+import GenrePage from "./pages/Genre/GenrePage";
+import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
+
+const getPageFromPath = (pathname) => {
+  if (pathname.startsWith("/watchlist")) return "watchlist";
+  if (pathname.startsWith("/favorites")) return "favorites";
+  if (pathname.startsWith("/genre")) return "genre";
+  if (pathname.startsWith("/movie")) return "movie";
+  return "home";
+};
 
 function App() {
-  const [currentPage, setCurrentPage] = useState("home");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentPage = getPageFromPath(location.pathname);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
   const [favorites, setFavorites] = useState([]);
@@ -47,11 +59,24 @@ function App() {
   }, [currentPage, headerHeight, heroContentBoundaryNode]);
 
   const handleNavigate = (page, payload = null) => {
-    setCurrentPage(page);
-
     if (page === "genre") {
       setSelectedGenre(payload);
+      navigate(`/genre/${payload.slug}`);
+      return;
     }
+
+    if (page === "movie" && payload?.id) {
+      navigate(`/movie/${payload.id}`);
+      return;
+    }
+
+    const paths = {
+      home: "/",
+      watchlist: "/watchlist",
+      favorites: "/favorites",
+    };
+
+    navigate(paths[page] ?? "/");
   };
   const handleToggleWatchlist = (movie) => {
     setWatchlist((prev) => {
@@ -80,45 +105,74 @@ function App() {
         onHeightChange={handleHeaderHeightChange}
       />
 
-      {currentPage === "home" && (
-        <HomePage
-          onToggleWatchlist={handleToggleWatchlist}
-          onToggleFavorite={handleToggleFavorite}
-          watchlist={watchlist}
-          favorites={favorites}
-          onNavigate={handleNavigate}
-          heroContentBoundaryRef={setHeroContentBoundaryNode}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+              watchlist={watchlist}
+              favorites={favorites}
+              onNavigate={handleNavigate}
+              heroContentBoundaryRef={setHeroContentBoundaryNode}
+            />
+          }
         />
-      )}
-      
-      {currentPage === "watchlist" && (
-        <CollectionPage
-          type="watchlist"
-          items={watchlist}
-          onClear={() => handleClearCollection("watchlist")}
-          onToggleWatchlist={handleToggleWatchlist}
-          onToggleFavorite={handleToggleFavorite}
+        <Route
+          path="/watchlist"
+          element={
+            <CollectionPage
+              type="watchlist"
+              items={watchlist}
+              onClear={() => handleClearCollection("watchlist")}
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          }
         />
-      )}
-      {currentPage === "favorites" && (
-        <CollectionPage
-          type="favorites"
-          items={favorites}
-          onClear={() => handleClearCollection("favorites")}
-          onToggleWatchlist={handleToggleWatchlist}
-          onToggleFavorite={handleToggleFavorite}
+        <Route
+          path="/favorites"
+          element={
+            <CollectionPage
+              type="favorites"
+              items={favorites}
+              onClear={() => handleClearCollection("favorites")}
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+            />
+          }
         />
-      )}
-      {currentPage === "genre" && selectedGenre && (
-        <GenrePage
-          genre={selectedGenre}
-          onNavigate={handleNavigate}
-          onToggleWatchlist={handleToggleWatchlist}
-          onToggleFavorite={handleToggleFavorite}
-          watchlist={watchlist}
-          favorites={favorites}
+        <Route
+          path="/genre/:slug"
+          element={
+            selectedGenre ? (
+              <GenrePage
+                genre={selectedGenre}
+                onNavigate={handleNavigate}
+                onToggleWatchlist={handleToggleWatchlist}
+                onToggleFavorite={handleToggleFavorite}
+                watchlist={watchlist}
+                favorites={favorites}
+              />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         />
-      )}
+        <Route
+          path="/movie/:id"
+          element={
+            <MovieDetailsPage
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+              watchlist={watchlist}
+              favorites={favorites}
+            />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   );
 }

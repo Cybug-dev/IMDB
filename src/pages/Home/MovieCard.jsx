@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER =
@@ -19,6 +20,7 @@ function MovieCard({
   isInWatchlist,
   isInFavorites,
 }) {
+  const navigate = useNavigate();
   const posterPath = movie.poster_path || movie.backdrop_path;
   const releaseYear = movie.release_date?.split("-")[0] || "TBA";
   const displayGenres = (movie.genres ?? []).slice(0, 3).map((g) => g.name);
@@ -28,9 +30,22 @@ function MovieCard({
     typeof movie.vote_average === "number"
       ? movie.vote_average.toFixed(1)
       : "N/A";
+  const goToDetails = () => navigate(`/movie/${movie.id}`);
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      goToDetails();
+    }
+  };
 
   return (
-    <div className="movie-card ui-surface-card">
+    <div
+      className="movie-card ui-surface-card"
+      role="button"
+      tabIndex={0}
+      onClick={goToDetails}
+      onKeyDown={handleKeyDown}
+    >
       <div className="movie-card__poster-wrap">
         <img
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
@@ -51,7 +66,10 @@ function MovieCard({
             aria-label={
               isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
             }
-            onClick={() => onToggleWatchlist(movie)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleWatchlist(movie);
+            }}
           >
           {isInWatchlist ? <Check/> : <Plus />}
     
@@ -63,7 +81,10 @@ function MovieCard({
             aria-label={
               isInFavorites ? "Remove from favorites" : "Add to favorites"
             }
-            onClick={() => onToggleFavorite(movie)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(movie);
+            }}
           >
             <FontAwesomeIcon icon={isInFavorites ? faHeartSolid : faHeart} />
           </button>

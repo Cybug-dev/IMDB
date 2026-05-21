@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER =
@@ -19,15 +20,29 @@ function MovieCard2({
   isInWatchlist,
   isInFavorites,
 }) {
+  const navigate = useNavigate();
   const posterPath = movie.poster_path || movie.backdrop_path;
   const rating =
     typeof movie.vote_average === "number"
       ? movie.vote_average.toFixed(1)
       : "N/A";
   const displayGenres = (movie.genres ?? []).slice(0, 2).map((g) => g.name);
+  const goToDetails = () => navigate(`/movie/${movie.id}`);
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      goToDetails();
+    }
+  };
 
   return (
-    <article className="movie-card2 ui-surface-card">
+    <article
+      className="movie-card2 ui-surface-card"
+      role="button"
+      tabIndex={0}
+      onClick={goToDetails}
+      onKeyDown={handleKeyDown}
+    >
       <div className="movie-card__poster">
         <img
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
@@ -46,7 +61,10 @@ function MovieCard2({
             aria-label={
               isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
             }
-            onClick={() => onToggleWatchlist(movie)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleWatchlist(movie);
+            }}
           >
             {isInWatchlist ? <Check /> : <Plus />}
           </button>
@@ -59,7 +77,10 @@ function MovieCard2({
             aria-label={
               isInFavorites ? "Remove from favorites" : "Add to favorites"
             }
-            onClick={() => onToggleFavorite(movie)}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(movie);
+            }}
           >
             <FontAwesomeIcon icon={isInFavorites ? faHeartSolid : faHeart} />
           </button>
@@ -92,7 +113,11 @@ function MovieCard2({
           <span>{rating}</span>
         </div>
 
-        <button type="button" className="movie-card2__trailer-button">
+        <button
+          type="button"
+          className="movie-card2__trailer-button"
+          onClick={(event) => event.stopPropagation()}
+        >
           <FontAwesomeIcon icon={faPlay} />
           <span>Watch trailer</span>
         </button>

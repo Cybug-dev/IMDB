@@ -70,8 +70,6 @@ function FeaturedMovies({
             onToggleFavorite={onToggleFavorite}
             isInWatchlist={watchlist.some((m) => m.id === movie.id)}
             isInFavorites={favorites.some((m) => m.id === movie.id)}
-            watchlist={watchlist}
-            favorites={favorites}
           />
         ))}
       </div>
