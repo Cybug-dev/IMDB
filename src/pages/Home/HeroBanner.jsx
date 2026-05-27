@@ -6,6 +6,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faCircleInfo,
+  faClock,
   faHeart as faHeartSolid,
   faPlay,
   faStar,
@@ -229,7 +230,7 @@ function HeroBanner({
         <div className="hero-banner__meta">
           <span>{movie.release_date?.split("-")[0]}</span>
           <span className="hero-banner__dot" aria-hidden="true" />
-          {runtime && <span>{runtime}</span>}
+          {runtime && <span><FontAwesomeIcon icon= {faClock} /> {runtime}</span>}
           {runtime && <span className="hero-banner__dot" aria-hidden="true" />}
           <span className="hero-banner__genre">{primaryGenre}</span>
         </div>

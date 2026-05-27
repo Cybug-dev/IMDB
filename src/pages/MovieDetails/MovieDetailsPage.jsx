@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMovieDetails } from "../../services/tmdb";
 import MovieHeroSection from "./MovieHeroSection";
+import CastSection from "./CastSection";
+import CastModal from "./CastModal";
 
 function MovieDetailsPage({
   onToggleWatchlist,
@@ -15,6 +17,7 @@ function MovieDetailsPage({
     movie: null,
     error: null,
   });
+  const [isCastModalOpen, setIsCastModalOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return undefined;
@@ -27,10 +30,12 @@ function MovieDetailsPage({
         const director = movieDetails.credits?.crew?.find(
           (person) => person.job === "Director",
         )?.name;
+       const cast = movieDetails.credits?.cast;
 
         const movieWithDetails = {
           ...movieDetails,
           director,
+          cast,
           genres: movieDetails.genres ?? [],
         };
 
@@ -69,13 +74,27 @@ function MovieDetailsPage({
   if (!movie) return <div className="page-error">Movie not found.</div>;
 
   return (
-    <MovieHeroSection
-      movie={movie}
-      onToggleWatchlist={() => onToggleWatchlist(movie)}
-      onToggleFavorite={() => onToggleFavorite(movie)}
-      isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-      isInFavorites={favorites.some((m) => m.id === movie.id)}
-    />
+    <div className="movie-details-page">
+      <MovieHeroSection
+        movie={movie}
+        onToggleWatchlist={() => onToggleWatchlist(movie)}
+        onToggleFavorite={() => onToggleFavorite(movie)}
+        isInWatchlist={watchlist.some((m) => m.id === movie.id)}
+        isInFavorites={favorites.some((m) => m.id === movie.id)}
+      />
+      <CastSection 
+        cast={movie.cast}
+        onViewFullCast={() => setIsCastModalOpen(true)}
+        isCastModalOpen={isCastModalOpen}
+      />
+
+     {isCastModalOpen && (
+              <CastModal
+                cast={movie.cast}
+                onClose={() => setIsCastModalOpen(false)}
+              />
+            )}
+    </div>
   );
 }
 
