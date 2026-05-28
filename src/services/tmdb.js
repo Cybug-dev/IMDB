@@ -30,11 +30,19 @@ const readData = async (path) => {
   return data;
 };
 
-export const fetchTrendingMovies = async () => {
-  return readResults("/trending/movie/week");
+const randomPage = (maxPage = 5) => Math.floor(Math.random() * maxPage) + 1;
+
+export const fetchTrendingMovies = async (timeWindow = "day", page = 1) => {
+  return readResults(`/trending/movie/${timeWindow}?page=${page}`);
 };
-export const fetchTopRated = async () => {
-  return readResults("/movie/top_rated");
+export const fetchTopRated = async (page = 1) => {
+  return readResults(`/movie/top_rated?page=${page}`);
+};
+export const fetchPopularMovies = async (page = 1) => {
+  return readResults(`/movie/popular?page=${page}`);
+};
+export const fetchNowPlayingMovies = async (page = 1) => {
+  return readResults(`/movie/now_playing?page=${page}`);
 };
 export const fetchGenresListOnly = async () => {
   const data = await readData("/genre/movie/list");
@@ -65,9 +73,9 @@ const uniqueById = (items) => {
   });
 };
 
-export const fetchMoviesByGenre = async (genreId) => {
+export const fetchMoviesByGenre = async (genreId, page = 1) => {
   return readResults(
-    `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc`,
+    `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc&page=${page}`,
   );
 };
 
@@ -80,7 +88,9 @@ const fallbackMoviePaths = [
 
 const fetchRandomMovieFallback = async () => {
   const randomIndex = Math.floor(Math.random() * fallbackMoviePaths.length);
-  const fallbackMovies = await readResults(fallbackMoviePaths[randomIndex]);
+  const fallbackMovies = await readResults(
+    `${fallbackMoviePaths[randomIndex]}?page=${randomPage()}`,
+  );
 
   return withMediaType(fallbackMovies, "movie");
 };
@@ -90,8 +100,8 @@ export const fetchWhatToWatchDataset = async (tabId) => {
 
   if (tabId === "movie") {
     const [trendingMovies, actionMovies] = await Promise.all([
-      fetchTrendingMovies(),
-      fetchMoviesByGenre(28),
+      fetchTrendingMovies("day", randomPage(3)),
+      fetchMoviesByGenre(28, randomPage()),
     ]);
 
     results = uniqueById([
@@ -99,12 +109,28 @@ export const fetchWhatToWatchDataset = async (tabId) => {
       ...withMediaType(actionMovies, "movie"),
     ]);
   } else if (tabId === "tv") {
-    const tvShows = await readResults("/trending/tv/week");
-    results = withMediaType(tvShows, "tv");
+    const [trendingTvShows, popularTvShows] = await Promise.all([
+      readResults(`/trending/tv/day?page=${randomPage(3)}`),
+      readResults(`/tv/popular?page=${randomPage()}`),
+    ]);
+
+    results = uniqueById([
+      ...withMediaType(trendingTvShows, "tv"),
+      ...withMediaType(popularTvShows, "tv"),
+    ]);
   } else {
-    const mixedResults = await readResults("/trending/all/week");
-    results = mixedResults.filter(
-      (item) => item.media_type === "movie" || item.media_type === "tv",
+    const [mixedResults, popularMovies] = await Promise.all([
+      readResults(`/trending/all/day?page=${randomPage(3)}`),
+      fetchPopularMovies(randomPage()),
+    ]);
+
+    results = uniqueById(
+      [
+        ...mixedResults.filter(
+          (item) => item.media_type === "movie" || item.media_type === "tv",
+        ),
+        ...withMediaType(popularMovies, "movie"),
+      ],
     );
   }
 

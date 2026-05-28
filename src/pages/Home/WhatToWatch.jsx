@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FilterTabs from "../../components/FilterTabs";
 import { fetchWhatToWatchDataset } from "../../services/tmdb";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
@@ -10,6 +10,7 @@ function WhatToWatch({
   watchlist,
   favorites,
 }) {
+  const railRef = useRef(null);
   const [activeTab, setActiveTab] = useState(WATCH_FILTERS[0].id);
   const [requestState, setRequestState] = useState({
     tabId: null,
@@ -46,7 +47,14 @@ function WhatToWatch({
     };
   }, [activeTab]);
 
-  // const isLoading = requestState.tabId !== activeTab;
+  useEffect(() => {
+    railRef.current?.scrollTo({
+      left: 0,
+      behavior: "smooth",
+    });
+  }, [requestState.tabId]);
+
+  const isLoading = requestState.tabId !== activeTab;
   const currentError =
     requestState.tabId === activeTab ? requestState.error : null;
   const visibleMovies = requestState.movies.slice(0, 15);
@@ -69,7 +77,9 @@ function WhatToWatch({
           />
         </div>
 
-        <div className="what-to-watch__rail">
+        {isLoading && <div className="what-to-watch__status">Loading...</div>}
+
+        <div className="what-to-watch__rail" ref={railRef}>
           {visibleMovies.map((movie) => (
             <MovieCard2
               key={movie.id}
@@ -79,9 +89,7 @@ function WhatToWatch({
               isInWatchlist={watchlist.some((m) => m.id === movie.id)}
               isInFavorites={favorites.some((m) => m.id === movie.id)}
             />
-            
-          ))
-                      }
+          ))}
         </div>
         {currentError && (
           <div className="what-to-watch__status">{currentError}</div>

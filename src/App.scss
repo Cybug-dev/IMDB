@@ -28,6 +28,7 @@
 }
 
 .site-header.is-glass {
+  padding-block: 10px;
   background: rgba(6, 6, 6, 0.68);
   border-bottom-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
@@ -2190,9 +2191,9 @@
     font-size: 0.9rem;
   }
 
-  .hero-banner__rating::after {
-    display: none;
-  }
+  // .hero-banner__rating::after {
+  //   display: none;
+  // }
 
   .hero-banner__meta {
     gap: 10px;
@@ -2476,7 +2477,9 @@
   padding: 6px 2px 18px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   scroll-snap-type: x proximity;
+  overscroll-behavior-inline: contain;
 }
 
 .what-to-watch__rail::-webkit-scrollbar {

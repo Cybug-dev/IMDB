@@ -48,7 +48,6 @@ function MovieCard2({
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
           alt={movie.title}
           className="movie-card2__poster"
-          loading="lazy"
         />
         <div className="movie-card2__media-overlay" />
 

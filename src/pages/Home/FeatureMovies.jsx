@@ -11,6 +11,7 @@ function FeaturedMovies({
   onToggleFavorite,
   watchlist,
   favorites,
+  visibleLimit,
 }) {
   const normalizedTitle = title.toLowerCase();
   const isFeaturedSection = normalizedTitle.includes("featured");
@@ -25,14 +26,8 @@ function FeaturedMovies({
         : "default";
   const isCompactSection = isFeaturedSection || isTopRatedSection;
 
-  const visibleMovies =
-    sectionVariant === "featured"
-      ? movies.slice(8, 11)
-      : isTrendingSection
-        ? movies.slice(0, 4) 
-        : isTopRatedSection
-          ? movies.slice(4, 10)
-          : movies;
+  const fallbackLimit = isTrendingSection ? 4 : isFeaturedSection ? 3 : 6;
+  const visibleMovies = movies.slice(0, visibleLimit ?? fallbackLimit);
 
   return (
     <section

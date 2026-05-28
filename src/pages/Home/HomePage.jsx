@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import {
   fetchTrendingMovies,
   fetchTopRated,
+  fetchPopularMovies,
+  fetchNowPlayingMovies,
   fetchGenresListOnly,
   fetchMovieDetails,
 } from "../../services/tmdb";
@@ -21,17 +23,28 @@ function HomePage({
 }) {
   const [trending, setTrending] = useState([]);
   const [topRated, setTopRated] = useState([]);
+  const [featured, setFeatured] = useState([]);
   const [heroMovies, setHeroMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const randomPage = () => Math.floor(Math.random() * 5) + 1;
+
     const loadMovies = async () => {
       try {
-        const [trendingData, topRatedData, genreList] = await Promise.all([
-          fetchTrendingMovies(),
-          fetchTopRated(),
-          fetchGenresListOnly(),
+        const [
+          trendingData,
+          topRatedData,
+          featuredData,
+          heroData,
+          genreList,
+        ] = await Promise.all([
+          fetchTrendingMovies("day"),
+          fetchTopRated(randomPage()),
+          fetchPopularMovies(randomPage()),
+          fetchNowPlayingMovies(randomPage()),
+          fetchGenresListOnly(randomPage()),
         ]);
 
         const genreMap = {};
@@ -53,8 +66,10 @@ function HomePage({
                })),
           }));
 
-        const enrichedTrending = enrichWithGenres(trendingData);
-        const enrichedTopRated = enrichWithGenres(topRatedData);
+        const enrichedTrending = enrichWithGenres(trendingData).slice(0, 4);
+        const enrichedTopRated = enrichWithGenres(topRatedData).slice(0, 6);
+        const enrichedFeatured = enrichWithGenres(featuredData).slice(0, 3);
+        const enrichedHero = enrichWithGenres(heroData).slice(0, 5);
 
         // Fetch additional details for runtime and director
         const enrichWithDetails = async (movies) => {
@@ -82,12 +97,22 @@ function HomePage({
           return detailedMovies;
         };
 
-        const detailedTrending = await enrichWithDetails(enrichedTrending);
-        const detailedTopRated = await enrichWithDetails(enrichedTopRated);
+        const [
+          detailedTrending,
+          detailedTopRated,
+          detailedFeatured,
+          detailedHero,
+        ] = await Promise.all([
+          enrichWithDetails(enrichedTrending),
+          enrichWithDetails(enrichedTopRated),
+          enrichWithDetails(enrichedFeatured),
+          enrichWithDetails(enrichedHero),
+        ]);
 
         setTrending(detailedTrending);
         setTopRated(detailedTopRated);
-        setHeroMovies(detailedTrending.slice(0, 5));
+        setFeatured(detailedFeatured);
+        setHeroMovies(detailedHero);
       } catch (loadError) {
         setError(
           loadError.message || "Failed to load movies. Please try again later.",
@@ -106,19 +131,22 @@ function HomePage({
   const sections = [
     {
       title: "Featured Movies",
-      movies: topRated,
+      movies: featured,
       LeftIcon: Award,
       RightIcon: Sparkles,
+      visibleLimit: 3,
     },
     {
       title: "Trending Now",
       movies: trending,
       LeftIcon: TrendingUp,
+      visibleLimit: 4,
     },
     {
       title: "Top Rated Movies",
       movies: topRated,
       LeftIcon: Star,
+      visibleLimit: 6,
     },
   ];
 
@@ -151,6 +179,7 @@ function HomePage({
             onToggleFavorite={onToggleFavorite}
             watchlist={watchlist}
             favorites={favorites}
+            visibleLimit={section.visibleLimit}
           />
         ))}
         <BrowseByGenre onNavigate={onNavigate} />
