@@ -49,7 +49,7 @@ function WhatToWatch({
   // const isLoading = requestState.tabId !== activeTab;
   const currentError =
     requestState.tabId === activeTab ? requestState.error : null;
-  const visibleMovies = requestState.movies.slice(0, 10);
+  const visibleMovies = requestState.movies.slice(0, 15);
 
   return (
     <section className="what-to-watch">
