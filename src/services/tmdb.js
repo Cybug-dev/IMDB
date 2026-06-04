@@ -124,14 +124,12 @@ export const fetchWhatToWatchDataset = async (tabId) => {
       fetchPopularMovies(randomPage()),
     ]);
 
-    results = uniqueById(
-      [
-        ...mixedResults.filter(
-          (item) => item.media_type === "movie" || item.media_type === "tv",
-        ),
-        ...withMediaType(popularMovies, "movie"),
-      ],
-    );
+    results = uniqueById([
+      ...mixedResults.filter(
+        (item) => item.media_type === "movie" || item.media_type === "tv",
+      ),
+      ...withMediaType(popularMovies, "movie"),
+    ]);
   }
 
   if (results.length > 0) {
@@ -167,3 +165,41 @@ export const fetchGenresWithImages = async (limit = 6, maxPosters = 5) => {
 export const fetchMovieDetails = async (movieId) => {
   return readData(`/movie/${movieId}?append_to_response=credits`);
 };
+
+export async function discoverRankingEngine() {
+  const fetchPopularMovies = async (page = 1) => {
+    return readResults(`/movie/popular?page=${page}`);
+  };
+  const fetchTrendingMovies = async (timeWindow = "day", page = 1) => {
+    return readResults(`/trending/movie/${timeWindow}?page=${page}`);
+  };
+  const fetchTopRated = async (page = 1) => {
+    return readResults(`/movie/top_rated?page=${page}`);
+  };
+
+  const [fetchPopularMoviesCopied, fetchTrendingMoviesCopied, fetchTopRatedCopied] =
+    await Promise.all([
+      fetchPopularMovies(randomPage()),
+      fetchTrendingMovies("day", randomPage(3)),
+      fetchTopRated(randomPage()),
+    ]);
+
+  const MoviesTypes = [
+    ...fetchPopularMoviesCopied,
+    ...fetchTrendingMoviesCopied,
+    ...fetchTopRatedCopied,
+  ];
+
+  const uniqueMovies = Array.from(
+    new Map(MoviesTypes?.map((movie) => [movie.id, movie])).values()
+  );
+
+  const scoredMovies = uniqueMovies.map((movie) => ({
+    ...movie,
+    customScore:
+      movie.vote_average * 2 + movie.popularity / 100 + movie.vote_count / 1000,   
+  }));
+
+
+  return [...scoredMovies].sort((a, b) => b.customScore - a.customScore);
+}

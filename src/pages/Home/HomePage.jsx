@@ -6,11 +6,13 @@ import {
   fetchNowPlayingMovies,
   fetchGenresListOnly,
   fetchMovieDetails,
+  discoverRankingEngine,
 } from "../../services/tmdb";
 import { Award, TrendingUp, Star, Sparkles } from "lucide-react";
 import HeroBanner from "./HeroBanner";
 import WhatToWatch from "./WhatToWatch";
 import FeaturedMovies from "./FeatureMovies";
+import TopRanked from "../Top Ranked/TopRanked";
 import BrowseByGenre from "./BrowseByGenre";
 
 function HomePage({
@@ -25,6 +27,7 @@ function HomePage({
   const [topRated, setTopRated] = useState([]);
   const [featured, setFeatured] = useState([]);
   const [heroMovies, setHeroMovies] = useState([]);
+  const [topRankedMovies, setTopRankedMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -38,13 +41,15 @@ function HomePage({
           topRatedData,
           featuredData,
           heroData,
+          topRankedData,
           genreList,
         ] = await Promise.all([
           fetchTrendingMovies("day"),
           fetchTopRated(randomPage()),
           fetchPopularMovies(randomPage()),
           fetchNowPlayingMovies(randomPage()),
-          fetchGenresListOnly(randomPage()),
+          discoverRankingEngine(),
+          fetchGenresListOnly(),
         ]);
 
         const genreMap = {};
@@ -113,6 +118,7 @@ function HomePage({
         setTopRated(detailedTopRated);
         setFeatured(detailedFeatured);
         setHeroMovies(detailedHero);
+        setTopRankedMovies(topRankedData.slice(0, 10));
       } catch (loadError) {
         setError(
           loadError.message || "Failed to load movies. Please try again later.",
@@ -182,6 +188,7 @@ function HomePage({
             visibleLimit={section.visibleLimit}
           />
         ))}
+        <TopRanked movies={topRankedMovies} />
         <BrowseByGenre onNavigate={onNavigate} />
       </div>
     </main>
