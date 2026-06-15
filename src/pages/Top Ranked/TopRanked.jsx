@@ -13,7 +13,8 @@ function TopRanked({
     : [];
   const topTenMovies = safeMovies.slice(0, 10);
   const featured = topTenMovies.slice(0, 3);
-  const compact = topTenMovies.slice(3);
+  const mediumFeatured = topTenMovies.slice(0, 6);
+  const compact = topTenMovies.slice(3, 9);
 
   if (isLoading) {
     return <section className="top-10-section">Loading...</section>;
@@ -34,11 +35,27 @@ function TopRanked({
   return (
     <section className="top-10-section">
       <div className="top-10-section__header">
-        <h2 className="top-10-section__title">{title}</h2>
+        <h2 className="top-10-section__title">
+          <span>{title}</span>
+          <span className="top-10-section__title-arrow" aria-hidden="true">
+            &rsaquo;
+          </span>
+        </h2>
       </div>
 
       <div className="top-10-section__featured">
         {featured.map((movie, index) => (
+          <TopRankedCard
+            key={movie.id}
+            movie={movie}
+            rank={index + 1}
+            variant="featured"
+          />
+        ))}
+      </div>
+
+      <div className="top-10-section__featured top-10-section__featured--medium">
+        {mediumFeatured.map((movie, index) => (
           <TopRankedCard
             key={movie.id}
             movie={movie}

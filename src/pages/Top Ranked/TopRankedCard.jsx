@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faStar } from "@fortawesome/free-solid-svg-icons";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
@@ -16,6 +16,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   const releaseDate = movie.release_date || movie.first_air_date;
   const releaseYear = releaseDate ? releaseDate.split("-")[0] : "TBA";
   const runtime = movie.runtime ? `${movie.runtime}m` : "N/A";
+  const ratingCert = movie.rating || movie.certification || movie.content_rating || "R";
   const rating =
     typeof movie.vote_average === "number"
       ? movie.vote_average.toFixed(1)
@@ -27,6 +28,10 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
     return (
       <article className={cardClassName}>
         <div className="top-ranked-card__poster">
+          {/* <button type="button" className="top-ranked-card__add" aria-label={`Add ${title}`}>
+            <FontAwesomeIcon icon={faPlus} />
+          </button> */}
+          <span className="top-ranked-card__badge">#{rank}</span>
           {posterPath ? (
             <img src={posterPath} alt={title} />
           ) : (
@@ -35,8 +40,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
         </div>
 
         <div className="top-ranked-card__body">
-          <span className="top-ranked-card__badge">#{rank}</span>
-          <h3 className="top-ranked-card__title">{title}</h3>
+          <h3 className="top-ranked-card__title compact">{title}</h3>
         </div>
       </article>
     );
@@ -45,6 +49,9 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   return (
     <article className={cardClassName}>
       <div className="top-ranked-card__poster">
+        <button type="button" className="top-ranked-card__add" aria-label={`Add ${title}`}>
+          <FontAwesomeIcon icon={faPlus} />
+        </button>
         {posterPath ? (
           <img src={posterPath} alt={title} />
         ) : (
@@ -59,17 +66,25 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
         <div className="top-ranked-card__meta">
           <span>{releaseYear}</span>
           <span>{runtime}</span>
+          <span>{ratingCert}</span>
         </div>
 
         <div className="top-ranked-card__rating">
-          <FontAwesomeIcon icon={faStar} />
-          <span>{rating}</span>
-          <span>({formatVotes(movie.vote_count)})</span>
+          <span className="top-ranked-card__rating-score">
+            <FontAwesomeIcon icon={faStar} />
+            <span>{rating}</span>
+            <span>({formatVotes(movie.vote_count)})</span>
+          </span>
+
+          <button type="button" className="top-ranked-card__rate">
+            <FontAwesomeIcon icon={faStar} />
+            <span>Rate</span>
+          </button>
         </div>
 
-        <button type="button" className="top-ranked-card__rate">
-          <FontAwesomeIcon icon={faStar} />
-          <span>Rate</span>
+        <button type="button" className="top-ranked-card__watched">
+          <FontAwesomeIcon icon={faEye} />
+          <span>Mark as watched</span>
         </button>
 
         <p className="top-ranked-card__overview">{overview}</p>
