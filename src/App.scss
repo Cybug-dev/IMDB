@@ -2135,10 +2135,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .movie-card__poster-wrap {
-    height: 236px;
-  }
-
   .collection-page__inner {
     padding-top: 24px;
     padding-bottom: 56px;
@@ -2173,11 +2169,6 @@
     width: 32px;
     justify-content: center;
     padding: 0;
-  }
-
-  .featured-movies--trending .featured-movies__grid,
-  .featured-movies--compact .featured-movies__grid {
-    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -2217,8 +2208,9 @@
     margin-bottom: 18px;
   }
 
-  .movie-card__poster-wrap {
-    height: 220px;
+    .featured-movies--trending .featured-movies__grid,
+  .featured-movies--compact .featured-movies__grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .movie-card__info {
@@ -2425,7 +2417,7 @@
 }
 
 .what-to-watch__title {
-  margin: 0 0 0 14px;
+  margin: 0 0 0 2px;
 }
 
 .what-to-watch__panel {
@@ -2789,8 +2781,9 @@
 
 .top-10-section__title-arrow {
   color: var(--text-primary);
-  font-size: 1.45em;
-  line-height: 0.8;
+  font-size: 1.9em;
+  margin-left: 5px;
+  margin-bottom: 3px;
 }
 
 .top-10-section__featured {
@@ -2846,10 +2839,11 @@
   @include interactive-card;
   min-height: 0;
   padding: 10px;
+  padding-bottom: 2rem;
   border-radius: 8px;
   background: #1f1f1f;
   display: grid;
-  grid-template-columns: clamp(108px, 10vw, 126px) minmax(0, 1fr);
+  grid-template-columns: clamp(160px, 10vw, 190px) minmax(0, 1fr);
   align-items: start;
   column-gap: 12px;
   row-gap: 12px;
@@ -2933,7 +2927,7 @@
 .top-ranked-card__badge {
   min-height: 22px;
   padding: 0 10px;
-  border-radius: 0 6px 6px 0;
+  border-radius: 5px 0 15px 5px;
   background: #0b7bdd;
   color: #ffffff;
   display: inline-flex;
@@ -3032,15 +3026,18 @@
 }
 
 .top-ranked-card__overview {
-  @include line-clamp(5);
+  @include line-clamp(4);
   grid-column: 1 / -1;
   margin: 0;
   color: rgba(255, 255, 255, 0.86);
   font-size: 0.9rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .top-ranked-card--compact {
+  background-color: #1f1f1f;
+  padding-bottom: 1rem;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -3064,9 +3061,9 @@
 .top-ranked-card--compact .top-ranked-card__badge {
   position: absolute;
   top: 0;
-  left: 32px;
+  left: 0;
   z-index: 2;
-  border-radius: 0 0 6px 0;
+  border-radius: 0 0 10px 0;
 }
 
 .top-ranked-card--compact .top-ranked-card__body {
@@ -3076,6 +3073,7 @@
 .top-ranked-card--compact .top-ranked-card__title {
   @include line-clamp(2);
   font-size: 0.9rem;
+  margin-left: 8px;
 }
 
 @media (max-width: 1024px) {
@@ -3093,7 +3091,8 @@
   }
 
   .top-ranked-card--featured {
-    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-columns: 110px minmax(0, 1fr);
+    padding-bottom: 10px;
   }
 
   .top-ranked-card__overview {

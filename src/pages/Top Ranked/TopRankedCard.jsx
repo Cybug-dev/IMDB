@@ -28,9 +28,6 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
     return (
       <article className={cardClassName}>
         <div className="top-ranked-card__poster">
-          <button type="button" className="top-ranked-card__add" aria-label={`Add ${title}`}>
-            <FontAwesomeIcon icon={faPlus} />
-          </button>
           <span className="top-ranked-card__badge">#{rank}</span>
           {posterPath ? (
             <img src={posterPath} alt={title} />
