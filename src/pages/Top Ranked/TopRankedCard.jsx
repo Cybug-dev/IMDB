@@ -8,6 +8,18 @@ const formatVotes = (count) => {
   return count >= 1000 ? `${(count / 1000).toFixed(0)}K` : count;
 };
 
+const formatRuntime = (minutes) => {
+  if (minutes == null) return "N/A";
+  const mins = Number(minutes);
+  if (Number.isNaN(mins) || mins <= 0) return "N/A";
+  const hours = Math.floor(mins / 60);
+  const remaining = mins % 60;
+  if (hours > 0) {
+    return remaining > 0 ? `${hours}h ${remaining}m` : `${hours}h`;
+  }
+  return `${remaining}m`;
+};
+
 function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   const posterPath = movie.poster_path
     ? `${IMG_BASE}${movie.poster_path}`
@@ -15,7 +27,13 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   const title = movie.title || movie.name || "Untitled";
   const releaseDate = movie.release_date || movie.first_air_date;
   const releaseYear = releaseDate ? releaseDate.split("-")[0] : "TBA";
-  const runtime = movie.runtime ? `${movie.runtime}m` : "N/A";
+  const runtimeMinutes =
+    typeof movie.runtime === "number"
+      ? movie.runtime
+      : Array.isArray(movie.episode_run_time) && movie.episode_run_time.length
+      ? movie.episode_run_time[0]
+      : null;
+  const runtime = formatRuntime(runtimeMinutes);
   const ratingCert = movie.rating || movie.certification || movie.content_rating || "R";
   const rating =
     typeof movie.vote_average === "number"

@@ -75,6 +75,7 @@ function HomePage({
         const enrichedTopRated = enrichWithGenres(topRatedData).slice(0, 6);
         const enrichedFeatured = enrichWithGenres(featuredData).slice(0, 3);
         const enrichedHero = enrichWithGenres(heroData).slice(0, 5);
+        const enrichedTopRanked = enrichWithGenres(topRankedData).slice(0, 10);
 
         // Fetch additional details for runtime and director
         const enrichWithDetails = async (movies) => {
@@ -107,18 +108,20 @@ function HomePage({
           detailedTopRated,
           detailedFeatured,
           detailedHero,
+          detailedTopRanked
         ] = await Promise.all([
           enrichWithDetails(enrichedTrending),
           enrichWithDetails(enrichedTopRated),
           enrichWithDetails(enrichedFeatured),
           enrichWithDetails(enrichedHero),
+          enrichWithDetails(enrichedTopRanked),
         ]);
 
         setTrending(detailedTrending);
         setTopRated(detailedTopRated);
         setFeatured(detailedFeatured);
         setHeroMovies(detailedHero);
-        setTopRankedMovies(topRankedData.slice(0, 10));
+        setTopRankedMovies(detailedTopRanked);
       } catch (loadError) {
         setError(
           loadError.message || "Failed to load movies. Please try again later.",
