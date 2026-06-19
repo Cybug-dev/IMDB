@@ -3,7 +3,7 @@ import FilterTabs from "../../components/FilterTabs";
 import { fetchWhatToWatchDataset } from "../../services/tmdb";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
 import MovieCard2 from "./MovieCard2";
-  
+
 function WhatToWatch({
   onToggleWatchlist,
   onToggleFavorite,
@@ -17,10 +17,14 @@ function WhatToWatch({
     movies: [],
     error: null,
   });
+  const [loadingDelay, setLoadingDelay] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-
+    const delayTimer = window.setTimeout(() => {
+      if (!cancelled) setLoadingDelay(false);
+    }, 2000);
+    const startTimer = window.setTimeout(() => setLoadingDelay(true), 0);
     fetchWhatToWatchDataset(activeTab)
       .then((movies) => {
         if (!cancelled) {
@@ -36,14 +40,15 @@ function WhatToWatch({
           setRequestState({
             tabId: activeTab,
             movies: [],
-            error:
-              error.message || "Failed to load recommendations right now.",
+            error: error.message || "Failed to load recommendations right now.",
           });
         }
       });
 
     return () => {
       cancelled = true;
+      clearTimeout(delayTimer);
+      clearTimeout(startTimer);
     };
   }, [activeTab]);
 
@@ -54,7 +59,7 @@ function WhatToWatch({
     });
   }, [requestState.tabId]);
 
-  const isLoading = requestState.tabId !== activeTab;
+  const isLoading = requestState.tabId !== activeTab || loadingDelay;
   const currentError =
     requestState.tabId === activeTab ? requestState.error : null;
   const visibleMovies = requestState.movies.slice(0, 15);
@@ -77,9 +82,13 @@ function WhatToWatch({
           />
         </div>
 
-        {isLoading && <div className="what-to-watch__status">Loading...</div>}
-
-        <div className="what-to-watch__rail" ref={railRef}>
+        {isLoading ? (
+          <div className="what-to-watch__loading">
+            <div className="what-to-watch__spinner" />
+          </div>
+        ) : (
+          <div
+          className="what-to-watch__rail" ref={railRef}>
           {visibleMovies.map((movie) => (
             <MovieCard2
               key={movie.id}
@@ -91,6 +100,7 @@ function WhatToWatch({
             />
           ))}
         </div>
+        )}
         {currentError && (
           <div className="what-to-watch__status">{currentError}</div>
         )}
