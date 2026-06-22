@@ -14,6 +14,7 @@ import WhatToWatch from "./WhatToWatch";
 import FeaturedMovies from "./FeatureMovies";
 import TopRanked from "../Top Ranked/TopRanked";
 import BrowseByGenre from "./BrowseByGenre";
+import SectionState from "../../components/Section State/SectionState";
 
 function HomePage({
   onToggleWatchlist,
@@ -36,6 +37,9 @@ function HomePage({
 
     const loadMovies = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         const [
           trendingData,
           topRatedData,
@@ -64,11 +68,11 @@ function HomePage({
             //^^^^^^
             // spread existing movie data, then override genre_ids
             // with a resolved genres array
-            genres: (movie.genre_ids ?? [])
-              .map((id) => ({ id, 
-            // If genreMap[id] is null or undefined, use 'Unknown'
-                name: genreMap[id] ?? "Unknown",
-               })),
+            genres: (movie.genre_ids ?? []).map((id) => ({
+              id,
+              // If genreMap[id] is null or undefined, use 'Unknown'
+              name: genreMap[id] ?? "Unknown",
+            })),
           }));
 
         const enrichedTrending = enrichWithGenres(trendingData).slice(0, 4);
@@ -108,7 +112,7 @@ function HomePage({
           detailedTopRated,
           detailedFeatured,
           detailedHero,
-          detailedTopRanked
+          detailedTopRanked,
         ] = await Promise.all([
           enrichWithDetails(enrichedTrending),
           enrichWithDetails(enrichedTopRated),
@@ -124,7 +128,8 @@ function HomePage({
         setTopRankedMovies(detailedTopRanked);
       } catch (loadError) {
         setError(
-          loadError.message || "Failed to load movies. Please try again later.",
+          loadError.message ||
+            "Unable to load movies. Please check your internet connection.",
         );
       } finally {
         setLoading(false);
@@ -134,8 +139,8 @@ function HomePage({
     loadMovies();
   }, []);
 
-  if (loading) return <div className="page-loading">Loading...</div>;
-  if (error) return <div className="page-error">{error}</div>;
+  // Render page immediately and let individual sections handle their
+  // loading / error states via `SectionState` (passed through props).
 
   const sections = [
     {
@@ -169,6 +174,7 @@ function HomePage({
         favorites={favorites}
         contentBoundaryRef={heroContentBoundaryRef}
       />
+
       <WhatToWatch
         onToggleWatchlist={onToggleWatchlist}
         onToggleFavorite={onToggleFavorite}
@@ -189,9 +195,14 @@ function HomePage({
             watchlist={watchlist}
             favorites={favorites}
             visibleLimit={section.visibleLimit}
+            loading={loading}
+            error={error}
           />
         ))}
-        <TopRanked movies={topRankedMovies} />
+        <TopRanked movies={topRankedMovies} 
+        loading={loading} 
+        error={error} />
+
         <BrowseByGenre onNavigate={onNavigate} />
       </div>
     </main>

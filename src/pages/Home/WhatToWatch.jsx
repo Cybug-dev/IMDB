@@ -102,7 +102,9 @@ function WhatToWatch({
         </div>
         )}
         {currentError && (
-          <div className="what-to-watch__status">{currentError}</div>
+          <div className="what-to-watch__status"> <div className="what-to-watch__loading">
+            <div className="what-to-watch__spinner" />
+          </div></div>
         )}
       </div>
     </section>

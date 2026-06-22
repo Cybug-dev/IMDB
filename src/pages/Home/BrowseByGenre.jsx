@@ -3,22 +3,39 @@ import GenreCard from "./GenreCard";
 import React, { useState, useEffect } from "react";
 import { fetchGenresWithImages } from "../../services/tmdb";
 import { useGenreRotationEngine } from "../../hooks/useGenreRotationEngine";
+import SectionState from "../../components/Section State/SectionState";
 
 function BrowseByGenre({ onNavigate }) {
   const [genres, setGenres] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const isLoading = Boolean(loading);
+  const hasError = Boolean(error);
+  const hasData = Array.isArray(genres) && genres.length > 0;
 
   useEffect(() => {
     let cancelled = false;
 
-    fetchGenresWithImages(6, 5)
-      .then((genreList) => {
+    const loadGenres = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const genreList = await fetchGenresWithImages(6, 5);
         if (!cancelled && Array.isArray(genreList)) {
           setGenres(genreList);
         }
-      })
-      .catch((error) => {
-        console.warn("Failed to load genre posters:", error);
-      });
+      } catch (err) {
+        if (!cancelled) {
+          setError(err.message || "Failed to load genres.");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadGenres();
 
     return () => {
       cancelled = true;
@@ -46,7 +63,10 @@ function BrowseByGenre({ onNavigate }) {
         Browse by Genre
       </h2>
       <p className="description">Discover movies by your favorite genres</p>
-      <div className="genre-list">
+       {isLoading || hasError || !hasData ? (
+        <SectionState loading={isLoading} error={error} data={hasData ? [1] : []} />
+      ) : (
+       <div className="genre-list">
         {genreEngine.genres.map((genre) => (
           <GenreCard
             key={genre.id}
@@ -55,7 +75,9 @@ function BrowseByGenre({ onNavigate }) {
             onClick={() => handleGenreClick(genre)}
           />
         ))}
-      </div>
+         </div>
+      )}
+     
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import MovieCard from "./MovieCard";
+import SectionState from "../../components/Section State/SectionState";
 
 function FeaturedMovies({
   title,
@@ -12,6 +13,8 @@ function FeaturedMovies({
   watchlist,
   favorites,
   visibleLimit,
+  loading = false,
+  error = null,
 }) {
   const normalizedTitle = title.toLowerCase();
   const isFeaturedSection = normalizedTitle.includes("featured");
@@ -28,6 +31,9 @@ function FeaturedMovies({
 
   const fallbackLimit = isTrendingSection ? 4 : isFeaturedSection ? 3 : 6;
   const visibleMovies = movies.slice(0, visibleLimit ?? fallbackLimit);
+  const isLoading = Boolean(loading);
+  const hasError = Boolean(error);
+  const hasData = Array.isArray(visibleMovies) && visibleMovies.length > 0;  
 
   return (
     <section
@@ -56,18 +62,25 @@ function FeaturedMovies({
         </button>
       </div>
 
-      <div className="featured-movies__grid">
-        {visibleMovies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            movie={movie}
-            onToggleWatchlist={onToggleWatchlist}
-            onToggleFavorite={onToggleFavorite}
-            isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-            isInFavorites={favorites.some((m) => m.id === movie.id)}
-          />
-        ))}
-      </div>
+      {isLoading || hasError || !hasData ? (
+        <SectionState 
+        loading={isLoading} 
+        error={error} 
+        data={visibleMovies} />
+      ) : (
+        <div className="featured-movies__grid">
+          {visibleMovies.map((movie) => (
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              onToggleWatchlist={onToggleWatchlist}
+              onToggleFavorite={onToggleFavorite}
+              isInWatchlist={watchlist.some((m) => m.id === movie.id)}
+              isInFavorites={favorites.some((m) => m.id === movie.id)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

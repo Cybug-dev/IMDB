@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchMoviesByGenre } from "../../services/tmdb";
 import MovieCard from "../Home/MovieCard";
+import SectionState from "../../components/Section State/SectionState";
 
 function GenrePage({
   genre,
@@ -55,9 +56,7 @@ function GenrePage({
   const isLoading = requestState.genreId !== genre.id && !requestState.error;
   const movies = requestState.movies;
   const error = requestState.error;
-
-  if (isLoading) return <div className="page-loading">Loading...</div>;
-  if (error) return <div className="page-error">{error}</div>;
+  const hasData = movies.length > 0;
 
   return (
     <main className="collection-page">
@@ -79,18 +78,22 @@ function GenrePage({
           </button>
         </div>
 
-        <div className="featured-movies__grid">
-          {movies.slice(0, 12).map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onToggleWatchlist={onToggleWatchlist}
-              onToggleFavorite={onToggleFavorite}
-              isInWatchlist={watchlist.some((item) => item.id === movie.id)}
-              isInFavorites={favorites.some((item) => item.id === movie.id)}
-            />
-          ))}
-        </div>
+        {isLoading || error || !hasData ? (
+          <SectionState loading={isLoading} error={error} data={hasData ? [1] : []} />
+        ) : (
+          <div className="featured-movies__grid">
+            {movies.slice(0, 12).map((movie) => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                onToggleWatchlist={onToggleWatchlist}
+                onToggleFavorite={onToggleFavorite}
+                isInWatchlist={watchlist.some((item) => item.id === movie.id)}
+                isInFavorites={favorites.some((item) => item.id === movie.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );

@@ -4,6 +4,7 @@ import { fetchMovieDetails } from "../../services/tmdb";
 import MovieHeroSection from "./MovieHeroSection";
 import CastSection from "./CastSection";
 import CastModal from "./CastModal";
+import SectionState from "../../components/Section State/SectionState";
 
 function MovieDetailsPage({
   onToggleWatchlist,
@@ -68,10 +69,17 @@ function MovieDetailsPage({
   const currentError =
     requestState.movieId === id ? requestState.error : null;
   const movie = requestState.movie;
+  const hasData = Boolean(movie);
 
-  if (isLoading) return <div className="page-loading">Loading...</div>;
-  if (currentError) return <div className="page-error">{currentError}</div>;
-  if (!movie) return <div className="page-error">Movie not found.</div>;
+  if (!id) return <div className="page-error">Movie ID not found.</div>;
+
+  if (isLoading || currentError || !hasData) {
+    return (
+      <div className="movie-details-page">
+        <SectionState loading={isLoading} error={currentError} data={hasData ? [1] : []} />
+      </div>
+    );
+  }
 
   return (
     <div className="movie-details-page">

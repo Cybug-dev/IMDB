@@ -1,12 +1,14 @@
 import TopRankedCard from "./TopRankedCard";
+import SectionState from "../../components/Section State/SectionState";
 
 function TopRanked({
   title = "Top 10 on IMDb this week",
   movies,
-  isLoading = false,
+  loading = false,
   error = null,
-  emptyMessage = "No ranked movies available.",
 }) {
+  const isLoading = Boolean(loading);
+  const hasError = Boolean(error);
   const hasInvalidMovies = movies != null && !Array.isArray(movies);
   const safeMovies = Array.isArray(movies)
     ? movies.filter((movie) => movie?.id != null)
@@ -15,21 +17,14 @@ function TopRanked({
   const featured = topTenMovies.slice(0, 3);
   const mediumFeatured = topTenMovies.slice(0, 6);
   const compact = topTenMovies.slice(3, 9);
+  const hasData = topTenMovies.length > 0;
 
-  if (isLoading) {
-    return <section className="top-10-section">Loading...</section>;
-  }
-
-  if (error || hasInvalidMovies) {
+  if (isLoading || hasError || !hasData) {
     return (
       <section className="top-10-section">
-        {error || "Invalid ranked movie data."}
+        <SectionState loading={isLoading} error={error || (hasInvalidMovies ? "Invalid ranked movie data." : null)} data={hasData ? [1] : []} />
       </section>
     );
-  }
-
-  if (topTenMovies.length === 0) {
-    return <section className="top-10-section">{emptyMessage}</section>;
   }
 
   return (
