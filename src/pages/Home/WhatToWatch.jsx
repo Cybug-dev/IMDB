@@ -102,9 +102,9 @@ function WhatToWatch({
         </div>
         )}
         {currentError && (
-          <div className="what-to-watch__status"> <div className="what-to-watch__loading">
-            <div className="what-to-watch__spinner" />
-          </div></div>
+          <div className="what-to-watch__status">
+            <p>Hey check your internet connection</p>
+          </div>
         )}
       </div>
     </section>

@@ -17,14 +17,11 @@
   background: transparent;
   border-bottom: 1px solid transparent;
   box-shadow: none;
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
   transition:
     background-color 0.24s ease,
     border-color 0.24s ease,
     box-shadow 0.24s ease,
     backdrop-filter 0.24s ease,
-    -webkit-backdrop-filter 0.24s ease;
 }
 
 .site-header.is-glass {
@@ -32,7 +29,6 @@
   border-bottom-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
   backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
 /* Header inner alignment */
@@ -1450,12 +1446,12 @@
   height: 1.1rem;
   width: 1.1rem;
   stroke-width: 2px;
-  margin-left: 10px;
   color: var(--imdb-yellow);
 }
 
 .featured-movies__head .lucide-sparkels {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  margin-left: 10px;
 }
 
 .featured-movies__trending-dots {
@@ -2208,9 +2204,14 @@
     margin-bottom: 18px;
   }
 
-    .featured-movies--trending .featured-movies__grid,
+  .featured-movies--trending .featured-movies__grid,
   .featured-movies--compact .featured-movies__grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(0, minmax(0, 1fr));
+
+    @media (max-width: 499px) {
+       grid-template-columns: minmax(0, 1fr);
+    }
+
   }
 
   .movie-card__info {
