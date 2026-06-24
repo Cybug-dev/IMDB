@@ -30,18 +30,18 @@ const readData = async (path) => {
   return data;
 };
 
-const randomPage = (maxPage = 5) => Math.floor(Math.random() * maxPage) + 1;
+const randomPage = (maxPage = 10) => Math.floor(Math.random() * maxPage) + 1;
 
-export const fetchTrendingMovies = async (timeWindow = "day", page = 1) => {
+export const fetchTrendingMovies = async (timeWindow = "day", page = randomPage() ) => {
   return readResults(`/trending/movie/${timeWindow}?page=${page}`);
 };
-export const fetchTopRated = async (page = 1) => {
+export const fetchTopRated = async (page = randomPage()) => {
   return readResults(`/movie/top_rated?page=${page}`);
 };
-export const fetchPopularMovies = async (page = 1) => {
+export const fetchPopularMovies = async (page = randomPage()) => {
   return readResults(`/movie/popular?page=${page}`);
 };
-export const fetchNowPlayingMovies = async (page = 1) => {
+export const fetchNowPlayingMovies = async (page = randomPage()) => {
   return readResults(`/movie/now_playing?page=${page}`);
 };
 export const fetchGenresListOnly = async () => {
@@ -73,7 +73,7 @@ const uniqueById = (items) => {
   });
 };
 
-export const fetchMoviesByGenre = async (genreId, page = 1) => {
+export const fetchMoviesByGenre = async (genreId, page = randomPage()) => {
   return readResults(
     `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc&page=${page}`,
   );
@@ -173,7 +173,7 @@ export async function discoverRankingEngine() {
   const fetchTrendingMovies = async (timeWindow = "day", page = 1) => {
     return readResults(`/trending/movie/${timeWindow}?page=${page}`);
   };
-  const fetchTopRated = async (page = 1) => {
+  const fetchTopRated = async (page = randomPage()) => {
     return readResults(`/movie/top_rated?page=${page}`);
   };
 

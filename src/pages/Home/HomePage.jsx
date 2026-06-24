@@ -3,7 +3,7 @@ import {
   fetchTrendingMovies,
   fetchTopRated,
   fetchPopularMovies,
-  fetchNowPlayingMovies,
+  // fetchNowPlayingMovies,
   fetchGenresListOnly,
   fetchMovieDetails,
   discoverRankingEngine,
@@ -49,9 +49,9 @@ function HomePage({
           genreList,
         ] = await Promise.all([
           fetchTrendingMovies("day"),
-          fetchTopRated(randomPage()),
+          fetchTopRated(),
           fetchPopularMovies(randomPage()),
-          fetchNowPlayingMovies(randomPage()),
+          fetchTrendingMovies("week"),
           discoverRankingEngine(),
           fetchGenresListOnly(),
         ]);
