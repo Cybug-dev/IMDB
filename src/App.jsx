@@ -12,8 +12,10 @@ import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 import GenrePage from "./pages/Genre/GenrePage";
 import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
+import MoviesPage from "./pages/Movies/MoviesPage";
 
 const getPageFromPath = (pathname) => {
+  if (pathname.startsWith("/movies")) return "movies";
   if (pathname.startsWith("/watchlist")) return "watchlist";
   if (pathname.startsWith("/favorites")) return "favorites";
   if (pathname.startsWith("/genre")) return "genre";
@@ -78,6 +80,7 @@ function App() {
 
     const paths = {
       home: "/",
+      movies: "/movies",
       watchlist: "/watchlist",
       favorites: "/favorites",
     };
@@ -122,6 +125,17 @@ function App() {
               favorites={favorites}
               onNavigate={handleNavigate}
               heroContentBoundaryRef={setHeroContentBoundaryNode}
+            />
+          }
+        />
+        <Route
+          path="/movies"
+          element={
+            <MoviesPage
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+              watchlist={watchlist}
+              favorites={favorites}
             />
           }
         />
