@@ -177,12 +177,14 @@ export function useHeroCarousel(items, intervalMs = DEFAULT_INTERVAL_MS) {
   useEffect(() => {
     if (isPaused || itemCount <= 1) return undefined;
 
-    const intervalId = window.setInterval(goToNext, intervalMs);
+    const intervalId = window.setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % itemCount);
+    }, intervalMs);
 
     return () => {
       window.clearInterval(intervalId);
     };
-  }, [goToNext, intervalMs, isPaused, itemCount]);
+  }, [intervalMs, isPaused, itemCount]);
 
   useEffect(
     () => () => {

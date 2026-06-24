@@ -1,0 +1,194 @@
+main:has(> section[aria-label="Featured movies"]) {
+  padding-top: var(--runtime-header-height);
+  background: var(--page-bg);
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] {
+  position: relative;
+  min-height: clamp(360px, 50vh, 520px);
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--surface);
+  color: var(--text-primary);
+  touch-action: pan-y;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(72px, 10vw, 112px) var(--content-rail) clamp(30px, 5vw, 52px);
+  cursor: pointer;
+  will-change: opacity, transform;
+  animation: movies-hero-slide-in var(--hero-transition-duration)
+    var(--hero-transition-ease) both;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before,
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before {
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.52) 42%, rgba(5, 5, 5, 0.16) 100%),
+    linear-gradient(180deg, rgba(5, 5, 5, 0.14) 0%, rgba(5, 5, 5, 0.1) 44%, var(--page-bg) 100%);
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::after {
+  z-index: -3;
+  background: var(--surface);
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.015);
+  animation: movies-hero-image-in var(--hero-transition-duration)
+    var(--hero-transition-ease) both;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article > div {
+  width: min(100%, var(--hero-content-width));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: default;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(2.6rem, 6vw, 4.35rem);
+  line-height: 0.98;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul {
+  max-width: min(100%, 660px);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  color: var(--text-primary);
+  font-size: var(--hero-meta-size);
+  font-weight: 700;
+  line-height: 1.35;
+  list-style: none;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] li {
+  display: inline-flex;
+  align-items: center;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] li:not(:last-child)::after {
+  content: ",";
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul + div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul + div button:nth-child(1) {
+  order: 1;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul + div button:nth-child(2) {
+  order: 3;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul + div button:nth-child(3) {
+  order: 2;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] nav {
+  display: none;
+}
+
+@keyframes movies-hero-slide-in {
+  from {
+    opacity: 0.12;
+    transform: translateX(42px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes movies-hero-image-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+}
+
+@media (max-width: 768px) {
+  main:has(> section[aria-label="Featured movies"]) {
+    padding-top: var(--runtime-header-height);
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] {
+    min-height: clamp(470px, 118vw, 620px);
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article {
+    padding: clamp(96px, 24vw, 134px) var(--content-gutter) 38px;
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before {
+    background:
+      linear-gradient(180deg, rgba(5, 5, 5, 0.06) 0%, rgba(5, 5, 5, 0.16) 42%, var(--page-bg) 100%),
+      linear-gradient(90deg, rgba(5, 5, 5, 0.44) 0%, rgba(5, 5, 5, 0.06) 78%);
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] h1 {
+    font-size: clamp(2rem, 10vw, 3.2rem);
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul {
+    max-height: 2.8em;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 560px) {
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] {
+    min-height: 78vh;
+    border-radius: 0;
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article {
+    padding-bottom: 34px;
+  }
+
+  main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] ul + div {
+    gap: 10px;
+  }
+}

@@ -72,6 +72,12 @@ function MoviesHeroBanner({
   const genreNames = activeItem.genres.map((genre) => genre.name);
   const isInWatchlist = watchlistIds.has(activeItem.id);
   const isInFavorites = favoriteIds.has(activeItem.id);
+  const handleSlideClick = () => {
+    onPlay?.(activeItem);
+  };
+  const stopSlideClick = (event) => {
+    event.stopPropagation();
+  };
 
   return (
     <section
@@ -80,7 +86,7 @@ function MoviesHeroBanner({
       onMouseLeave={resume}
       {...touchHandlers}
     >
-      <article key={activeItemKey}>
+      <article key={activeItemKey} onClick={handleSlideClick}>
         {backdropUrl && (
           <img src={backdropUrl} alt="" aria-hidden="true" loading="eager" />
         )}
@@ -97,22 +103,41 @@ function MoviesHeroBanner({
           )}
 
           <div>
-            <button type="button" onClick={() => onPlay?.(activeItem)}>
+            <button
+              type="button"
+              className="hero-banner__trailer"
+              onClick={(event) => {
+                stopSlideClick(event);
+                onPlay?.(activeItem);
+              }}
+            >
               {playLabel}
             </button>
 
             <button
               type="button"
+              className={`hero-banner__watchlist${
+                isInWatchlist ? " is-active" : ""
+              }`}
               aria-pressed={isInWatchlist}
-              onClick={() => onToggleWatchlist?.(activeItem)}
+              onClick={(event) => {
+                stopSlideClick(event);
+                onToggleWatchlist?.(activeItem);
+              }}
             >
               {isInWatchlist ? "In My List" : listLabel}
             </button>
 
             <button
               type="button"
+              className={`hero-banner__favourites${
+                isInFavorites ? " is-active" : ""
+              }`}
               aria-pressed={isInFavorites}
-              onClick={() => onToggleFavorite?.(activeItem)}
+              onClick={(event) => {
+                stopSlideClick(event);
+                onToggleFavorite?.(activeItem);
+              }}
             >
               {isInFavorites ? `In ${favoriteLabel}` : `+ ${favoriteLabel}`}
             </button>
