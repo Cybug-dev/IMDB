@@ -1,18 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faStar } from "@fortawesome/free-regular-svg-icons";
-import { faArrowRightToBracket } from "@fortawesome/free-solid-svg-icons";
-
-const actions = [
-  { label: "Watchlist", icon: faStar, page: "watchlist" },
-  { label: "Favorites", icon: faHeart, page: "favorites" },
-  { label: "Sign In", icon: faArrowRightToBracket, page: null },
-];
-
+import { memo } from "react";
+import { headerActions } from "./headerNavigation";
 
 function HeaderRight({ onNavigate, currentPage, watchlistCount }) {
   return (
     <div className="header-right">
-      {actions.map(({ label, icon, page }) => (
+      {headerActions.map(({ label, icon, page }) => (
         <button
           key={label}
           type="button"
@@ -31,4 +24,4 @@ function HeaderRight({ onNavigate, currentPage, watchlistCount }) {
   );
 }
 
-export default HeaderRight;
+export default memo(HeaderRight);

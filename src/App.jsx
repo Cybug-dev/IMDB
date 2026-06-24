@@ -64,7 +64,7 @@ function App() {
     };
   }, [currentPage, headerHeight, heroContentBoundaryNode]);
 
-  const handleNavigate = (page, payload = null) => {
+  const handleNavigate = useCallback((page, payload = null) => {
     if (page === "genre") {
       setSelectedGenre(payload);
       navigate(`/genre/${payload.slug}`);
@@ -83,22 +83,22 @@ function App() {
     };
 
     navigate(paths[page] ?? "/");
-  };
-  const handleToggleWatchlist = (movie) => {
+  }, [navigate]);
+  const handleToggleWatchlist = useCallback((movie) => {
     setWatchlist((prev) => {
       const exists = prev.some((m) => m.id === movie.id);
       return exists ? prev.filter((m) => m.id !== movie.id) : [...prev, movie];
     });
-  };
-  const handleToggleFavorite = (movie) => {
+  }, []);
+  const handleToggleFavorite = useCallback((movie) => {
     setFavorites((prev) => {
       const exists = prev.some((m) => m.id === movie.id);
       return exists ? prev.filter((m) => m.id !== movie.id) : [...prev, movie];
     });
-  };
-  const handleClearCollection = (type) => {
+  }, []);
+  const handleClearCollection = useCallback((type) => {
     type === "watchlist" ? setWatchlist([]) : setFavorites([]);
-  };
+  }, []);
   const shouldUseGlassHeader = currentPage !== "home" || isHeaderGlass;
 
   return (

@@ -8,5 +8,6 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-  base: process.env.VITE_BASE_PATH || "/IMDB"
+base: import.meta.env.VITE_BASE_PATH || "/IMDB",
+
 });

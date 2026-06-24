@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { memo, useId, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-function HeaderSearch() {
+function HeaderSearch({ className = "", inputId }) {
   const [query, setQuery] = useState("");
+  const reactInputId = useId();
+  const searchInputId = inputId ?? `header-search-${reactInputId}`;
 
   const handleChange = (e) => {
     setQuery(e.target.value);
@@ -15,12 +17,16 @@ function HeaderSearch() {
   };
 
   return (
-    <form className="header-search" role="search" onSubmit={handleSubmit}>
-      <label className="sr-only" htmlFor="header-search-input">
+    <form
+      className={`header-search${className ? ` ${className}` : ""}`}
+      role="search"
+      onSubmit={handleSubmit}
+    >
+      <label className="sr-only" htmlFor={searchInputId}>
         Search movies, actors, directors
       </label>
       <input
-        id="header-search-input"
+        id={searchInputId}
         type="text"
         placeholder="Search movies, actors, directors..."
         value={query}
@@ -33,4 +39,4 @@ function HeaderSearch() {
   );
 }
 
-export default HeaderSearch;
+export default memo(HeaderSearch);

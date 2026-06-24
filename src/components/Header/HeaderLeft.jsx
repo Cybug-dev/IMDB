@@ -1,12 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
-
-const navItems = [
-  { label: "Home", icon: faHouse, page: "home" },
-  { label: "Movies", page: "movies" },
-  { label: "TV Shows", page: "tvshows" },
-  { label: "Celebrities", page: "celebrities" },
-];
+import { memo } from "react";
+import { primaryNavItems } from "./headerNavigation";
 
 function HeaderLeft({ onNavigate, currentPage }) {
   return (
@@ -17,7 +11,7 @@ function HeaderLeft({ onNavigate, currentPage }) {
       </button>
 
       <nav className="header-nav" aria-label="Primary">
-        {navItems.map(({ label, page, icon }) => (
+        {primaryNavItems.map(({ label, page, icon }) => (
           <button
             key={label}
             type="button"
@@ -36,4 +30,4 @@ function HeaderLeft({ onNavigate, currentPage }) {
   );
 }
 
-export default HeaderLeft;
+export default memo(HeaderLeft);
