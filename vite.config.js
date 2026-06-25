@@ -13,6 +13,6 @@ export default defineConfig(({ mode }) => {
       babel({ presets: [reactCompilerPreset()] })
     ],
     // Access your variable using the loaded env object instead of import.meta
-    base: env.VITE_BASE_PATH || "/IMDB",
+    base: env.VITE_BASE_PATH || "/",
   };
 });

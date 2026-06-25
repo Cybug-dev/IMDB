@@ -82,7 +82,7 @@ function MoviesHeroBanner({
 
   return (
     <section
-      aria-label="Featured Movies"
+      aria-label="Featured movies"
       onMouseEnter={pause}
       onMouseLeave={resume}
       {...touchHandlers}
