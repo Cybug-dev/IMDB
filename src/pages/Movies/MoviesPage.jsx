@@ -4,8 +4,8 @@ import MoviesHeroBanner from "./MoviesHeroBanner";
 import { useFeaturedHeroMedia } from "./useHeroCarousel";
 import {
   fetchGenresListOnly,
-  fetchNowPlayingMovies,
-  fetchPopularMovies,
+  fetchMovies,
+  fetchMoviesByGenre,
 } from "../../services/tmdb";
 
 function MoviesPage({
@@ -16,12 +16,11 @@ function MoviesPage({
 }) {
   const navigate = useNavigate();
 
-  const fetchPopular = useCallback(() => fetchPopularMovies(1), []);
-  const fetchRecent = useCallback(() => fetchNowPlayingMovies(1), []);
+  const fetchPopular = useCallback(() => fetchMovies(), []);
+  // const fetchRecent = useCallback(() => fetchNowPlayingMovies(1), []);
 
   const { items, loading, error } = useFeaturedHeroMedia({
     fetchPopular,
-    fetchRecent,
     fetchGenres: fetchGenresListOnly,
     mediaType: "movie",
     limit: 8,

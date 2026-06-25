@@ -70,7 +70,7 @@ function MoviesHeroBanner({
   const backdropUrl = getImageUrl(
     activeItem.backdrop_path || activeItem.poster_path,
   );
-  const genreNames = activeItem.genres.map((genre) => genre.name);
+  const genreNames = (activeItem.genres ?? []).map((genre) => genre.name);
   const isInWatchlist = watchlistIds.has(activeItem.id);
   const isInFavorites = favoriteIds.has(activeItem.id);
   const handleSlideClick = () => {
@@ -87,7 +87,7 @@ function MoviesHeroBanner({
       onMouseLeave={resume}
       {...touchHandlers}
     >
-      <article 
+      <article
       key={activeItemKey} onClick={handleSlideClick}>
 
         {backdropUrl && (

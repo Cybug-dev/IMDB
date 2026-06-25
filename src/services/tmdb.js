@@ -95,6 +95,26 @@ const fetchRandomMovieFallback = async () => {
   return withMediaType(fallbackMovies, "movie");
 };
 
+export const fetchMovies = async () => {
+  let results = [];
+
+    const [trendingMovies, actionMovies] = await Promise.all([
+      fetchTrendingMovies("day", randomPage()),
+      fetchMoviesByGenre(28, randomPage()),
+    ]);
+
+    results = uniqueById([
+      ...withMediaType(trendingMovies, "movie"),
+      ...withMediaType(actionMovies, "movie"),
+    ])
+
+ if (results.length > 0) {
+    return results;
+  }
+
+  return fetchRandomMovieFallback();
+}
+
 export const fetchWhatToWatchDataset = async (tabId) => {
   let results = [];
 
@@ -120,7 +140,7 @@ export const fetchWhatToWatchDataset = async (tabId) => {
     ]);
   } else {
     const [mixedResults, popularMovies] = await Promise.all([
-      readResults(`/trending/all/day?page=${randomPage(3)}`),
+      readResults(`/trending/all/day?page=${randomPage()}`),
       fetchPopularMovies(randomPage()),
     ]);
 

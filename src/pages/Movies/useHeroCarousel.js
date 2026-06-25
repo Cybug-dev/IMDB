@@ -40,7 +40,6 @@ const normalizeHeroItem = (item, genreMap, mediaType) => ({
 
 export function useFeaturedHeroMedia({
   fetchPopular,
-  fetchRecent,
   fetchGenres,
   mediaType = "movie",
   limit = 8,
@@ -57,9 +56,8 @@ export function useFeaturedHeroMedia({
         setLoading(true);
         setError(null);
 
-        const [popularItems, recentItems, genres] = await Promise.all([
+        const [popularItems, genres] = await Promise.all([
           fetchPopular(),
-          fetchRecent(),
           fetchGenres ? fetchGenres() : Promise.resolve([]),
         ]);
 
@@ -71,7 +69,6 @@ export function useFeaturedHeroMedia({
 
         const normalizedItems = mergeUniqueByMediaId(
           popularItems,
-          recentItems,
         )
           .filter((item) => item.backdrop_path || item.poster_path)
           .map((item) => normalizeHeroItem(item, genreMap, mediaType))
@@ -93,7 +90,7 @@ export function useFeaturedHeroMedia({
     return () => {
       isMounted = false;
     };
-  }, [fetchPopular, fetchRecent, fetchGenres, limit, mediaType]);
+  }, [fetchPopular, fetchGenres, limit, mediaType]);
 
   return { items, loading, error };
 }
