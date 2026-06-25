@@ -37,6 +37,7 @@ function MoviesHeroBanner({
     () => new Set(watchlist.map((item) => item.id)),
     [watchlist],
   );
+
   const favoriteIds = useMemo(
     () => new Set(favorites.map((item) => item.id)),
     [favorites],
@@ -81,12 +82,14 @@ function MoviesHeroBanner({
 
   return (
     <section
-      aria-label="Featured movies"
+      aria-label="Featured Movies"
       onMouseEnter={pause}
       onMouseLeave={resume}
       {...touchHandlers}
     >
-      <article key={activeItemKey} onClick={handleSlideClick}>
+      <article 
+      key={activeItemKey} onClick={handleSlideClick}>
+
         {backdropUrl && (
           <img src={backdropUrl} alt="" aria-hidden="true" loading="eager" />
         )}
@@ -97,7 +100,7 @@ function MoviesHeroBanner({
           {genreNames.length > 0 && (
             <ul aria-label="Genres">
               {genreNames.map((genre) => (
-                <li key={genre}>{genre}</li>
+                <li key={genre}> {genre} </li>
               ))}
             </ul>
           )}
