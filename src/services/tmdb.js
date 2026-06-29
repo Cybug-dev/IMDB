@@ -32,7 +32,10 @@ const readData = async (path) => {
 
 const randomPage = (maxPage = 10) => Math.floor(Math.random() * maxPage) + 1;
 
-export const fetchTrendingMovies = async (timeWindow = "day", page = randomPage() ) => {
+export const fetchTrendingMovies = async (
+  timeWindow = "day",
+  page = randomPage(),
+) => {
   return readResults(`/trending/movie/${timeWindow}?page=${page}`);
 };
 export const fetchTopRated = async (page = randomPage()) => {
@@ -44,6 +47,7 @@ export const fetchPopularMovies = async (page = randomPage()) => {
 export const fetchNowPlayingMovies = async (page = randomPage()) => {
   return readResults(`/movie/now_playing?page=${page}`);
 };
+
 export const fetchUpcomingMovies = async (page = randomPage()) => {
   return readResults(`/movie/upcoming?page=${page}`);
 };
@@ -101,22 +105,22 @@ const fetchRandomMovieFallback = async () => {
 export const fetchMovies = async () => {
   let results = [];
 
-    const [trendingMovies, actionMovies] = await Promise.all([
-      fetchTrendingMovies("day", randomPage()),
-      fetchMoviesByGenre(28, randomPage()),
-    ]);
+  const [trendingMovies, actionMovies] = await Promise.all([
+    fetchTrendingMovies("day", randomPage()),
+    fetchMoviesByGenre(28, randomPage()),
+  ]);
 
-    results = uniqueById([
-      ...withMediaType(trendingMovies, "movie"),
-      ...withMediaType(actionMovies, "movie"),
-    ])
+  results = uniqueById([
+    ...withMediaType(trendingMovies, "movie"),
+    ...withMediaType(actionMovies, "movie"),
+  ]);
 
- if (results.length > 0) {
+  if (results.length > 0) {
     return results;
   }
 
   return fetchRandomMovieFallback();
-}
+};
 
 export const fetchWhatToWatchDataset = async (tabId) => {
   let results = [];
@@ -202,12 +206,12 @@ const dateDaysAgo = (days) => {
 const hasRequiredMovieCardData = (movie) =>
   Boolean(
     movie?.id &&
-      movie.poster_path &&
-      (movie.title || movie.name) &&
-      typeof movie.vote_average === "number" &&
-      movie.vote_average > 0 &&
-      typeof movie.runtime === "number" &&
-      movie.runtime > 0,
+    movie.poster_path &&
+    (movie.title || movie.name) &&
+    typeof movie.vote_average === "number" &&
+    movie.vote_average > 0 &&
+    typeof movie.runtime === "number" &&
+    movie.runtime > 0,
   );
 
 const excludeMovieIds = (movies, excludeIds = []) => {
@@ -271,8 +275,11 @@ export const getFallbackMovieCards = async (limit) =>
   fetchFallbackMovieCardDataset(limit);
 
 export const getNowShowing = (limit, excludeIds = []) =>
-  getMovieCardDataset(() => fetchNowPlayingMovies(1), limit, excludeIds);
-
+  getMovieCardDataset(
+    () => fetchNowPlayingMovies(randomPage),
+    limit,
+    excludeIds,
+  );
 export const getLatestMovies = (limit, excludeIds = []) =>
   getMovieCardDataset(
     () =>
@@ -286,13 +293,13 @@ export const getLatestMovies = (limit, excludeIds = []) =>
   );
 
 export const getUpcomingMovies = (limit, excludeIds = []) =>
-  getMovieCardDataset(() => fetchUpcomingMovies(1), limit, excludeIds);
+  getMovieCardDataset(() => fetchUpcomingMovies(), limit, excludeIds);
 
 export const getPopularMovieCards = (limit, excludeIds = []) =>
   getMovieCardDataset(
     () =>
       readResults(
-        `/discover/movie?with_genres=${HIGH_INTEREST_GENRES}&sort_by=popularity.desc&page=1`,
+        `/discover/movie?with_genres=${HIGH_INTEREST_GENRES}&sort_by=popularity.desc&page=randomePage`,
       ),
     limit,
     excludeIds,
@@ -319,12 +326,15 @@ export async function discoverRankingEngine() {
     return readResults(`/movie/top_rated?page=${page}`);
   };
 
-  const [fetchPopularMoviesCopied, fetchTrendingMoviesCopied, fetchTopRatedCopied] =
-    await Promise.all([
-      fetchPopularMovies(randomPage()),
-      fetchTrendingMovies("day", randomPage(3)),
-      fetchTopRated(randomPage()),
-    ]);
+  const [
+    fetchPopularMoviesCopied,
+    fetchTrendingMoviesCopied,
+    fetchTopRatedCopied,
+  ] = await Promise.all([
+    fetchPopularMovies(randomPage()),
+    fetchTrendingMovies("day", randomPage(3)),
+    fetchTopRated(randomPage()),
+  ]);
 
   const MoviesTypes = [
     ...fetchPopularMoviesCopied,
@@ -333,15 +343,14 @@ export async function discoverRankingEngine() {
   ];
 
   const uniqueMovies = Array.from(
-    new Map(MoviesTypes?.map((movie) => [movie.id, movie])).values()
+    new Map(MoviesTypes?.map((movie) => [movie.id, movie])).values(),
   );
 
   const scoredMovies = uniqueMovies.map((movie) => ({
     ...movie,
     customScore:
-      movie.vote_average * 2 + movie.popularity / 100 + movie.vote_count / 1000,   
+      movie.vote_average * 2 + movie.popularity / 100 + movie.vote_count / 1000,
   }));
-
 
   return [...scoredMovies].sort((a, b) => b.customScore - a.customScore);
 }
