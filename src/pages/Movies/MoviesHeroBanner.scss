@@ -31,6 +31,7 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
   position: absolute;
   inset: 0;
   pointer-events: none;
+    height: 101%;
 }
 
 main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before {

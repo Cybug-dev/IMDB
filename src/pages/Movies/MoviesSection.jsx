@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SectionState from "../../components/Section State/SectionState";
 import MovieCard from "./MovieCard";
+import "./MoviesSection.scss";
 
 function MoviesSection({
   title,

@@ -1,0 +1,182 @@
+@use "../../styles/mixins" as *;
+
+.movies-card {
+  @include interactive-card;
+
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.movies-card:hover,
+.movies-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(245, 197, 24, 0.2);
+  box-shadow:
+    0 22px 46px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.movies-card:focus-visible {
+  outline: 2px solid rgba(245, 197, 24, 0.58);
+  outline-offset: 4px;
+}
+
+.movies-card__poster-frame {
+  position: relative;
+  aspect-ratio: 0.68;
+  overflow: hidden;
+  background: #101010;
+}
+
+.movies-card__poster-frame::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 38%;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.48));
+  pointer-events: none;
+}
+
+.movies-card__poster {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition:
+    transform 0.28s ease,
+    filter 0.28s ease;
+}
+
+.movies-card:hover .movies-card__poster,
+.movies-card:focus-visible .movies-card__poster {
+  transform: scale(1.035);
+  filter: saturate(1.05);
+}
+
+.movies-card__badge {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  z-index: 2;
+  min-height: 24px;
+  max-width: calc(100% - 18px);
+  padding: 0 9px;
+  border: 1px solid rgba(245, 197, 24, 0.28);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 5, 5, 0.78);
+  color: var(--imdb-yellow);
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+}
+
+.movies-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 12px 14px;
+}
+
+.movies-card__title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.movies-card__title {
+  @include line-clamp(2);
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(0.9rem, 0.9vw, 1rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.movies-card__rating {
+  min-height: 20px;
+  padding-top: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.movies-card__rating svg {
+  color: var(--imdb-yellow);
+  font-size: 0.7rem;
+}
+
+.movies-card__details {
+  min-width: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.movies-card__genres .separator {
+  opacity: 0.5;
+  font-size: 0.85em;   
+  color: #888888;     
+  user-select: none;    /* Prevents users from accidentally highlighting the dot */
+}
+
+.movies-card__genres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.movies-card__details span {
+  min-width: 0;
+}
+
+// .movies-card__details span + span::before {
+//   content: "";
+//   width: 3px;
+//   height: 3px;
+//   margin-right: 6px;
+//   border-radius: 999px;
+//   display: inline-block;
+//   vertical-align: middle;
+//   background: rgba(255, 255, 255, 0.28);
+// }
+
+
+@media (max-width: 767px) {
+  .movies-card {
+    border-radius: 12px;
+  }
+
+  .movies-card__body {
+    padding: 10px 10px 12px;
+  }
+
+  .movies-card__title {
+    font-size: 0.88rem;
+  }
+}
