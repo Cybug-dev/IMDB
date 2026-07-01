@@ -103,9 +103,10 @@ function App() {
     type === "watchlist" ? setWatchlist([]) : setFavorites([]);
   }, []);
   const shouldUseGlassHeader = currentPage !== "home" || isHeaderGlass;
+  const shouldUsePageBackground = currentPage === "home";
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${shouldUsePageBackground ? " app-shell--home" : ""}`}>
       <Header
         onNavigate={handleNavigate}
         currentPage={currentPage}

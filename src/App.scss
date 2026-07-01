@@ -5,7 +5,10 @@
 .app-shell {
   min-height: 100vh;
   width: 100%;
-  background: var(--page-bg);
+}
+
+.app-shell--home {
+  @include background;
 }
 
 /* Header shell */
@@ -466,7 +469,6 @@ body.mobile-sidebar-open {
 .home-page {
   width: 100%;
   padding-bottom: 88px;
-  background: var(--page-bg);
 }
 
 /* Home page loading and error states */
