@@ -32,6 +32,7 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
   inset: 0;
   pointer-events: none;
     height: 101%;
+  height: 101%;
 }
 
 main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before {
@@ -167,6 +168,7 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
     background:
       linear-gradient(180deg, rgba(5, 5, 5, 0.06) 0%, rgba(5, 5, 5, 0.16) 42%, var(--page-bg) 100%),
       linear-gradient(90deg, rgba(5, 5, 5, 0.44) 0%, rgba(5, 5, 5, 0.06) 78%);
+        height: 110%;
   }
 
   main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] h1 {
@@ -181,7 +183,7 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
 
 @media (max-width: 560px) {
   main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] {
-    min-height: 78vh;
+    min-height: 50vh;
     border-radius: 0;
   }
 

@@ -1,5 +1,8 @@
 import { memo, useMemo } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faPlus, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useHeroCarousel } from "./useHeroCarousel";
+import "./MoviesHeroBanner.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
 
@@ -94,7 +97,7 @@ function MoviesHeroBanner({
           <img src={backdropUrl} alt="" aria-hidden="true" loading="eager" />
         )}
 
-        <div>
+        <div className="hero-banner__content">
           <h1>{activeItem.title}</h1>
 
           {genreNames.length > 0 && (
@@ -105,7 +108,7 @@ function MoviesHeroBanner({
             </ul>
           )}
 
-          <div>
+          <div className="hero-banner__actions">
             <button
               type="button"
               className="hero-banner__trailer"
@@ -114,7 +117,8 @@ function MoviesHeroBanner({
                 onPlay?.(activeItem);
               }}
             >
-              {playLabel}
+              <FontAwesomeIcon icon={faPlay} />
+              <span>{playLabel}</span>
             </button>
 
             <button
@@ -128,7 +132,8 @@ function MoviesHeroBanner({
                 onToggleWatchlist?.(activeItem);
               }}
             >
-              {isInWatchlist ? "In My List" : listLabel}
+              <FontAwesomeIcon icon={isInWatchlist ? faCheck : faBookmark} />
+              <span>{isInWatchlist ? "In My List" : listLabel}</span>
             </button>
 
             <button
@@ -142,7 +147,8 @@ function MoviesHeroBanner({
                 onToggleFavorite?.(activeItem);
               }}
             >
-              {isInFavorites ? `In ${favoriteLabel}` : `+ ${favoriteLabel}`}
+              <FontAwesomeIcon icon={isInFavorites ? faCheck : faPlus} />
+              <span>{isInFavorites ? `In ${favoriteLabel}` : favoriteLabel}</span>
             </button>
           </div>
         </div>
