@@ -5,7 +5,6 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { useGenreMovies } from "./useGenreMovies";
 import "../Movies/MoviesSection.scss";
 import "./GenrePage.scss";
-
 function GenrePage({
   genre,
   onNavigate,
@@ -18,21 +17,33 @@ function GenrePage({
      return `${pagination.totalResults} ${genreName} movies found`;
   }, [pagination.totalResults, genreName]);
 
-  const handlePageChange = useCallback(
-    (nextPage) => {
-    if (
-      nextPage < 1 ||
-      nextPage > pagination.totalPages ||
-      nextPage === pagination.page ||
-      loading
-     ) {
-      return;
-     }
+  const handlePageChange = useCallback((nextPage) => {
+  // 1. Early validation - prevent invalid page changes
+  if (
+    typeof nextPage !== "number" || 
+    nextPage < 1 ||
+    nextPage > (pagination?.totalPages ?? 0) ||
+    nextPage === pagination?.page ||
+    loading === true
+  ) {
+    return;
+  }
 
-    pagination.setPage(nextPage);
-    document.getElementById("genre-results")?.scrollIntoView({ block: "start", behavior: "smooth" });
-    }, [pagination, loading]
-  );
+  // 2. Update the page (core behavior - unchanged)
+  pagination.setPage(nextPage);
+
+  // 3. Smooth scroll to results section with safe fallback
+  const resultsElement = document.getElementById("genre-results");
+  if (resultsElement) {
+    resultsElement.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }
+}, [pagination, loading]); // Keep original dependency style for compatibility
+
+
+
 
 const handleRetry = useCallback(() => {
   pagination.reload();
