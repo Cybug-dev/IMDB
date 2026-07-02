@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, Plus, Star } from "lucide-react";
+import { Check, Plus, Star } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendar,
@@ -59,7 +59,6 @@ function MovieHeroSection({
           className="movie-hero-section__back"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={18} />
           <span>Back</span>
         </button>
 

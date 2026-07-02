@@ -1,32 +1,35 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { fetchGenreMoviePage, fetchMovieDetails } from "../../services/tmdb";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
+import {
+  fetchGenreMoviePage,
+  fetchMovieDetails,
+  GENRE_DISCOVER_PAGE_CAP,
+  getSessionGenrePage,
+  movieQueryKeys,
+} from "../../queries/movieQueries";
 
 const MOVIES_PER_PAGE = 12;
-const TMDB_PAGE_SIZE = 10;
-const MAX_CONCURRENT_ENRICH = 6; // Adjust this if needed (4-8 is reasonable)
+const TMDB_PAGE_SIZE = 20;
+const MAX_CONCURRENT_ENRICH = 6;
 
-// Helper to limit concurrent enrich operations
 const createConcurrentLimiter = (limit = MAX_CONCURRENT_ENRICH) => {
   let running = 0;
   const queue = [];
 
-  const run = async (task) => {
+  return async (task) => {
     if (running >= limit) {
       await new Promise((resolve) => queue.push(resolve));
     }
-    running++;
+
+    running += 1;
+
     try {
       return await task();
     } finally {
-      running--;
-      if (queue.length > 0) {
-        const next = queue.shift();
-        next();
-      }
+      running -= 1;
+      queue.shift()?.();
     }
   };
-
-  return run;
 };
 
 const enrichWithLimit = createConcurrentLimiter();
@@ -47,9 +50,7 @@ const enrichMovie = async (movie, fallbackGenre) => {
           ? details.genres
           : [{ id: fallbackGenre.id, name: fallbackGenre.name }],
     };
-  } catch (error) {
-    console.warn(`Failed to enrich movie ${movie.id}:`, error);
-
+  } catch {
     return {
       ...movie,
       runtime: movie.runtime ?? null,
@@ -65,117 +66,95 @@ const getApiPagesForUiPage = (page) => {
   return {
     startIndex,
     startApiPage: Math.floor(startIndex / TMDB_PAGE_SIZE) + 1,
-    endApiPage: Math.floor(endIndex / TMDB_PAGE_SIZE) + 1,
+    endApiPage: Math.min(
+      GENRE_DISCOVER_PAGE_CAP,
+      Math.floor(endIndex / TMDB_PAGE_SIZE) + 1,
+    ),
+  };
+};
+
+const loadGenreMovies = async (genre, page) => {
+  const { startIndex, startApiPage, endApiPage } = getApiPagesForUiPage(page);
+  const sessionStartPage = getSessionGenrePage(genre.id);
+  const apiPages = [];
+  const toSessionPage = (apiPage) =>
+    ((sessionStartPage - 1 + apiPage - 1) % GENRE_DISCOVER_PAGE_CAP) + 1;
+
+  for (let apiPage = startApiPage; apiPage <= endApiPage; apiPage += 1) {
+    apiPages.push(fetchGenreMoviePage(genre.id, toSessionPage(apiPage)));
+  }
+
+  const pageResponses = await Promise.all(apiPages);
+  const allResults = pageResponses.flatMap((response) => response?.results || []);
+  const firstResponse = pageResponses[0] ?? {};
+  const pageOffset = startIndex % TMDB_PAGE_SIZE;
+  const pageResults = allResults
+    .slice(pageOffset, pageOffset + MOVIES_PER_PAGE)
+    .filter((movie) => movie?.id && movie.poster_path);
+
+  const detailedResults = await Promise.all(
+    pageResults.map((movie) => enrichWithLimit(() => enrichMovie(movie, genre))),
+  );
+  const cappedResultCount = Math.min(
+    firstResponse.totalResults ?? detailedResults.length,
+    Math.min(firstResponse.totalPages ?? 1, GENRE_DISCOVER_PAGE_CAP) *
+      TMDB_PAGE_SIZE,
+  );
+
+  return {
+    movies: detailedResults,
+    totalPages: Math.max(1, Math.ceil(cappedResultCount / MOVIES_PER_PAGE)),
+    totalResults: cappedResultCount,
   };
 };
 
 export function useGenreMovies(genre) {
-  const [page, setPage] = useState(1);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const genreId = genre?.id ?? null;
+  const [paginationState, setPaginationState] = useState({
+    genreId: null,
+    page: 1,
+  });
+  const page = paginationState.genreId === genreId ? paginationState.page : 1;
+  const setPage = useCallback(
+    (nextPage) => {
+      setPaginationState({
+        genreId,
+        page: nextPage,
+      });
+    },
+    [genreId],
+  );
 
-  const [state, setState] = useState({
-    error: null,
-    loading: true,
-    movies: [],
-    totalPages: 1,
-    totalResults: 0,
+  const query = useQuery({
+    queryKey: movieQueryKeys.genreMovies(genreId, page),
+    queryFn: () => loadGenreMovies(genre, page),
+    enabled: Boolean(genreId),
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Reset page when genre changes
-  useEffect(() => {
-    setPage(1);
-  }, [genre?.id]);
-
-  useEffect(() => {
-    if (!genre?.id) return undefined;
-
-    let cancelled = false;
-
-    const { startIndex, startApiPage, endApiPage } = getApiPagesForUiPage(page);
-
-    setState((prev) => ({
-      ...prev,
-      error: null,
-      loading: true,
-    }));
-
-    const loadMovies = async () => {
-      try {
-        const apiPages = [];
-
-        for (let apiPage = startApiPage; apiPage <= endApiPage; apiPage += 1) {
-          apiPages.push(fetchGenreMoviePage(genre.id, apiPage));
-        }
-
-        const pageResponses = await Promise.all(apiPages);
-        const allResults = pageResponses.flatMap((response) => response?.results || []);
-
-        const firstResponse = pageResponses[0] ?? {};
-        const pageOffset = startIndex % TMDB_PAGE_SIZE;
-
-        const pageResults = allResults
-          .slice(pageOffset, pageOffset + MOVIES_PER_PAGE)
-          .filter((movie) => movie?.id && movie.poster_path);
-
-        // Enrich with controlled concurrency
-        const detailedResults = await Promise.all(
-          pageResults.map((movie) =>
-            enrichWithLimit(() => enrichMovie(movie, genre))
-          )
-        );
-
-        if (cancelled) return;
-
-        const cappedResultCount = Math.min(
-          firstResponse.totalResults ?? detailedResults.length,
-          (firstResponse.totalPages ?? 1) * TMDB_PAGE_SIZE
-        );
-
-        setState({
-          error: null,
-          loading: false,
-          movies: detailedResults,
-          totalPages: Math.max(1, Math.ceil(cappedResultCount / MOVIES_PER_PAGE)),
-          totalResults: cappedResultCount,
-        });
-      } catch (loadError) {
-        if (cancelled) return;
-
-        setState((prev) => ({
-          ...prev,
-          error: loadError?.message || "Failed to load genre movies.",
-          loading: false,
-          movies: [],
-        }));
-      }
-    };
-
-    loadMovies();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [genre, page, refreshKey]);
-
+  const { refetch } = query;
   const reload = useCallback(() => {
-    setRefreshKey((key) => key + 1);
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const pagination = useMemo(
     () => ({
-      canGoNext: page < state.totalPages,
+      canGoNext: page < (query.data?.totalPages ?? 1),
       canGoPrevious: page > 1,
       page,
       reload,
       setPage,
-      totalPages: state.totalPages,
-      totalResults: state.totalResults,
+      totalPages: query.data?.totalPages ?? 1,
+      totalResults: query.data?.totalResults ?? 0,
     }),
-    [page, reload, state.totalPages, state.totalResults]
+    [page, query.data?.totalPages, query.data?.totalResults, reload, setPage],
   );
 
   return {
-    ...state,
+    error: query.error?.message ?? null,
+    loading: query.isPending || query.isFetching,
+    movies: query.data?.movies ?? [],
     pagination,
   };
 }

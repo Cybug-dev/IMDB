@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const DEFAULT_INTERVAL_MS = 7000;
 const SWIPE_THRESHOLD_PX = 48;
@@ -44,55 +45,32 @@ export function useFeaturedHeroMedia({
   mediaType = "movie",
   limit = 8,
 }) {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadFeaturedMedia = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const [popularItems, genres] = await Promise.all([
-          fetchPopular(),
-          fetchGenres ? fetchGenres() : Promise.resolve([]),
-        ]);
-
-        if (!isMounted) return;
-
+  const query = useQuery({
+    queryKey: ["tmdb", "featuredHero", mediaType, limit],
+    queryFn: async () => {
+      const [popularItems, genres] = await Promise.all([
+        fetchPopular(),
+        fetchGenres ? fetchGenres() : Promise.resolve([]),
+      ]);
         const genreMap = new Map(
           genres.map((genre) => [genre.id, genre.name]),
         );
 
-        const normalizedItems = mergeUniqueByMediaId(
+      return mergeUniqueByMediaId(
           popularItems,
         )
           .filter((item) => item.backdrop_path || item.poster_path)
           .map((item) => normalizeHeroItem(item, genreMap, mediaType))
           .slice(0, limit);
+    },
+    staleTime: 1000 * 60 * 5,
+  });
 
-        setItems(normalizedItems);
-      } catch (loadError) {
-        if (!isMounted) return;
-        setError(loadError.message || "Unable to load featured movies.");
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadFeaturedMedia();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [fetchPopular, fetchGenres, limit, mediaType]);
-
-  return { items, loading, error };
+  return {
+    items: query.data ?? [],
+    loading: query.isPending,
+    error: query.error?.message ?? null,
+  };
 }
 
 export function useHeroCarousel(items, intervalMs = DEFAULT_INTERVAL_MS) {

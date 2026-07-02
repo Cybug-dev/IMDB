@@ -1,46 +1,18 @@
 import { Film } from "lucide-react";
 import GenreCard from "./GenreCard";
-import React, { useState, useEffect } from "react";
-import { fetchGenresWithImages } from "../../services/tmdb";
+import { useGenresWithImages } from "../../queries/movieQueries";
 import { useGenreRotationEngine } from "../../hooks/useGenreRotationEngine";
 import SectionState from "../../components/Section State/SectionState";
 
 function BrowseByGenre({ onNavigate }) {
-  const [genres, setGenres] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const isLoading = Boolean(loading);
+  const {
+    data: genres = [],
+    error,
+    isPending,
+  } = useGenresWithImages(6, 5);
+  const isLoading = Boolean(isPending);
   const hasError = Boolean(error);
   const hasData = Array.isArray(genres) && genres.length > 0;
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadGenres = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const genreList = await fetchGenresWithImages(6, 5);
-        if (!cancelled && Array.isArray(genreList)) {
-          setGenres(genreList);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load genres.");
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadGenres();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const genreEngine = useGenreRotationEngine({
     genres,

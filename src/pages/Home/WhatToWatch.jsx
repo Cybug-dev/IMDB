@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import FilterTabs from "../../components/FilterTabs";
-import { fetchWhatToWatchDataset } from "../../services/tmdb";
+import { useWhatToWatchDataset } from "../../queries/movieQueries";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
 import MovieCard2 from "./MovieCard2";
 
@@ -12,57 +12,18 @@ function WhatToWatch({
 }) {
   const railRef = useRef(null);
   const [activeTab, setActiveTab] = useState(WATCH_FILTERS[0].id);
-  const [requestState, setRequestState] = useState({
-    tabId: null,
-    movies: [],
-    error: null,
-  });
-  const [loadingDelay, setLoadingDelay] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-    const delayTimer = window.setTimeout(() => {
-      if (!cancelled) setLoadingDelay(false);
-    }, 2000);
-    const startTimer = window.setTimeout(() => setLoadingDelay(true), 0);
-    fetchWhatToWatchDataset(activeTab)
-      .then((movies) => {
-        if (!cancelled) {
-          setRequestState({
-            tabId: activeTab,
-            movies,
-            error: null,
-          });
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          setRequestState({
-            tabId: activeTab,
-            movies: [],
-            error: error.message || "Failed to load recommendations right now.",
-          });
-        }
-      });
-
-    return () => {
-      cancelled = true;
-      clearTimeout(delayTimer);
-      clearTimeout(startTimer);
-    };
-  }, [activeTab]);
+  const { data: movies = [], error, isFetching, isPending } =
+    useWhatToWatchDataset(activeTab);
 
   useEffect(() => {
     railRef.current?.scrollTo({
       left: 0,
       behavior: "smooth",
     });
-  }, [requestState.tabId]);
+  }, [activeTab]);
 
-  const isLoading = requestState.tabId !== activeTab || loadingDelay;
-  const currentError =
-    requestState.tabId === activeTab ? requestState.error : null;
-  const visibleMovies = requestState.movies.slice(0, 15);
+  const isLoading = isPending || (isFetching && movies.length === 0);
+  const visibleMovies = movies.slice(0, 15);
 
   return (
     <section className="what-to-watch">
@@ -101,7 +62,7 @@ function WhatToWatch({
           ))}
         </div>
         )}
-        {currentError && (
+        {error && (
           <div className="what-to-watch__status">
             <p>Hey check your internet connection</p>
           </div>

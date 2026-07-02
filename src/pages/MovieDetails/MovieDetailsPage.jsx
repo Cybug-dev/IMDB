@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchMovieDetails } from "../../services/tmdb";
+import { useMovieDetails } from "../../queries/movieQueries";
 import MovieHeroSection from "./MovieHeroSection";
 import CastSection from "./CastSection";
 import CastModal from "./CastModal";
@@ -13,62 +13,10 @@ function MovieDetailsPage({
   favorites,
 }) {
   const { id } = useParams();
-  const [requestState, setRequestState] = useState({
-    movieId: null,
-    movie: null,
-    error: null,
-  });
   const [isCastModalOpen, setIsCastModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (!id) return undefined;
-
-    let cancelled = false;
-
-    const loadMovieDetails = async () => {
-      try {
-        const movieDetails = await fetchMovieDetails(id);
-        const director = movieDetails.credits?.crew?.find(
-          (person) => person.job === "Director",
-        )?.name;
-       const cast = movieDetails.credits?.cast;
-
-        const movieWithDetails = {
-          ...movieDetails,
-          director,
-          cast,
-          genres: movieDetails.genres ?? [],
-        };
-
-        if (!cancelled) {
-          setRequestState({
-            movieId: id,
-            movie: movieWithDetails,
-            error: null,
-          });
-        }
-      } catch (loadError) {
-        if (!cancelled) {
-          setRequestState({
-            movieId: id,
-            movie: null,
-            error: loadError.message || "Failed to load movie details.",
-          });
-        }
-      }
-    };
-
-    loadMovieDetails();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
-
-  const isLoading = requestState.movieId !== id;
-  const currentError =
-    requestState.movieId === id ? requestState.error : null;
-  const movie = requestState.movie;
+  const { data: movie, error, isPending } = useMovieDetails(id);
+  const isLoading = Boolean(isPending);
+  const currentError = error?.message ?? null;
   const hasData = Boolean(movie);
 
   if (!id) return <div className="page-error">Movie ID not found.</div>;
