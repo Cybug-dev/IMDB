@@ -72,45 +72,9 @@
 }
 
 .genre-page__back-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 18px;
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(245, 197, 24, 0.35);
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-decoration: none;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ @include neon-button;
 }
 
-/* Automatically slides an elegant arrow in if it's just text */
-.genre-page__back-button::before {
-  content: "←";
-  font-size: 0.9rem;
-  line-height: 1;
-  transition: transform 0.2s ease;
-}
-
-/* Premium Hover State */
-.genre-page__back-button:hover {
-  background: #f5c518; /* Solid gold fill on hover */
-  color: #050507; /* Crisp dark text for maximum legibility */
-  border-color: #f5c518;
-  box-shadow: 0 0 16px rgba(245, 197, 24, 0.4);
-  transform: translateY(-1px);
-}
-
-.genre-page__back-button:hover::before {
-  transform: translateX(-3px); /* Subtle interactive movement */
-}
 .genre-page__page-loading {
   position: absolute;
   top: 12px;
