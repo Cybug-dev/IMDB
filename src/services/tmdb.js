@@ -86,6 +86,19 @@ export const fetchMoviesByGenre = async (genreId, page = randomPage()) => {
   );
 };
 
+export const fetchGenreMoviePage = async (genreId, page = 1) => {
+  const data = await readData(
+    `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc&page=${page}`,
+  );
+
+  return {
+    page: data.page ?? page,
+    results: Array.isArray(data.results) ? data.results : [],
+    totalPages: data.total_pages ?? 1,
+    totalResults: data.total_results ?? 0,
+  };
+};
+
 const fallbackMoviePaths = [
   "/movie/popular",
   "/movie/now_playing",

@@ -1,99 +1,146 @@
-import { useEffect, useState } from "react";
-import { fetchMoviesByGenre } from "../../services/tmdb";
-import MovieCard from "../Home/MovieCard";
-import SectionState from "../../components/Section State/SectionState";
+import { useCallback, useMemo } from "react";
+import MovieCard from "../Movies/MovieCard";
+import GenrePagination from "./GenrePagination";
+import ScrollToTopButton from "./ScrollToTopButton";
+import { useGenreMovies } from "./useGenreMovies";
+import "../Movies/MoviesSection.scss";
+import "./GenrePage.scss";
 
 function GenrePage({
   genre,
   onNavigate,
-  onToggleWatchlist,
-  onToggleFavorite,
-  watchlist,
-  favorites,
 }) {
-  const [requestState, setRequestState] = useState({
-    genreId: null,
-    movies: [],
-    error: null,
-  });
-
-  useEffect(() => {
-    if (!genre?.id) {
-      return;
-    }
-
-    let cancelled = false;
-
-    fetchMoviesByGenre(genre.id)
-      .then((genreMovies) => {
-        if (!cancelled) {
-          setRequestState({
-            genreId: genre.id,
-            error: null,
-            movies: genreMovies.map((movie) => ({
-              ...movie,
-              genres: [{ id: genre.id, name: genre.name }],
-            })),
-          });
-        }
-      })
-      .catch((loadError) => {
-        if (!cancelled) {
-          setRequestState({
-            genreId: genre.id,
-            movies: [],
-            error: loadError.message || "Failed to load genre movies.",
-          });
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [genre]);
-
-  if (!genre?.id) return <div className="page-error">Genre not found.</div>;
-  const isLoading = requestState.genreId !== genre.id && !requestState.error;
-  const movies = requestState.movies;
-  const error = requestState.error;
+  const { error, loading, movies, pagination } = useGenreMovies(genre);
+  const genreName = genre?.name ?? "Genre";
   const hasData = movies.length > 0;
+  const resultSummary = useMemo(() => {
+    if (pagination.totalResults === 0) return "No Movies Found";
+     return `${pagination.totalResults} ${genreName} movies found`;
+  }, [pagination.totalResults, genreName]);
+
+  const handlePageChange = useCallback(
+    (nextPage) => {
+    if (
+      nextPage < 1 ||
+      nextPage > pagination.totalPages ||
+      nextPage === pagination.page ||
+      loading
+     ) {
+      return;
+     }
+
+    pagination.setPage(nextPage);
+    document.getElementById("genre-results")?.scrollIntoView({ block: "start", behavior: "smooth" });
+    }, [pagination, loading]
+  );
+
+const handleRetry = useCallback(() => {
+  pagination.reload();
+}, [pagination]);
+
+if (!genre?.id) return <div className="page-error">Genre not found.</div>;
 
   return (
-    <main className="collection-page">
-      <div className="collection-page__inner">
-        <div className="collection-page__topbar">
+              <main className="genre-page">
+      <div className="genre-page__inner">
+        <div className="genre-page__topbar">
           <div>
-            <h1 className="collection-page__heading">{genre.name}</h1>
-            <p className="collection-page__subtitle">
-              Popular {genre.name.toLowerCase()} movies to watch and add to your collection
+            <h1 className="genre-page__heading">{genreName}</h1>
+            <p className="genre-page__subtitle">
+              Popular {genreName.toLowerCase()} movies to watch and add to your collection
             </p>
           </div>
 
           <button
             type="button"
-            className="collection-clear"
+            className="genre-page__back-button"
             onClick={() => onNavigate("home")}
           >
             Back home
           </button>
         </div>
 
-        {isLoading || error || !hasData ? (
-          <SectionState loading={isLoading} error={error} data={hasData ? [1] : []} />
-        ) : (
-          <div className="featured-movies__grid">
-            {movies.slice(0, 12).map((movie) => (
-              <MovieCard
-                key={movie.id}
-                movie={movie}
-                onToggleWatchlist={onToggleWatchlist}
-                onToggleFavorite={onToggleFavorite}
-                isInWatchlist={watchlist.some((item) => item.id === movie.id)}
-                isInFavorites={favorites.some((item) => item.id === movie.id)}
-              />
-            ))}
+              <div className="genre-page__count" aria-live="polite">
+          <span>{resultSummary}</span>
+          {pagination.totalPages > 1 && (
+            <>
+              <span className="genre-page__count-dot" aria-hidden="true">
+                -
+              </span>
+              <span>
+                Page {pagination.page} of {pagination.totalPages}
+              </span>
+            </>
+          )}
+        </div>
+
+        <section
+          id="genre-results"
+          className="genre-page__results"
+          aria-label={`${genreName} movie results`}
+          aria-busy={loading}
+        >
+          {loading && !hasData && (
+            <div className="genre-page__state" role="status" aria-live="polite">
+              <span className="genre-page__spinner" aria-hidden="true" />
+              <p>Loading {genreName.toLowerCase()} movies...</p>
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="genre-page__state" role="alert">
+              <h2>Unable to load movies</h2>
+              <p>{error}</p>
+              <button
+                type="button"
+                className="genre-page__state-action"
+                onClick={handleRetry}
+              >
+                Retry
+              </button>
+            </div>
+          )}
+
+          {!loading && !error && !hasData && (
+            <div className="genre-page__state">
+              <h2>No movies found</h2>
+              <p>There are no {genreName.toLowerCase()} movies available right now.</p>
+            </div>
+          )}
+
+          {hasData && (
+            <div className="genre-page__list-wrap">
+              {loading && (
+                <div className="genre-page__page-loading" role="status" aria-live="polite">
+                  <span className="genre-page__spinner" aria-hidden="true" />
+                  <span>Loading page {pagination.page}...</span>
+                </div>
+              )}
+
+              <div className="movies-section__list genre-page__list">
+                {movies.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {!error && hasData && (
+          <div className="genre-page__footer">
+            <GenrePagination
+              canGoNext={pagination.canGoNext}
+              canGoPrevious={pagination.canGoPrevious}
+              currentPage={pagination.page}
+              disabled={loading}
+              onPageChange={handlePageChange}
+              totalPages={pagination.totalPages}
+            />
           </div>
         )}
+
+        <ScrollToTopButton />
+      
       </div>
     </main>
   );

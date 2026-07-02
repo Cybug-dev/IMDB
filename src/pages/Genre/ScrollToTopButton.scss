@@ -1,0 +1,43 @@
+.scroll-to-top-button {
+  position: fixed;
+  right: max(18px, calc((100vw - var(--content-width)) / 2 + 18px));
+  bottom: 24px;
+  z-index: 40;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(245, 197, 24, 0.22);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 5, 5, 0.78);
+  color: var(--imdb-yellow);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(12px);
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.scroll-to-top-button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 197, 24, 0.42);
+  background: rgba(18, 18, 18, 0.92);
+}
+
+.scroll-to-top-button:focus-visible {
+  outline: 2px solid rgba(245, 197, 24, 0.7);
+  outline-offset: 3px;
+}
+
+.scroll-to-top-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 560px) {
+  .scroll-to-top-button {
+    right: 16px;
+    bottom: 18px;
+  }
+}
