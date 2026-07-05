@@ -26,7 +26,7 @@
 
   background-size: 100% 100%, 100% 100%;
   background-position: 0 0;
-  background-attachment: fixed;
+  background-attachment: scroll;
 }
 
 @mixin neon-button($primary-color: #f5c518, $dark-text: #050507) {
@@ -46,8 +46,11 @@
   letter-spacing: 0.1em;
   text-decoration: none;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
 
   // 2. The Arrow State
   &::before {
@@ -82,7 +85,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: none;
   transition:
     transform 0.18s ease,
     background-color 0.18s ease,

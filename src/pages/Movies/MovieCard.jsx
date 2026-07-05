@@ -81,8 +81,9 @@ function MovieCard({ movie }) {
         </div>
 
         <div className="movies-card__details">
-  {/* Block 1: Runtime */}
-  <span className="movies-card__runtime">{movie.runtime} min</span>
+          {typeof movie.runtime === "number" && movie.runtime > 0 && (
+            <span className="movies-card__runtime">{movie.runtime} min</span>
+          )}
   
   {/* Block 2: Genres Wrapper */}
   <div className="movies-card__genres">

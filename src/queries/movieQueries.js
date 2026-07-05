@@ -86,9 +86,7 @@ const hasRequiredMovieCardData = (movie) =>
       movie.poster_path &&
       (movie.title || movie.name) &&
       typeof movie.vote_average === "number" &&
-      movie.vote_average > 0 &&
-      typeof movie.runtime === "number" &&
-      movie.runtime > 0,
+      movie.vote_average > 0,
   );
 
 const excludeMovieIds = (movies, excludeIds = []) => {
@@ -361,15 +359,21 @@ export const fetchMovieDetails = (movieId) =>
   queryClient.fetchQuery(movieQueryOptions.movieDetails(movieId));
 
 const getMovieCardDetails = async (movies, limit) => {
-  const detailResults = await Promise.allSettled(
-    movies.slice(0, limit * 2).map((movie) => fetchMovieDetails(movie.id)),
-  );
+  const genres = await fetchGenresListOnly().catch(() => []);
+  const genreMap = new Map(genres.map((genre) => [genre.id, genre.name]));
 
   return uniqueById(
-    detailResults
-      .filter((result) => result.status === "fulfilled")
-      .map((result) => result.value)
-      .filter(hasRequiredMovieCardData),
+    movies
+      .filter(hasRequiredMovieCardData)
+      .map((movie) => ({
+        ...movie,
+        genres:
+          movie.genres ??
+          (movie.genre_ids ?? []).map((id) => ({
+            id,
+            name: genreMap.get(id) ?? "Unknown",
+          })),
+      })),
   ).slice(0, limit);
 };
 

@@ -2,7 +2,6 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import {
   fetchGenreMoviePage,
-  fetchMovieDetails,
   GENRE_DISCOVER_PAGE_CAP,
   getSessionGenrePage,
   movieQueryKeys,
@@ -10,54 +9,11 @@ import {
 
 const MOVIES_PER_PAGE = 12;
 const TMDB_PAGE_SIZE = 20;
-const MAX_CONCURRENT_ENRICH = 6;
 
-const createConcurrentLimiter = (limit = MAX_CONCURRENT_ENRICH) => {
-  let running = 0;
-  const queue = [];
-
-  return async (task) => {
-    if (running >= limit) {
-      await new Promise((resolve) => queue.push(resolve));
-    }
-
-    running += 1;
-
-    try {
-      return await task();
-    } finally {
-      running -= 1;
-      queue.shift()?.();
-    }
-  };
-};
-
-const enrichWithLimit = createConcurrentLimiter();
-
-const enrichMovie = async (movie, fallbackGenre) => {
-  if (!movie?.id || !fallbackGenre?.id || !fallbackGenre?.name) {
-    return movie;
-  }
-
-  try {
-    const details = await fetchMovieDetails(movie.id);
-
-    return {
-      ...movie,
-      ...details,
-      genres:
-        details?.genres?.length > 0
-          ? details.genres
-          : [{ id: fallbackGenre.id, name: fallbackGenre.name }],
-    };
-  } catch {
-    return {
-      ...movie,
-      runtime: movie.runtime ?? null,
-      genres: [{ id: fallbackGenre.id, name: fallbackGenre.name }],
-    };
-  }
-};
+const attachGenre = (movie, fallbackGenre) => ({
+  ...movie,
+  genres: [{ id: fallbackGenre.id, name: fallbackGenre.name }],
+});
 
 const getApiPagesForUiPage = (page) => {
   const startIndex = (page - 1) * MOVIES_PER_PAGE;
@@ -92,17 +48,15 @@ const loadGenreMovies = async (genre, page) => {
     .slice(pageOffset, pageOffset + MOVIES_PER_PAGE)
     .filter((movie) => movie?.id && movie.poster_path);
 
-  const detailedResults = await Promise.all(
-    pageResults.map((movie) => enrichWithLimit(() => enrichMovie(movie, genre))),
-  );
+  const movies = pageResults.map((movie) => attachGenre(movie, genre));
   const cappedResultCount = Math.min(
-    firstResponse.totalResults ?? detailedResults.length,
+    firstResponse.totalResults ?? movies.length,
     Math.min(firstResponse.totalPages ?? 1, GENRE_DISCOVER_PAGE_CAP) *
       TMDB_PAGE_SIZE,
   );
 
   return {
-    movies: detailedResults,
+    movies,
     totalPages: Math.max(1, Math.ceil(cappedResultCount / MOVIES_PER_PAGE)),
     totalResults: cappedResultCount,
   };

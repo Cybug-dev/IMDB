@@ -14,7 +14,7 @@ import {
 import { Check, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const IMG_BASE = "https://image.tmdb.org/t/p/original";
+const IMG_BASE = "https://image.tmdb.org/t/p/w1280";
 const INTERVAL_MS = 7000;
 const TRANSITION_MS = 560;
 
