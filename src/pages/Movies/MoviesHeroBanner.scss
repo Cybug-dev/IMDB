@@ -1,6 +1,8 @@
+@use "../../styles/_mixins" as *;
+
 main:has(> section[aria-label="Featured movies"]) {
   padding-top: var(--runtime-header-height);
-  background: var(--page-bg);
+  @include background;
 }
 
 main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] {
