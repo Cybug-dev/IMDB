@@ -618,37 +618,62 @@ body.mobile-sidebar-open {
 }
 
 .movie-hero-section__user-score {
-  /* High-intensity neon color variables */
-  --score-color: #ffd700; 
+  --score-color: #f5c518;
   --score-glow: #f5c518;
-  --track-color: rgba(255, 255, 255, 0.08);
-  
-  width: 62px; 
-  aspect-ratio: 1;
+  --accent-glow: rgba(245, 197, 24, 0.55);
+  --track-color: rgba(255, 255, 255, 0.07);
+  --inner-bg: #0a0a0e;
+
+  width: 62px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   display: grid;
   place-items: center;
   position: relative;
-  
-  /* Layered 3D glassmorphic background with 54% cutout */
-  background: 
-    radial-gradient(circle at center, #0f0f12 54%, transparent 57%),
-    radial-gradient(circle at center, rgba(15, 15, 18, 0.85) 0%, rgba(5, 5, 7, 0.98) 100%),
-    conic-gradient(var(--score-color) 0% var(--user-score), var(--track-color) var(--user-score) 100%);
-  
-  /* Blazing multi-tiered neon glow stacks */
-  box-shadow:
-    inset 0 0 12px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.08),
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 8px 24px -4px rgba(0, 0, 0, 0.6),
-    0 0 12px var(--score-glow),               /* Sharp core neon glow */
-    0 0 25px rgba(245, 197, 24, 0.45),        /* Medium atmospheric glow */
-    0 0 40px rgba(245, 197, 24, 0.2);         /* Wide ultra-bright bloom */
-    
-  backdrop-filter: blur(8px);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
   cursor: pointer;
+
+  /* Multi-layered background */
+  background: 
+    /* Inner metallic base */
+    radial-gradient(circle at 48% 45%, #1f1f26 18%, var(--inner-bg) 58%),
+    
+    /* Subtle highlight ring */
+    radial-gradient(circle at center, rgba(255,255,255,0.09) 0%, transparent 68%),
+    
+    /* Main conic progress */
+    conic-gradient(
+      var(--score-color) 0% calc(var(--user-score) * 1%), 
+      var(--track-color) calc(var(--user-score) * 1%) 100%
+    );
+
+  /* Rich depth & cinematic lighting */
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.78),
+    inset 0 -4px 10px rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+    
+    /* Outer glow using f5c518 */
+    0 0 0 1px rgba(245, 197, 24, 0.18),
+    0 0 20px var(--accent-glow),
+    0 0 42px rgba(245, 197, 24, 0.28),
+    0 12px 35px -8px rgba(0, 0, 0, 0.7);
+
+  backdrop-filter: blur(12px);
+  transition: 
+    transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.4s ease;
+}
+
+.movie-hero-section__user-score:hover {
+  transform: scale(1.08);
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.78),
+    inset 0 -4px 10px rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(245, 197, 24, 0.35),
+    0 0 28px var(--accent-glow),
+    0 0 52px rgba(245, 197, 24, 0.35),
+    0 16px 40px -6px rgba(0, 0, 0, 0.75);
 }
 
 /* Hyper-charged hover radiance */
@@ -677,16 +702,10 @@ body.mobile-sidebar-open {
 .movie-hero-section__user-score::after {
   content: '';
   position: absolute;
-  inset: -1px;
+  inset: 9px;
+  background: #0a0a0e;
   border-radius: 50%;
-  padding: 1px;
-  background: conic-gradient(var(--score-color) 0% var(--user-score), transparent var(--user-score) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  pointer-events: none;
-  filter: drop-shadow(0 0 5px var(--score-glow));
-  opacity: 0.9;
+  box-shadow: inset 0 4px 12px rgba(0,0,0,0.8);
   z-index: 1;
 }
 
@@ -696,7 +715,7 @@ body.mobile-sidebar-open {
   color: #ffffff;
   font-family: var(--font-display, 'Inter', system-ui, sans-serif);
   font-size: 1.2rem; 
-  font-weight: 900; 
+  font-weight: 700; 
   letter-spacing: -0.03em;
   line-height: 1;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(255, 215, 0, 0.3);
