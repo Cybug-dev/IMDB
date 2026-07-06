@@ -4,7 +4,7 @@ import React  from "react";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./MovieCard.scss";
 
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
 
 const getNotableLabel = (movie) => {
   const rating = Number(movie.vote_average) || 0;

@@ -4,7 +4,7 @@ import { faPlay, faPlus, faCheck, faBookmark } from "@fortawesome/free-solid-svg
 import { useHeroCarousel } from "./useHeroCarousel";
 import "./MoviesHeroBanner.scss";
 
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w1280";
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/orginal";
 
 const getImageUrl = (path) => (path ? `${IMAGE_BASE_URL}${path}` : "");
 

@@ -13,8 +13,7 @@ import {
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const POSTER_BASE = "https://image.tmdb.org/t/p/w500";
-const BACKDROP_BASE = "https://image.tmdb.org/t/p/w1280";
+const IMG_BASE = "https://image.tmdb.org/t/p/original";
 
 const STREAMING_OPTIONS = [
   { name: "Netflix", iconSrc: "/src/assets/imageIcons/netflix.png" },
@@ -34,8 +33,8 @@ function MovieHeroSection({
   const watchlistLabel = isInWatchlist ? "In Watchlist" : "Add to Watchlist";
   const posterPath = movie.poster_path || movie.backdrop_path;
   const backdropPath = movie.backdrop_path || movie.poster_path;
-  const posterUrl = posterPath ? `${POSTER_BASE}${posterPath}` : "";
-  const backdropUrl = backdropPath ? `${BACKDROP_BASE}${backdropPath}` : "";
+  const posterUrl = posterPath ? `${IMG_BASE}${posterPath}` : "";
+  const backdropUrl = backdropPath ? `${IMG_BASE}${backdropPath}` : "";
   const releaseYear = movie.release_date
     ? new Date(movie.release_date).getFullYear()
     : "TBA";
