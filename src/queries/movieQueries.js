@@ -30,11 +30,12 @@ const dateDaysAgo = (days) => {
 export const posterUrl = (path, size = "w500") =>
   path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
 
-export const requestTMDB = async (path) => {
+export const requestTMDB = async (path, options = {}) => {
   if (!TOKEN) throw new Error("TMDB API token is missing.");
 
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "GET",
+    signal: options.signal,
     headers: {
       accept: "application/json",
       Authorization: `Bearer ${TOKEN}`,
@@ -80,13 +81,35 @@ const uniqueById = (items) => {
   });
 };
 
-const hasRequiredMovieCardData = (movie) =>
+const isFilledString = (value) =>
+  typeof value === "string" && value.trim().length > 0;
+
+const hasValidMediaDate = (item) => {
+  const date = item?.release_date ?? item?.first_air_date;
+
+  return isFilledString(date) && !Number.isNaN(Date.parse(date));
+};
+
+const hasValidMediaGenres = (item) => {
+  const genres = item?.genres ?? [];
+  const genreIds = item?.genre_ids ?? [];
+
+  return (
+    genres.some((genre) => isFilledString(genre?.name)) ||
+    genreIds.some((genreId) => Number.isFinite(Number(genreId)))
+  );
+};
+
+export const hasCompleteMediaData = (item) =>
   Boolean(
-    movie?.id &&
-      movie.poster_path &&
-      (movie.title || movie.name) &&
-      typeof movie.vote_average === "number" &&
-      movie.vote_average > 0,
+    item?.id &&
+      isFilledString(item.title || item.name) &&
+      isFilledString(item.overview) &&
+      isFilledString(item.poster_path) &&
+      hasValidMediaDate(item) &&
+      typeof item.vote_average === "number" &&
+      item.vote_average > 0 &&
+      hasValidMediaGenres(item),
   );
 
 const excludeMovieIds = (movies, excludeIds = []) => {
@@ -123,11 +146,33 @@ const normalizeMovieDetails = (movieDetails) => {
   };
 };
 
+const normalizeMediaDetails = (mediaDetails, mediaType = "movie") => {
+  const normalizedDetails = normalizeMovieDetails(mediaDetails);
+
+  if (mediaType !== "tv") {
+    return normalizedDetails;
+  }
+
+  return {
+    ...normalizedDetails,
+    media_type: "tv",
+    release_date: mediaDetails.first_air_date ?? mediaDetails.release_date,
+    runtime: mediaDetails.runtime ?? mediaDetails.episode_run_time?.[0] ?? null,
+    title: mediaDetails.name ?? mediaDetails.title,
+  };
+};
+
 export const movieQueryKeys = {
   all: ["tmdb"],
   rawData: (path) => [...movieQueryKeys.all, "data", path],
   rawResults: (path) => [...movieQueryKeys.all, "results", path],
   movieDetails: (movieId) => [...movieQueryKeys.all, "movie", String(movieId)],
+  mediaDetails: (mediaType, mediaId) => [
+    ...movieQueryKeys.all,
+    "media",
+    mediaType,
+    String(mediaId),
+  ],
   genreMoviePage: (genreId, page) => [
     ...movieQueryKeys.all,
     "genre",
@@ -177,6 +222,17 @@ export const movieQueryOptions = {
     enabled: Boolean(movieId),
     staleTime: MOVIE_DETAIL_STALE_TIME,
   }),
+  mediaDetails: (mediaType, mediaId) => {
+    const resolvedMediaType = mediaType === "tv" ? "tv" : "movie";
+
+    return {
+      queryKey: movieQueryKeys.mediaDetails(resolvedMediaType, mediaId),
+      queryFn: () =>
+        requestTMDB(`/${resolvedMediaType}/${mediaId}?append_to_response=credits`),
+      enabled: Boolean(mediaId),
+      staleTime: MOVIE_DETAIL_STALE_TIME,
+    };
+  },
   genreMoviePage: (genreId, page = 1) => ({
     queryKey: movieQueryKeys.genreMoviePage(genreId, page),
     queryFn: async () => {
@@ -252,7 +308,7 @@ const fetchRandomMovieFallback = async () => {
     `${fallbackMoviePaths[randomIndex]}?page=${randomPage()}`,
   );
 
-  return withMediaType(fallbackMovies, "movie");
+  return withMediaType(fallbackMovies, "movie").filter(hasCompleteMediaData);
 };
 
 const buildMoviesDataset = async () => {
@@ -264,7 +320,7 @@ const buildMoviesDataset = async () => {
   const results = uniqueById([
     ...withMediaType(trendingMovies, "movie"),
     ...withMediaType(actionMovies, "movie"),
-  ]);
+  ]).filter(hasCompleteMediaData);
 
   return results.length > 0 ? results : fetchRandomMovieFallback();
 };
@@ -288,7 +344,7 @@ const buildWhatToWatchDataset = async (tabId) => {
     results = uniqueById([
       ...withMediaType(trendingMovies, "movie"),
       ...withMediaType(actionMovies, "movie"),
-    ]);
+    ]).filter(hasCompleteMediaData);
   } else if (tabId === "tv") {
     const [trendingTvShows, popularTvShows] = await Promise.all([
       readResults(`/trending/tv/day?page=${randomPage(3)}`),
@@ -298,7 +354,7 @@ const buildWhatToWatchDataset = async (tabId) => {
     results = uniqueById([
       ...withMediaType(trendingTvShows, "tv"),
       ...withMediaType(popularTvShows, "tv"),
-    ]);
+    ]).filter(hasCompleteMediaData);
   } else {
     const [mixedResults, popularMovies] = await Promise.all([
       readResults(`/trending/all/day?page=${randomPage()}`),
@@ -310,7 +366,7 @@ const buildWhatToWatchDataset = async (tabId) => {
         (item) => item.media_type === "movie" || item.media_type === "tv",
       ),
       ...withMediaType(popularMovies, "movie"),
-    ]);
+    ]).filter(hasCompleteMediaData);
   }
 
   return results.length > 0 ? results : fetchRandomMovieFallback();
@@ -364,7 +420,6 @@ const getMovieCardDetails = async (movies, limit) => {
 
   return uniqueById(
     movies
-      .filter(hasRequiredMovieCardData)
       .map((movie) => ({
         ...movie,
         genres:
@@ -373,7 +428,8 @@ const getMovieCardDetails = async (movies, limit) => {
             id,
             name: genreMap.get(id) ?? "Unknown",
           })),
-      })),
+      }))
+      .filter(hasCompleteMediaData),
   ).slice(0, limit);
 };
 
@@ -465,7 +521,9 @@ export const discoverRankingEngine = () =>
         readResults(`/trending/movie/day?page=${randomPage(3)}`),
         readResults(`/movie/top_rated?page=${randomPage()}`),
       ]);
-      const movies = [...popularMovies, ...trendingMovies, ...topRated];
+      const movies = [...popularMovies, ...trendingMovies, ...topRated].filter(
+        hasCompleteMediaData,
+      );
       const uniqueMovies = Array.from(
         new Map(movies.map((movie) => [movie.id, movie])).values(),
       );
@@ -489,7 +547,7 @@ const enrichWithGenres = (movies, genreMap) =>
       id,
       name: genreMap.get(id) ?? "Unknown",
     })),
-  }));
+  })).filter(hasCompleteMediaData);
 
 const enrichHomeMoviesWithDetails = async (movies) => {
   const detailedMovies = await Promise.allSettled(
@@ -632,4 +690,10 @@ export const useMovieDetails = (movieId) =>
   useQuery({
     ...movieQueryOptions.movieDetails(movieId),
     select: normalizeMovieDetails,
+  });
+
+export const useMediaDetails = (mediaType, mediaId) =>
+  useQuery({
+    ...movieQueryOptions.mediaDetails(mediaType, mediaId),
+    select: (mediaDetails) => normalizeMediaDetails(mediaDetails, mediaType),
   });

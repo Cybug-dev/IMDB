@@ -11,7 +11,6 @@ import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 import GenrePage from "./pages/Genre/GenrePage";
-import MediaDetailsPlaceholder from "./pages/MediaDetails/MediaDetailsPlaceholder";
 import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
 import MoviesPage from "./pages/Movies/MoviesPage";
 import SearchPage from "./pages/Search/SearchPage";
@@ -22,6 +21,7 @@ const getPageFromPath = (pathname) => {
   if (pathname.startsWith("/favorites")) return "favorites";
   if (pathname.startsWith("/genre")) return "genre";
   if (pathname.startsWith("/movie")) return "movie";
+  if (pathname.startsWith("/tv")) return "movie";
   if (pathname.startsWith("/search")) return "search";
   return "home";
 };
@@ -188,6 +188,7 @@ function App() {
           path="/movie/:id"
           element={
             <MovieDetailsPage
+              mediaType="movie"
               onToggleWatchlist={handleToggleWatchlist}
               onToggleFavorite={handleToggleFavorite}
               watchlist={watchlist}
@@ -198,11 +199,15 @@ function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route
           path="/tv/:id"
-          element={<MediaDetailsPlaceholder mediaType="tv" />}
-        />
-        <Route
-          path="/person/:id"
-          element={<MediaDetailsPlaceholder mediaType="person" />}
+          element={
+            <MovieDetailsPage
+              mediaType="tv"
+              onToggleWatchlist={handleToggleWatchlist}
+              onToggleFavorite={handleToggleFavorite}
+              watchlist={watchlist}
+              favorites={favorites}
+            />
+          }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

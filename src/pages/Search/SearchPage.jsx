@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../../components/search/searchApi";
 import { useSearchResults } from "../../components/search/useSearch";
 
@@ -54,7 +56,11 @@ function SearchPage() {
                   <span className="search-page__result-title">{result.title}</span>
                   <span className="search-page__result-meta">
                     <span>{result.mediaTypeLabel}</span>
-                    {result.subtitle && <span>{result.subtitle}</span>}
+                    {result.primaryGenre && <span>{result.primaryGenre}</span>}
+                    <span className="search-page__rating">
+                      <FontAwesomeIcon icon={faStar} />
+                      <span>{result.ratingLabel}</span>
+                    </span>
                   </span>
                   {result.overview && (
                     <span className="search-page__overview">{result.overview}</span>

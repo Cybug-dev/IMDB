@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../search/searchApi";
 import { useHeaderSearch, useSearchHistory } from "../search/useSearch";
 
@@ -177,7 +177,11 @@ function HeaderSearch({ className = "", inputId }) {
                       <span className="header-search__result-title">{result.title}</span>
                       <span className="header-search__result-meta">
                         <span>{result.mediaTypeLabel}</span>
-                        {result.subtitle && <span>{result.subtitle}</span>}
+                        {result.primaryGenre && <span>{result.primaryGenre}</span>}
+                        <span className="header-search__rating">
+                          <FontAwesomeIcon icon={faStar} />
+                          <span>{result.ratingLabel}</span>
+                        </span>
                       </span>
                     </span>
                   </button>

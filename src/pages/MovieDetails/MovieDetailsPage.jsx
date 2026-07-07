@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useMovieDetails } from "../../queries/movieQueries";
+import { useMediaDetails } from "../../queries/movieQueries";
 import MovieHeroSection from "./MovieHeroSection";
 import CastSection from "./CastSection";
 import CastModal from "./CastModal";
 import SectionState from "../../components/Section State/SectionState";
 
 function MovieDetailsPage({
+  mediaType = "movie",
   onToggleWatchlist,
   onToggleFavorite,
   watchlist,
@@ -14,7 +15,7 @@ function MovieDetailsPage({
 }) {
   const { id } = useParams();
   const [isCastModalOpen, setIsCastModalOpen] = useState(false);
-  const { data: movie, error, isPending } = useMovieDetails(id);
+  const { data: movie, error, isPending } = useMediaDetails(mediaType, id);
   const isLoading = Boolean(isPending);
   const currentError = error?.message ?? null;
   const hasData = Boolean(movie);
