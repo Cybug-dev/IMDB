@@ -11,8 +11,10 @@ import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 import GenrePage from "./pages/Genre/GenrePage";
+import MediaDetailsPlaceholder from "./pages/MediaDetails/MediaDetailsPlaceholder";
 import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
 import MoviesPage from "./pages/Movies/MoviesPage";
+import SearchPage from "./pages/Search/SearchPage";
 
 const getPageFromPath = (pathname) => {
   if (pathname.startsWith("/movies")) return "movies";
@@ -20,6 +22,7 @@ const getPageFromPath = (pathname) => {
   if (pathname.startsWith("/favorites")) return "favorites";
   if (pathname.startsWith("/genre")) return "genre";
   if (pathname.startsWith("/movie")) return "movie";
+  if (pathname.startsWith("/search")) return "search";
   return "home";
 };
 
@@ -191,6 +194,15 @@ function App() {
               favorites={favorites}
             />
           }
+        />
+        <Route path="/search" element={<SearchPage />} />
+        <Route
+          path="/tv/:id"
+          element={<MediaDetailsPlaceholder mediaType="tv" />}
+        />
+        <Route
+          path="/person/:id"
+          element={<MediaDetailsPlaceholder mediaType="person" />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

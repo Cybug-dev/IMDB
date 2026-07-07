@@ -27,10 +27,10 @@ const dateDaysAgo = (days) => {
   return date.toISOString().slice(0, 10);
 };
 
-const posterUrl = (path, size = "w500") =>
+export const posterUrl = (path, size = "w500") =>
   path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
 
-const requestTMDB = async (path) => {
+export const requestTMDB = async (path) => {
   if (!TOKEN) throw new Error("TMDB API token is missing.");
 
   const response = await fetch(`${BASE_URL}${path}`, {
@@ -51,7 +51,7 @@ const requestTMDB = async (path) => {
   return data;
 };
 
-const requestResults = async (path) => {
+export const requestResults = async (path) => {
   const data = await requestTMDB(path);
 
   if (!Array.isArray(data.results)) {
