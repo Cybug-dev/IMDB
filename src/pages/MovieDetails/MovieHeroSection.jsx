@@ -110,9 +110,7 @@ function MovieHeroSection({
               </span>
 
               <button type="button" className="movie-hero-section__vibe-button">
-                <span>
-                  What's your <strong>Vibe?</strong>
-                </span>
+                <span>Rate this title</span>
                 <FontAwesomeIcon icon={faCircleInfo} />
               </button>
             </div>
