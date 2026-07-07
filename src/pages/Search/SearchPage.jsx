@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { getSearchResultPath } from "../../components/search/searchApi";
-import { useSearchResults } from "../../components/search/useSearch";
+import { getSearchResultPath } from "../../components/searchEngine/searchApi";
+import { useSearchResults } from "../../components/searchEngine/useSearch";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();

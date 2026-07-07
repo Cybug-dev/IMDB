@@ -2,8 +2,8 @@ import { memo, useCallback, useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faStar } from "@fortawesome/free-solid-svg-icons";
-import { getSearchResultPath } from "../search/searchApi";
-import { useHeaderSearch, useSearchHistory } from "../search/useSearch";
+import { getSearchResultPath } from "../searchEngine/searchApi";
+import { useHeaderSearch, useSearchHistory } from "../searchEngine/useSearch";
 
 function HeaderSearch({ className = "", inputId }) {
   const [query, setQuery] = useState("");
