@@ -103,6 +103,9 @@ export const useHeaderSearch = (inputValue) => {
     queryFn: () => fetchHeaderSuggestions(),
     enabled: !normalizedInput,
     staleTime: SUGGESTIONS_STALE_TIME,
+    gcTime: 1000 * 60 * 2,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
   const searchQuery = useQuery({
     queryKey: searchQueryKeys.header(headerLookupTerm),
