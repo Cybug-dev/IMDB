@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-const DEFAULT_INTERVAL_MS = 7000;
+const DEFAULT_INTERVAL_MS = 3000;
 const SWIPE_THRESHOLD_PX = 48;
 const RESUME_DELAY_MS = 1200;
 
