@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React  from "react";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { Bookmark, Heart } from "lucide-react";
 import "./MovieCard.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
+const FALLBACK_POSTER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 750'%3E%3Crect width='500' height='750' fill='%23101010'/%3E%3Ctext x='50%25' y='50%25' fill='%23999' font-family='Arial' font-size='34' text-anchor='middle' dominant-baseline='middle'%3ENo Poster%3C/text%3E%3C/svg%3E";
 
 const getNotableLabel = (movie) => {
   const rating = Number(movie.vote_average) || 0;
@@ -27,7 +29,13 @@ const getNotableLabel = (movie) => {
   return null;
 };
 
-function MovieCard({ movie }) {
+function MovieCard({
+  movie,
+  onToggleWatchlist,
+  onToggleFavorite,
+  isInWatchlist = false,
+  isInFavorites = false,
+}) {
   const navigate = useNavigate();
   const title = movie.title || movie.name || "Untitled Movie";
   const rating =
@@ -35,8 +43,11 @@ function MovieCard({ movie }) {
       ? movie.vote_average.toFixed(1)
       : "N/A";
   const genres = (movie.genres ?? []).slice(0, 3).map((genre) => genre.name);
-  // const genreText = genres.join(" ");
   const notableLabel = getNotableLabel(movie);
+  const posterPath = movie.poster_path || movie.backdrop_path;
+  const hasCollectionActions =
+    typeof onToggleWatchlist === "function" ||
+    typeof onToggleFavorite === "function";
 
   const goToDetails = () => {
     navigate(`/movie/${movie.id}`);
@@ -47,6 +58,12 @@ function MovieCard({ movie }) {
       event.preventDefault();
       goToDetails();
     }
+  };
+
+  const handleCollectionAction = (event, toggle) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggle?.(movie);
   };
 
   return (
@@ -60,13 +77,57 @@ function MovieCard({ movie }) {
       <div className="movies-card__poster-frame">
         <img
           className="movies-card__poster"
-          src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+          src={posterPath ? `${IMAGE_BASE_URL}${posterPath}` : FALLBACK_POSTER}
           alt={title}
           loading="lazy"
         />
 
         {notableLabel && (
           <span className="movies-card__badge">{notableLabel}</span>
+        )}
+
+        {hasCollectionActions && (
+          <div className="movies-card__action-panel" aria-label="Movie actions">
+            {typeof onToggleWatchlist === "function" && (
+              <button
+                type="button"
+                className={`movies-card__action${
+                  isInWatchlist ? " is-active movies-card__action--watchlist" : ""
+                }`}
+                aria-label={
+                  isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                }
+                title={
+                  isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
+                }
+                onClick={(event) =>
+                  handleCollectionAction(event, onToggleWatchlist)
+                }
+              >
+                <Bookmark aria-hidden="true" size={17} />
+              </button>
+            )}
+
+            {typeof onToggleFavorite === "function" && (
+              <button
+                type="button"
+                className={`movies-card__action${
+                  isInFavorites ? " is-active movies-card__action--favorite" : ""
+                }`}
+                aria-label={
+                  isInFavorites ? "Remove from favourites" : "Add to favourites"
+                }
+                title={
+                  isInFavorites ? "Remove from favourites" : "Add to favourites"
+                }
+                onClick={(event) =>
+                  handleCollectionAction(event, onToggleFavorite)
+                }
+              >
+                <Heart aria-hidden="true" size={17} />
+              </button>
+            )}
+          </div>
         )}
       </div>
 
@@ -84,21 +145,20 @@ function MovieCard({ movie }) {
           {typeof movie.runtime === "number" && movie.runtime > 0 && (
             <span className="movies-card__runtime">{movie.runtime} min</span>
           )}
-  
-  {/* Block 2: Genres Wrapper */}
-  <div className="movies-card__genres">
-    {genres &&
-      genres.map((genre, index) => (
-        <React.Fragment key={index}>
-          <span>{genre}</span>
-          {index < genres.length - 1 && (
-            <span className="separator">•</span>
-          )}
-        </React.Fragment>
-      ))}
-  </div>
-</div>
 
+          {genres.length > 0 && (
+            <div className="movies-card__genres">
+              {genres.map((genre, index) => (
+                <span className="movies-card__genre" key={genre}>
+                  {genre}
+                  {index < genres.length - 1 && (
+                    <span className="separator">/</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </article>
   );

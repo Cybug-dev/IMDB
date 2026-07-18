@@ -1,5 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCalendarDays,
+  faClock,
   faStar,
   faHeart as faHeartSolid,
   faCircleInfo,
@@ -19,14 +21,25 @@ function MovieCard2({
   onToggleFavorite,
   isInWatchlist,
   isInFavorites,
+  variant = "default",
 }) {
   const navigate = useNavigate();
   const posterPath = movie.poster_path || movie.backdrop_path;
+  const releaseYear =
+    (movie.release_date || movie.first_air_date)?.split("-")[0] || "TBA";
+  const runtimeMinutes =
+    typeof movie.runtime === "number"
+      ? movie.runtime
+      : Array.isArray(movie.episode_run_time) && movie.episode_run_time.length
+        ? movie.episode_run_time[0]
+        : null;
+  const runtime = runtimeMinutes ? `${runtimeMinutes}mmm` : "N/A";
   const rating =
     typeof movie.vote_average === "number"
       ? movie.vote_average.toFixed(1)
       : "N/A";
   const displayGenres = (movie.genres ?? []).slice(0, 2).map((g) => g.name);
+  const isSectionVariant = variant === "section";
   const goToDetails = () => navigate(`/movie/${movie.id}`);
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -37,17 +50,18 @@ function MovieCard2({
 
   return (
     <article
-      className="movie-card2 ui-surface-card"
+      className={`movie-card2 movie-card2--${variant} ui-surface-card`}
       role="button"
       tabIndex={0}
       onClick={goToDetails}
       onKeyDown={handleKeyDown}
     >
-      <div className="movie-card__poster">
+      <div className="movie-card2__media">
         <img
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
           alt={movie.title}
           className="movie-card2__poster"
+          loading="lazy"
         />
         <div className="movie-card2__media-overlay" />
 
@@ -91,11 +105,25 @@ function MovieCard2({
           <span className="movie-card2__title-text">
             {movie.title || movie.name || "Untitled Movie"}
           </span>
-          <FontAwesomeIcon
-            icon={faCircleInfo}
-            className="movie-card2__info-icon"
-          />
+          {!isSectionVariant && (
+            <FontAwesomeIcon
+              icon={faCircleInfo}
+              className="movie-card2__info-icon"
+            />
+          )}
         </h3>
+        {isSectionVariant && (
+          <div className="movie-card2__meta">
+            <span className="movie-card2__meta-item">
+              <FontAwesomeIcon icon={faCalendarDays} />
+              <span>{releaseYear}</span>
+            </span>
+            <span className="movie-card2__meta-item">
+              <FontAwesomeIcon icon={faClock} />
+              <span>{runtime}</span>
+            </span>
+          </div>
+        )}
 
         {displayGenres.length > 0 && (
           <div className="movie-card2__genres">
@@ -107,27 +135,31 @@ function MovieCard2({
           </div>
         )}
 
-        <div className="movie-card2__rating">
-          <FontAwesomeIcon icon={faStar} />
-          <span>{rating}</span>
-        </div>
+        {!isSectionVariant && (
+          <>
+            <div className="movie-card2__rating">
+              <FontAwesomeIcon icon={faStar} />
+              <span>{rating}</span>
+            </div>
 
-        <button
-          type="button"
-          className="movie-card2__trailer-button"
-          onClick={(event) => event.stopPropagation()}
-        >
-          <FontAwesomeIcon icon={faPlay} />
-          <span>Watch trailer</span>
-        </button>
+            <button
+              type="button"
+              className="movie-card2__trailer-button"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <FontAwesomeIcon icon={faPlay} />
+              <span>Watch trailer</span>
+            </button>
 
-        <div className="movie-card2__watch-on">
-          <span className="movie-card2__watch-on-label">Watch on</span>
-          <span className="movie-card2__watch-on-dots" aria-hidden="true">
-            <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--violet" />
-            <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--red" />
-          </span>
-        </div>
+            <div className="movie-card2__watch-on">
+              <span className="movie-card2__watch-on-label">Watch on</span>
+              <span className="movie-card2__watch-on-dots" aria-hidden="true">
+                <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--violet" />
+                <span className="movie-card2__watch-on-dot movie-card2__watch-on-dot--red" />
+              </span>
+            </div>
+          </>
+        )}
       </div>
     </article>
   );

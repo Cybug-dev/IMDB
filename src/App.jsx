@@ -1,5 +1,5 @@
 import "./App.scss";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Navigate,
   Route,
@@ -7,6 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { Toaster } from "sonner";
 import Header from "./components/Header/Header";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
@@ -14,6 +15,9 @@ import GenrePage from "./pages/Genre/GenrePage";
 import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
 import MoviesPage from "./pages/Movies/MoviesPage";
 import SearchPage from "./pages/Search/SearchPage";
+import { showCollectionToast } from "./utils/collectionToast";
+
+const COLLECTION_TOGGLE_DEBOUNCE_MS = 260;
 
 const getPageFromPath = (pathname) => {
   if (pathname.startsWith("/movies")) return "movies";
@@ -33,6 +37,9 @@ function App() {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const watchlistRef = useRef(watchlist);
+  const favoritesRef = useRef(favorites);
+  const collectionActionTimersRef = useRef({});
   const [isHeaderGlass, setIsHeaderGlass] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [heroContentBoundaryNode, setHeroContentBoundaryNode] = useState(null);
@@ -90,26 +97,94 @@ function App() {
 
     navigate(paths[page] ?? "/");
   }, [navigate]);
+
+  useEffect(() => {
+    watchlistRef.current = watchlist;
+  }, [watchlist]);
+
+  useEffect(() => {
+    favoritesRef.current = favorites;
+  }, [favorites]);
+
+  useEffect(() => {
+    const actionTimers = collectionActionTimersRef.current;
+
+    return () => {
+      Object.values(actionTimers).forEach((timer) => clearTimeout(timer));
+    };
+  }, []);
+
+  const toggleCollection = useCallback((type, movie) => {
+    if (!movie?.id) return;
+
+    const timerKey = `${type}-${movie.id}`;
+
+    if (collectionActionTimersRef.current[timerKey]) {
+      clearTimeout(collectionActionTimersRef.current[timerKey]);
+    }
+
+    collectionActionTimersRef.current[timerKey] = setTimeout(() => {
+      const isWatchlist = type === "watchlist";
+      const collectionRef = isWatchlist ? watchlistRef : favoritesRef;
+      const setCollection = isWatchlist ? setWatchlist : setFavorites;
+      const exists = collectionRef.current.some((item) => item.id === movie.id);
+      const nextCollection = exists
+        ? collectionRef.current.filter((item) => item.id !== movie.id)
+        : [...collectionRef.current, movie];
+
+      collectionRef.current = nextCollection;
+      setCollection(nextCollection);
+      showCollectionToast({
+        movie,
+        type,
+        action: exists ? "removed" : "added",
+      });
+
+      delete collectionActionTimersRef.current[timerKey];
+    }, COLLECTION_TOGGLE_DEBOUNCE_MS);
+  }, []);
+
   const handleToggleWatchlist = useCallback((movie) => {
-    setWatchlist((prev) => {
-      const exists = prev.some((m) => m.id === movie.id);
-      return exists ? prev.filter((m) => m.id !== movie.id) : [...prev, movie];
-    });
-  }, []);
+    toggleCollection("watchlist", movie);
+  }, [toggleCollection]);
+
   const handleToggleFavorite = useCallback((movie) => {
-    setFavorites((prev) => {
-      const exists = prev.some((m) => m.id === movie.id);
-      return exists ? prev.filter((m) => m.id !== movie.id) : [...prev, movie];
-    });
-  }, []);
+    toggleCollection("favorite", movie);
+  }, [toggleCollection]);
+
   const handleClearCollection = useCallback((type) => {
-    type === "watchlist" ? setWatchlist([]) : setFavorites([]);
+    const actionType = type === "favorites" ? "favorite" : type;
+
+    Object.entries(collectionActionTimersRef.current).forEach(([key, timer]) => {
+      if (key.startsWith(`${actionType}-`)) {
+        clearTimeout(timer);
+        delete collectionActionTimersRef.current[key];
+      }
+    });
+
+    if (type === "watchlist") {
+      watchlistRef.current = [];
+      setWatchlist([]);
+      return;
+    }
+
+    favoritesRef.current = [];
+    setFavorites([]);
   }, []);
   const shouldUseGlassHeader = currentPage !== "home" || isHeaderGlass;
   const shouldUsePageBackground = currentPage === "home";
 
   return (
     <div className={`app-shell${shouldUsePageBackground ? " app-shell--home" : ""}`}>
+      <Toaster
+        position="bottom-center"
+        richColors
+        closeButton={false}
+        visibleToasts={2}
+        toastOptions={{
+          duration: 3600,
+        }}
+      />
       <Header
         onNavigate={handleNavigate}
         currentPage={currentPage}
