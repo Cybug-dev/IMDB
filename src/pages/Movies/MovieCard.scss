@@ -43,6 +43,92 @@
   pointer-events: none;
 }
 
+.movies-card__action-panel {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  padding: 46px 12px 12px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.movies-card:hover .movies-card__action-panel,
+.movies-card:focus-within .movies-card__action-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.movies-card__action {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 18, 18, 0.82);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-16px);
+  transition:
+    opacity 0.22s ease,
+    transform 0.24s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.movies-card__action:nth-child(2) {
+  transition-delay: 0.04s, 0.04s, 0s, 0s, 0s;
+}
+
+.movies-card:hover .movies-card__action,
+.movies-card:focus-within .movies-card__action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.movies-card__action:hover,
+.movies-card__action:focus-visible {
+  background: rgba(36, 36, 36, 0.94);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.movies-card__action:focus-visible {
+  outline: 2px solid rgba(245, 197, 24, 0.66);
+  outline-offset: 3px;
+}
+
+.movies-card__action.is-active.movies-card__action--watchlist {
+  background: var(--imdb-yellow);
+  border-color: transparent;
+  color: #111111;
+}
+
+.movies-card__action.is-active.movies-card__action--favorite {
+  background: var(--heart-color);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.movies-card__action.is-active svg {
+  fill: currentColor;
+}
+
 .movies-card__poster {
   width: 100%;
   height: 100%;
@@ -199,5 +285,10 @@
 
   .movies-card__genres {
     gap: 4px;
+  }
+
+  .movies-card__action {
+    width: 32px;
+    height: 32px;
   }
 }

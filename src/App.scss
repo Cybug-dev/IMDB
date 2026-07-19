@@ -1573,10 +1573,10 @@ body.mobile-sidebar-open {
 }
 
 /* Movie details mature refresh */
-.movie-details-page {
-  background:
-    linear-gradient(180deg, #090909 0%, #111111 48%, #0b0b0b 100%);
-}
+// .movie-details-page {
+//   background:
+//     // linear-gradient(180deg, #090909 0%, #111111 48%, #0b0b0b 100%);
+// }
 
 .movie-hero-section {
   min-height: auto;
@@ -2613,26 +2613,6 @@ body.mobile-sidebar-open {
   font-family: var(--font-display);
 }
 
-/* Featured movies grid layout */
-.featured-movies__grid {
-  display: grid;
-  gap: 20px;
-  padding-bottom: 0;
-  overflow: visible;
-}
-
-.featured-movies__grid > * {
-  min-width: 0;
-}
-
-.featured-movies--trending .featured-movies__grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.featured-movies--compact .featured-movies__grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 /* Movie card shell */
 .movie-card {
   position: relative;
@@ -2790,7 +2770,6 @@ body.mobile-sidebar-open {
 
 .movie-card__title {
   margin: 0;
-  font-size: var(--card-title-size);
   line-height: 1.18;
   font-weight: 800;
   font-family: var(--font-display);
@@ -2812,7 +2791,7 @@ body.mobile-sidebar-open {
   flex-wrap: wrap;
   align-items: center;
   gap: 14px;
-  margin-top: -2px;
+  margin-top: 5px;
   color: rgba(255, 255, 255, 0.54);
   font-size: var(--card-meta-size);
 }
@@ -2833,6 +2812,10 @@ body.mobile-sidebar-open {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+
+@media (max-width: 580px) { 
+ display: none;
+}
 }
 
 .movie-card__genre-tag {
@@ -3164,14 +3147,6 @@ body.mobile-sidebar-open {
     width: min(100%, 500px);
   }
 
-  .featured-movies--featured .featured-movies__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .featured-movies--compact .featured-movies__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .collection-page__inner {
     padding-bottom: 64px;
   }
@@ -3203,9 +3178,6 @@ body.mobile-sidebar-open {
     order: 3;
   }
 
-  .featured-movies__grid {
-    gap: 18px;
-  }
 }
 
 /* Mobile layout */
@@ -3267,11 +3239,6 @@ body.mobile-sidebar-open {
 
   .featured-movies {
     padding-top: 34px;
-  }
-
-  .featured-movies--trending .featured-movies__grid,
-  .featured-movies--compact .featured-movies__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .collection-page__inner {
@@ -3347,26 +3314,12 @@ body.mobile-sidebar-open {
     margin-bottom: 18px;
   }
 
-  .featured-movies--trending .featured-movies__grid,
-  .featured-movies--compact .featured-movies__grid {
-    grid-template-columns: repeat(0, minmax(0, 1fr));
-
-    @media (max-width: 499px) {
-       grid-template-columns: minmax(0, 1fr);
-    }
-
-  }
-
   .movie-card__info {
-    gap: 10px;
+    gap: 7px;
   }
 
   .movie-card__title {
     min-height: auto;
-  }
-
-  .movie-card__desc {
-    font-size: 0.94rem;
   }
 
   .collection-page__topbar {
@@ -3402,7 +3355,7 @@ body.mobile-sidebar-open {
 .genre-list {
   display: flex;
   flex-direction: row;
-  gap: 18px;
+  gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
   flex-wrap: nowrap;
@@ -3422,9 +3375,8 @@ body.mobile-sidebar-open {
 
 .genre-card {
   position: relative;
-  flex: 0 0 clamp(170px, 17vw, 208px);
-  min-width: clamp(170px, 17vw, 208px);
-  aspect-ratio: 0.7;
+  min-width: 170px;
+  aspect-ratio: 0.6;
   border-radius: 16px;
   background: linear-gradient(180deg, #1f1f1f 0%, #171717 100%);
   border: 1px solid rgba(255, 255, 255, 0.04);
@@ -3630,7 +3582,7 @@ body.mobile-sidebar-open {
 .what-to-watch__rail {
   display: flex;
   align-items: stretch;
-  gap: 18px;
+  gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 6px 2px 18px;
@@ -3799,6 +3751,27 @@ body.mobile-sidebar-open {
 
 .movie-card2__genre:last-child::after {
   display: none;
+}
+
+.movie-card2__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.movie-card2__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.movie-card2__meta-item svg {
+  color: #6cb7ff;
+  font-size: 0.72rem;
 }
 
 .movie-card2__rating {
