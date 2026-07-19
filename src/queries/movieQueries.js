@@ -588,9 +588,9 @@ const buildHomePageMovies = async () => {
     fetchGenresListOnly(),
   ]);
   const genreMap = new Map(genreList.map((genre) => [genre.id, genre.name]));
-  const enrichedTrending = enrichWithGenres(trendingData, genreMap).slice(0, 4);
-  const enrichedTopRated = enrichWithGenres(topRatedData, genreMap).slice(0, 6);
-  const enrichedFeatured = enrichWithGenres(featuredData, genreMap).slice(0, 3);
+  const enrichedTrending = enrichWithGenres(trendingData, genreMap).slice(0, 12);
+  const enrichedTopRated = enrichWithGenres(topRatedData, genreMap).slice(0, 12);
+  const enrichedFeatured = enrichWithGenres(featuredData, genreMap).slice(0, 12);
   const enrichedHero = enrichWithGenres(heroData, genreMap).slice(0, 5);
   const enrichedTopRanked = enrichWithGenres(topRankedData, genreMap).slice(0, 10);
   const [

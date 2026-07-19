@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import MovieCard from "./MovieCard";
+import MovieCard from "../Movies/MovieCard";
 import SectionState from "../../components/Section State/SectionState";
+import "../Movies/MoviesSection.scss";
 
 function FeaturedMovies({
   title,
@@ -12,7 +13,6 @@ function FeaturedMovies({
   onToggleFavorite,
   watchlist,
   favorites,
-  visibleLimit,
   loading = false,
   error = null,
 }) {
@@ -29,8 +29,7 @@ function FeaturedMovies({
         : "default";
   const isCompactSection = isFeaturedSection || isTopRatedSection;
 
-  const fallbackLimit = isTrendingSection ? 4 : isFeaturedSection ? 3 : 6;
-  const visibleMovies = movies.slice(0, visibleLimit ?? fallbackLimit);
+  const visibleMovies = movies;
   const isLoading = Boolean(loading);
   const hasError = Boolean(error);
   const hasData = Array.isArray(visibleMovies) && visibleMovies.length > 0;  
@@ -68,7 +67,7 @@ function FeaturedMovies({
         error={error} 
         data={visibleMovies} />
       ) : (
-        <div className="featured-movies__grid">
+        <div className="movies-section__list">
           {visibleMovies.map((movie) => (
             <MovieCard
               key={movie.id}

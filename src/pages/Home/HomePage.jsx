@@ -37,19 +37,16 @@ function HomePage({
       movies: featured,
       LeftIcon: Award,
       RightIcon: Sparkles,
-      visibleLimit: 3,
     },
     {
       title: "Trending Now",
       movies: trending,
       LeftIcon: TrendingUp,
-      visibleLimit: 4,
     },
     {
       title: "Top Rated Movies",
       movies: topRated,
       LeftIcon: Star,
-      visibleLimit: 6,
     },
   ];
 
