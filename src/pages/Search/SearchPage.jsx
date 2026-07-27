@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../../components/searchEngine/searchApi";
 import { useSearchResults } from "../../components/searchEngine/useSearch";
+import SectionState from "../../components/Section State/SectionState";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -12,7 +13,7 @@ function SearchPage() {
     () => searchParams.get("query")?.trim() ?? "",
     [searchParams],
   );
-  const { data, isError, isLoading } = useSearchResults({ query });
+  const { data, error, isError, isLoading, refetch } = useSearchResults({ query });
   const results = data?.results ?? [];
 
   return (
@@ -25,17 +26,21 @@ function SearchPage() {
           </h1>
         </header>
 
-        {isLoading && <p className="search-page__status">Searching...</p>}
-        {isError && (
-          <p className="search-page__status">Search is unavailable right now.</p>
-        )}
         {!query && <p className="search-page__status">Enter a search from the header.</p>}
 
-        {!isLoading && !isError && query && results.length === 0 && (
-          <p className="search-page__status">No results found.</p>
+        {query && (isLoading || isError || results.length === 0) && (
+          <SectionState
+            loading={isLoading}
+            error={isError ? error : null}
+            data={results}
+            loadingMessage="Searching..."
+            emptyTitle="No results found"
+            emptyMessage="Try searching for a different title, person, or genre."
+            onRetry={refetch}
+          />
         )}
 
-        {results.length > 0 && (
+        {query && !isLoading && !isError && results.length > 0 && (
           <div className="search-page__results">
             {results.map((result) => (
               <button

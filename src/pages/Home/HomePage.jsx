@@ -18,6 +18,7 @@ function HomePage({
     data = {},
     error,
     isPending,
+    refetch,
   } = useHomePageMovies();
   const {
     featured = [],
@@ -54,6 +55,9 @@ function HomePage({
     <main className="home-page">
       <HeroBanner
         movies={heroMovies}
+        loading={loading}
+        error={error}
+        onRetry={refetch}
         onToggleWatchlist={onToggleWatchlist}
         onToggleFavorite={onToggleFavorite}
         watchlist={watchlist}
@@ -83,11 +87,13 @@ function HomePage({
             visibleLimit={section.visibleLimit}
             loading={loading}
             error={errorMessage}
+            onRetry={refetch}
           />
         ))}
         <TopRanked movies={topRankedMovies} 
         loading={loading} 
-        error={errorMessage} />
+        error={errorMessage}
+        onRetry={refetch} />
 
         <BrowseByGenre onNavigate={onNavigate} />
       </div>

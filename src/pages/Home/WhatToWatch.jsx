@@ -3,6 +3,7 @@ import FilterTabs from "../../components/FilterTabs";
 import { useWhatToWatchDataset } from "../../queries/movieQueries";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
 import MovieCard2 from "./MovieCard2";
+import SectionState from "../../components/Section State/SectionState";
 
 function WhatToWatch({
   onToggleWatchlist,
@@ -12,7 +13,7 @@ function WhatToWatch({
 }) {
   const railRef = useRef(null);
   const [activeTab, setActiveTab] = useState(WATCH_FILTERS[0].id);
-  const { data: movies = [], error, isFetching, isPending } =
+  const { data: movies = [], error, isFetching, isPending, refetch } =
     useWhatToWatchDataset(activeTab);
 
   useEffect(() => {
@@ -43,10 +44,16 @@ function WhatToWatch({
           />
         </div>
 
-        {isLoading ? (
-          <div className="what-to-watch__loading">
-            <div className="what-to-watch__spinner" />
-          </div>
+        {isLoading || error || visibleMovies.length === 0 ? (
+          <SectionState
+            loading={isLoading}
+            error={error}
+            data={visibleMovies}
+            loadingMessage="Loading picks..."
+            emptyTitle="No picks found"
+            emptyMessage="There are no recommendations available right now."
+            onRetry={refetch}
+          />
         ) : (
           <div
           className="what-to-watch__rail" ref={railRef}>
@@ -61,11 +68,6 @@ function WhatToWatch({
             />
           ))}
         </div>
-        )}
-        {error && (
-          <div className="what-to-watch__status">
-            <p>Hey check your internet connection</p>
-          </div>
         )}
       </div>
     </section>

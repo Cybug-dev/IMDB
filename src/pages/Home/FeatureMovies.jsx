@@ -15,6 +15,7 @@ function FeaturedMovies({
   favorites,
   loading = false,
   error = null,
+  onRetry,
 }) {
   const normalizedTitle = title.toLowerCase();
   const isFeaturedSection = normalizedTitle.includes("featured");
@@ -62,10 +63,12 @@ function FeaturedMovies({
       </div>
 
       {isLoading || hasError || !hasData ? (
-        <SectionState 
-        loading={isLoading} 
-        error={error} 
-        data={visibleMovies} />
+        <SectionState
+          loading={isLoading}
+          error={error}
+          data={visibleMovies}
+          onRetry={onRetry}
+        />
       ) : (
         <div className="movies-section__list">
           {visibleMovies.map((movie) => (

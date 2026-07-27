@@ -20,6 +20,7 @@ function MoviesPage({
   const {
     data: sectionData = {},
     isPending: sectionsLoading,
+    refetch: refetchSections,
   } = useMoviesPageSections();
   const {
     latestMovies = [],
@@ -30,7 +31,7 @@ function MoviesPage({
     upcomingMovies = [],
   } = sectionData;
 
-  const { items, loading, error } = useFeaturedHeroMedia({
+  const { items, loading, error, refetch: refetchHero } = useFeaturedHeroMedia({
     fetchPopular,
     fetchGenres: fetchGenresListOnly,
     mediaType: "movie",
@@ -50,6 +51,7 @@ function MoviesPage({
         items={items}
         loading={loading}
         error={error}
+        onRetry={refetchHero}
         watchlist={watchlist}
         favorites={favorites}
         onPlay={handlePlay}
@@ -62,30 +64,35 @@ function MoviesPage({
         movies={nowShowingMovies}
         loading={sectionsLoading}
         error={sectionErrors.nowShowing}
+        onRetry={refetchSections}
       />
       <MoviesSection
         title="Latest Movies"
         movies={latestMovies}
         loading={sectionsLoading}
         error={sectionErrors.latest}
+        onRetry={refetchSections}
       />
       <MoviesSection
         title="Upcoming Movies"
         movies={upcomingMovies}
         loading={sectionsLoading}
         error={sectionErrors.upcoming}
+        onRetry={refetchSections}
       />
       <MoviesSection
         title="Popular"
         movies={popularMovies}
         loading={sectionsLoading}
         error={sectionErrors.popular}
+        onRetry={refetchSections}
       />
       <MoviesSection
         title="Top Rated"
         movies={topRatedMovies}
         loading={sectionsLoading}
         error={sectionErrors.topRated}
+        onRetry={refetchSections}
       />
     </main>
   );

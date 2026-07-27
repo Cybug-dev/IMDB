@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
+import SectionState from "../../components/Section State/SectionState";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 
@@ -28,8 +29,27 @@ function MovieHeroSection({
   onToggleFavorite,
   isInWatchlist,
   isInFavorites,
+  loading = false,
+  error = null,
+  onRetry,
 }) {
   const navigate = useNavigate();
+  if (loading || error || !movie) {
+    return (
+      <SectionState
+        as="section"
+        className="movie-hero-section"
+        variant="hero"
+        loading={loading}
+        error={error}
+        data={movie}
+        emptyTitle="Movie not found"
+        emptyMessage="This movie is not available right now."
+        onRetry={onRetry}
+      />
+    );
+  }
+
   const watchlistLabel = isInWatchlist ? "In Watchlist" : "Add to Watchlist";
   const posterPath = movie.poster_path || movie.backdrop_path;
   const backdropPath = movie.backdrop_path || movie.poster_path;

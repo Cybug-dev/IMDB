@@ -70,6 +70,7 @@ export function useFeaturedHeroMedia({
     items: query.data ?? [],
     loading: query.isPending,
     error: query.error?.message ?? null,
+    refetch: query.refetch,
   };
 }
 

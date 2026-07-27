@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../searchEngine/searchApi";
 import { useHeaderSearch, useSearchHistory } from "../searchEngine/useSearch";
+import SectionState from "../Section State/SectionState";
 
 function HeaderSearch({ className = "", inputId }) {
   const [query, setQuery] = useState("");
@@ -143,16 +144,31 @@ function HeaderSearch({ className = "", inputId }) {
           )}
 
           {!isSearching && suggestionsQuery.isLoading && (
-            <p className="header-search__status">Loading popular picks...</p>
+            <SectionState
+              loading
+              data={[1]}
+              loadingMessage="Loading popular picks..."
+            />
           )}
 
           {isSearching && isReadyToSearch && (searchQuery.isLoading || isDebouncing) && (
-            <p className="header-search__status">Searching...</p>
+            <SectionState loading data={[1]} loadingMessage="Searching..." />
           )}
 
-          {((isSearching && searchQuery.isError) ||
-            (!isSearching && suggestionsQuery.isError)) && (
-            <p className="header-search__status">Search is unavailable right now.</p>
+          {isSearching && searchQuery.isError && (
+            <SectionState
+              error={searchQuery.error}
+              data={resultItems}
+              onRetry={searchQuery.refetch}
+            />
+          )}
+
+          {!isSearching && suggestionsQuery.isError && (
+            <SectionState
+              error={suggestionsQuery.error}
+              data={resultItems}
+              onRetry={suggestionsQuery.refetch}
+            />
           )}
 
           {resultItems.length > 0 && (

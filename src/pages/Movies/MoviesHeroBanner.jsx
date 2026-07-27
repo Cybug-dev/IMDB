@@ -2,6 +2,7 @@ import { memo, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useHeroCarousel } from "./useHeroCarousel";
+import SectionState from "../../components/Section State/SectionState";
 import "./MoviesHeroBanner.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
@@ -18,6 +19,7 @@ function MoviesHeroBanner({
   onPlay,
   onToggleWatchlist,
   onToggleFavorite,
+  onRetry,
   playLabel = "Play",
   listLabel = "My List",
   favoriteLabel = "Favourite",
@@ -48,25 +50,42 @@ function MoviesHeroBanner({
 
   if (loading) {
     return (
-      <section aria-busy="true" aria-label="Featured movies">
-        <p>Loading featured movies...</p>
-      </section>
+      <SectionState
+        as="section"
+        variant="hero"
+        loading
+        aria-busy="true"
+        aria-label="Featured movies"
+        className="movies-hero-state"
+      />
     );
   }
 
   if (error) {
     return (
-      <section role="status" aria-label="Featured movies">
-        <p>{error}</p>
-      </section>
+      <SectionState
+        as="section"
+        variant="hero"
+        error={error}
+        data={items}
+        onRetry={onRetry}
+        aria-label="Featured movies"
+        className="movies-hero-state"
+      />
     );
   }
 
   if (!activeItem) {
     return (
-      <section role="status" aria-label="Featured movies">
-        <p>{emptyMessage}</p>
-      </section>
+      <SectionState
+        as="section"
+        variant="hero"
+        data={items}
+        emptyTitle="No featured movies found"
+        emptyMessage={emptyMessage}
+        aria-label="Featured movies"
+        className="movies-hero-state"
+      />
     );
   }
 

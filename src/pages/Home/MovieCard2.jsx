@@ -25,6 +25,7 @@ function MovieCard2({
 }) {
   const navigate = useNavigate();
   const posterPath = movie.poster_path || movie.backdrop_path;
+  // const movieTitle = 
   const releaseYear =
     (movie.release_date || movie.first_air_date)?.split("-")[0] || "TBA";
   const runtimeMinutes =

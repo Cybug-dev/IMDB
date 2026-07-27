@@ -9,6 +9,7 @@ function MoviesSection({
   movies,
   loading = false,
   error = null,
+  onRetry,
   limit = 12,
 }) {
   const headingId = `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-heading`;
@@ -68,6 +69,7 @@ function MoviesSection({
         loading={currentState.loading}
         error={currentState.error}
         data={currentState.movies}
+        onRetry={onRetry}
       />
 
       {!currentState.loading && !currentState.error && hasMovies && (

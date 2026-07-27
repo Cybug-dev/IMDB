@@ -9,6 +9,7 @@ function BrowseByGenre({ onNavigate }) {
     data: genres = [],
     error,
     isPending,
+    refetch,
   } = useGenresWithImages(6, 5);
   const isLoading = Boolean(isPending);
   const hasError = Boolean(error);
@@ -36,7 +37,15 @@ function BrowseByGenre({ onNavigate }) {
       </h2>
       <p className="description">Discover movies by your favorite genres</p>
        {isLoading || hasError || !hasData ? (
-        <SectionState loading={isLoading} error={error} data={hasData ? [1] : []} />
+        <SectionState
+          loading={isLoading}
+          error={error}
+          data={hasData ? [1] : []}
+          loadingMessage="Loading genres..."
+          emptyTitle="No genres found"
+          emptyMessage="There are no genres available right now."
+          onRetry={refetch}
+        />
       ) : (
        <div className="genre-list">
         {genreEngine.genres.map((genre) => (

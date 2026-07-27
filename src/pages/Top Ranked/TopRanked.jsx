@@ -6,6 +6,7 @@ function TopRanked({
   movies,
   loading = false,
   error = null,
+  onRetry,
 }) {
   const isLoading = Boolean(loading);
   const hasError = Boolean(error);
@@ -22,7 +23,12 @@ function TopRanked({
   if (isLoading || hasError || !hasData) {
     return (
       <section className="top-10-section">
-        <SectionState loading={isLoading} error={error || (hasInvalidMovies ? "Invalid ranked movie data." : null)} data={hasData ? [1] : []} />
+        <SectionState
+          loading={isLoading}
+          error={error || (hasInvalidMovies ? "Invalid ranked movie data." : null)}
+          data={hasData ? [1] : []}
+          onRetry={onRetry}
+        />
       </section>
     );
   }

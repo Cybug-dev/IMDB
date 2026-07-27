@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Check, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SectionState from "../../components/Section State/SectionState";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
@@ -25,6 +26,9 @@ function HeroBanner({
   watchlist,
   favorites,
   contentBoundaryRef,
+  loading = false,
+  error = null,
+  onRetry,
 }) {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -86,7 +90,21 @@ function HeroBanner({
     [],
   );
 
-  if (!movies || movieCount === 0) return null;
+  if (loading || error || !movies || movieCount === 0) {
+    return (
+      <SectionState
+        as="section"
+        className="hero-banner"
+        variant="hero"
+        loading={loading}
+        error={error}
+        data={movies}
+        emptyTitle="No featured movies found"
+        emptyMessage="There are no featured movies available right now."
+        onRetry={onRetry}
+      />
+    );
+  }
   const movie = movies[safeActiveIndex] ?? movies[0];
 
   const isInWatchlist = watchlist.some((item) => item.id === movie.id);
