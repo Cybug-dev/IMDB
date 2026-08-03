@@ -225,6 +225,7 @@ function App() {
               type="watchlist"
               items={watchlist}
               onClear={() => handleClearCollection("watchlist")}
+              onNavigate={handleNavigate}
               onToggleWatchlist={handleToggleWatchlist}
               onToggleFavorite={handleToggleFavorite}
             />
@@ -237,6 +238,7 @@ function App() {
               type="favorites"
               items={favorites}
               onClear={() => handleClearCollection("favorites")}
+              onNavigate={handleNavigate}
               onToggleWatchlist={handleToggleWatchlist}
               onToggleFavorite={handleToggleFavorite}
             />

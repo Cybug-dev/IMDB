@@ -28,6 +28,7 @@ function CollectionPage({
   type,
   items,
   onClear,
+  onNavigate,
   onToggleWatchlist,
   onToggleFavorite,
 }) {
@@ -40,8 +41,9 @@ function CollectionPage({
     type === "watchlist" ? "var(--imdb-yellow)" : "var(--heart-color)";
   // const handleClear = () => setItems([]);
   const handleBrowse = () => {
-    // TODO: navigate to Movies page when routing is added
+    onNavigate("movies")
   };
+  
   const handleLoadMore = () => setVisibleCount((prev) => prev + 5);
 
   return (

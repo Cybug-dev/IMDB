@@ -4,7 +4,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { Bookmark, Heart } from "lucide-react";
 import "./MovieCard.scss";
 
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
+const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780";
 const FALLBACK_POSTER =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 750'%3E%3Crect width='500' height='750' fill='%23101010'/%3E%3Ctext x='50%25' y='50%25' fill='%23999' font-family='Arial' font-size='34' text-anchor='middle' dominant-baseline='middle'%3ENo Poster%3C/text%3E%3C/svg%3E";
 
