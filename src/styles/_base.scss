@@ -66,4 +66,8 @@ button {
 
 .heading {
   color: var(--text-primary);
+
+  @media (max-width: 387px) {
+  font-size: 1em;    
+  }
 }

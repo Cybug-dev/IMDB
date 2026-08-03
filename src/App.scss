@@ -2137,10 +2137,18 @@ body.mobile-sidebar-open {
 
 .hero-banner__nav--prev {
   left: 24px;
+
+  @media (max-width: 500px) {
+    left: 5px;
+  }
 }
 
 .hero-banner__nav--next {
   right: 24px;
+
+  @media (max-width: 500px) {
+    right: 5px;
+  }
 }
 
 .hero-banner__dots {
@@ -2153,7 +2161,7 @@ body.mobile-sidebar-open {
   gap: 0.6rem;
 
   @media (max-width: 700px) {
-    bottom: 0px;
+    bottom: 10px;
   }
 }
 
@@ -2565,6 +2573,10 @@ body.mobile-sidebar-open {
   width: 1.1rem;
   stroke-width: 2px;
   color: var(--imdb-yellow);
+
+  @media (max-width: 980px ) {
+    margin-right: 5px;
+  }
 }
 
 .featured-movies__head .lucide-sparkels {
@@ -2618,6 +2630,11 @@ body.mobile-sidebar-open {
   align-items: center;
   gap: 8px;
   font-family: var(--font-display);
+
+  @media (max-width: 500px) {
+    font-size: 0.7rem;
+    gap: 0px;
+  }
 }
 
 /* Movie card shell */
@@ -2945,7 +2962,7 @@ body.mobile-sidebar-open {
 }
 
 .collection-clear:disabled {
-  opacity: 0.72;
+  opacity: 0;
   color: #b3bac7;
 }
 

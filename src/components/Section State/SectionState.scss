@@ -72,6 +72,9 @@
 
 .section-state--hero {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-height: clamp(360px, 50vh, 520px);
   border: 0;
   border-radius: 0;
