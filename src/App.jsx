@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { Toaster } from "sonner";
 import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 import GenrePage from "./pages/Genre/GenrePage";
@@ -288,6 +289,7 @@ function App() {
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
