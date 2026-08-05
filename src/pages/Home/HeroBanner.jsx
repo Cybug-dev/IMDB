@@ -18,6 +18,7 @@ import SectionState from "../../components/Section State/SectionState";
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
 const TRANSITION_MS = 560;
+const AUTO_ADVANCE_ENABLED = false;
 
 function HeroBanner({
   movies,
@@ -59,13 +60,12 @@ function HeroBanner({
   }, [isTransitioning]);
 
   useEffect(() => {
-    if (movieCount === 0) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+
+    if (movieCount === 0 || !AUTO_ADVANCE_ENABLED) {
       return undefined;
     }
-
-    clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
       const currentIndex = activeIndexRef.current;
