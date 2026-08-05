@@ -49,6 +49,12 @@ function App() {
     setHeaderHeight(height);
   }, []);
 
+  // useEffect(() => {
+  //   if ("scrollRestoration" in window.history) {
+  //     window.history.scrollRestoration = "manual";
+  //   }
+  // }, []);
+
   useEffect(() => {
     if (currentPage !== "home") {
       return undefined;
