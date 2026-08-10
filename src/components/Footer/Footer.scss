@@ -1,0 +1,312 @@
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--page-bg);
+}
+
+.footer__main,
+.footer__bottom {
+  width: min(100%, var(--content-width));
+  margin: 0 auto;
+  padding-right: var(--content-gutter);
+  padding-left: var(--content-gutter);
+}
+
+.footer__main {
+  padding-top: 56px;
+  padding-bottom: 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.9fr) minmax(0, 1fr);
+  gap: clamp(30px, 5vw, 76px);
+}
+
+.footer h2 {
+  margin: 0 0 18px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.footer__logo {
+  display: inline-flex;
+  padding: 4px 7px;
+  border-radius: 4px;
+  background: var(--imdb-yellow);
+  color: var(--text-dark);
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  text-decoration: none;
+}
+
+.footer__description,
+.footer__newsletter > p {
+  max-width: 34ch;
+  margin: 16px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.footer__contact-list {
+  margin-top: 20px;
+  display: grid;
+  gap: 11px;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  font-style: normal;
+}
+
+.footer__contact-list span,
+.footer__contact-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.footer__contact-list svg {
+  flex: 0 0 auto;
+  color: var(--imdb-yellow);
+}
+
+.footer__contact-list a {
+  width: fit-content;
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer__contact-list a:hover,
+.footer__contact-list a:focus-visible,
+.footer__bottom a:hover,
+.footer__bottom a:focus-visible {
+  color: var(--imdb-yellow);
+}
+
+.footer__movie-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.footer__movie {
+  aspect-ratio: 0.68;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: var(--surface-elevated);
+}
+
+.footer__movie img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 220ms var(--hero-transition-ease), opacity 220ms ease;
+}
+
+.footer__movie:hover img,
+.footer__movie:focus-visible img {
+  opacity: 0.82;
+  transform: scale(1.06);
+}
+
+.footer__movie:focus-visible {
+  outline: 2px solid var(--imdb-yellow);
+  outline-offset: 2px;
+}
+
+.footer__movie-grid--loading {
+  pointer-events: none;
+}
+
+.footer__movie-skeleton {
+  aspect-ratio: 0.68;
+  background: linear-gradient(100deg, var(--surface-elevated) 25%, rgba(255, 255, 255, 0.09) 45%, var(--surface-elevated) 65%);
+  background-size: 220% 100%;
+  animation: footer-shimmer 1.25s linear infinite;
+}
+
+.footer__movie-state.section-state {
+  min-height: 150px;
+  padding: 16px;
+  text-align: left;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.footer__movie-state.section-state h2 {
+  margin-bottom: 4px;
+  font-size: 0.86rem;
+}
+
+.footer__movie-state.section-state p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.footer__movie-state .section-state__action {
+  margin-top: 8px;
+}
+
+.footer__newsletter h2 span {
+  color: var(--heart-color);
+}
+
+.footer__subscribe {
+  margin-top: 18px;
+  display: flex;
+  gap: 8px;
+}
+
+.footer__subscribe input {
+  min-width: 0;
+  width: 100%;
+  height: 39px;
+  padding: 0 11px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 7px;
+  outline: 0;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.footer__subscribe input:focus {
+  border-color: var(--imdb-yellow);
+}
+
+.footer__subscribe button {
+  min-height: 39px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 7px;
+  background: var(--imdb-yellow);
+  color: var(--text-dark);
+  font-size: 0.78rem;
+  font-weight: 800;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.footer__subscribe button:hover,
+.footer__subscribe button:focus-visible {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.footer__email-error {
+  margin: 7px 0 0;
+  color: #ff8b8b;
+  font-size: 0.76rem;
+}
+
+.footer__socials {
+  margin-top: 20px;
+  display: flex;
+  gap: 9px;
+}
+
+.footer__socials a {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.footer__socials a:hover,
+.footer__socials a:focus-visible {
+  border-color: var(--imdb-yellow);
+  color: var(--imdb-yellow);
+  transform: translateY(-2px);
+}
+
+.footer__socials span {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.footer__bottom {
+  min-height: 68px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footer__bottom p,
+.footer__bottom nav {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
+.footer__bottom nav {
+  display: flex;
+  gap: 22px;
+}
+
+.footer__bottom a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+@keyframes footer-shimmer {
+  to { background-position: -120% 0; }
+}
+
+@media (max-width: 700px) {
+  .footer__main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer__newsletter {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer__main {
+    padding-top: 42px;
+    padding-bottom: 38px;
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+
+  .footer__newsletter {
+    grid-column: auto;
+  }
+
+  .footer__movie-grid {
+    max-width: 320px;
+  }
+
+  .footer__subscribe {
+    max-width: 360px;
+  }
+
+  .footer__subscribe input,
+  .footer__subscribe button,
+  .footer__socials a {
+    min-height: 44px;
+  }
+
+  .footer__socials a {
+    width: 44px;
+    height: 44px;
+  }
+
+  .footer__bottom {
+    min-height: 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
