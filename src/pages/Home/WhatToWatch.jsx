@@ -55,19 +55,18 @@ function WhatToWatch({
             onRetry={refetch}
           />
         ) : (
-          <div
-          className="what-to-watch__rail" ref={railRef}>
-          {visibleMovies.map((movie) => (
-            <MovieCard2
-              key={movie.id}
-              movie={movie}
-              onToggleWatchlist={onToggleWatchlist}
-              onToggleFavorite={onToggleFavorite}
-              isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-              isInFavorites={favorites.some((m) => m.id === movie.id)}
-            />
-          ))}
-        </div>
+          <div className="what-to-watch__rail" ref={railRef}>
+            {visibleMovies.map((movie) => (
+              <MovieCard2
+                key={movie.id}
+                movie={movie}
+                onToggleWatchlist={onToggleWatchlist}
+                onToggleFavorite={onToggleFavorite}
+                isInWatchlist={watchlist.some((m) => m.id === movie.id)}
+                isInFavorites={favorites.some((m) => m.id === movie.id)}
+              />
+            ))}
+          </div>
         )}
       </div>
     </section>

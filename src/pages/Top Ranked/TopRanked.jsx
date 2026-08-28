@@ -77,6 +77,17 @@ function TopRanked({
         ))}
       </div>
 
+      <div className="top-10-section__mobile-rail">
+        {topTenMovies.map((movie, index) => (
+          <TopRankedCard
+            key={movie.id}
+            movie={movie}
+            rank={index + 1}
+            variant="compact"
+          />
+        ))}
+      </div>
+
       <button type="button" className="top-10-section__see-all">
         See all
       </button>
