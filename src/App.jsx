@@ -10,6 +10,7 @@ import {
 import { Toaster } from "sonner";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
+import CookieConsent from "./components/CookieConsent/CookieConsent";
 import CollectionPage from "./pages/Collection/CollectionPage";
 import HomePage from "./pages/Home/HomePage";
 import GenrePage from "./pages/Genre/GenrePage";
@@ -192,6 +193,7 @@ function App() {
           duration: 3600,
         }}
       />
+      <CookieConsent />
       <Header
         onNavigate={handleNavigate}
         currentPage={currentPage}

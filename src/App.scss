@@ -5,6 +5,7 @@
 .app-shell {
   min-height: 100vh;
   width: 100%;
+  background: var(--page-bg);
 }
 
 .app-shell--home {
@@ -637,9 +638,7 @@ body.mobile-sidebar-open {
 .media-placeholder {
   min-height: 100vh;
   padding: calc(var(--runtime-header-height) + 44px) var(--content-rail) 72px;
-  background:
-    linear-gradient(180deg, rgba(245, 197, 24, 0.08), transparent 220px),
-    #080808;
+  background: var(--page-bg);
 }
 
 .search-page__inner,
@@ -977,7 +976,7 @@ body.mobile-sidebar-open {
   width: 100%;
   min-height: 100vh;
   padding: calc(var(--runtime-header-height) + 20px) 0 72px;
-  background: #050505;
+  background: var(--page-bg);
   overflow: hidden;
 }
 
@@ -995,17 +994,17 @@ body.mobile-sidebar-open {
   inset: 0;
   background:
     linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.34) 0%,
+      rgba(0, 0, 0, 0.12) 36%,
+      var(--page-bg) 100%
+    ),
+    linear-gradient(
       90deg,
       rgba(0, 0, 0, 0.94) 0%,
       rgba(0, 0, 0, 0.78) 28%,
       rgba(0, 0, 0, 0.46) 58%,
       rgba(0, 0, 0, 0.86) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.34) 0%,
-      rgba(0, 0, 0, 0.12) 36%,
-      rgba(0, 0, 0, 0.88) 100%
     );
 }
 
@@ -1719,7 +1718,7 @@ body.mobile-sidebar-open {
 .movie-hero-section {
   min-height: auto;
   padding: calc(var(--runtime-header-height) + 46px) 0 68px;
-  background: #080808;
+  background: var(--page-bg);
 }
 
 .movie-hero-section__backdrop {
@@ -1732,17 +1731,17 @@ body.mobile-sidebar-open {
 .movie-hero-section__backdrop::after {
   background:
     linear-gradient(
+      180deg,
+      rgba(5, 5, 5, 0.34) 0%,
+      rgba(5, 5, 5, 0.72) 58%,
+      var(--page-bg) 100%
+    ),
+    linear-gradient(
       90deg,
       rgba(5, 5, 5, 0.98) 0%,
       rgba(5, 5, 5, 0.88) 34%,
       rgba(5, 5, 5, 0.58) 68%,
       rgba(5, 5, 5, 0.9) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(5, 5, 5, 0.34) 0%,
-      rgba(5, 5, 5, 0.72) 58%,
-      #080808 100%
     );
 }
 
@@ -1898,7 +1897,7 @@ body.mobile-sidebar-open {
   display: flex;
   align-items: center;
   justify-content: start;
-  background-color: #0d0d0d;
+  background-color: var(--page-bg);
   overflow: hidden;
   isolation: isolate;
 }
@@ -1943,13 +1942,18 @@ body.mobile-sidebar-open {
   z-index: 1;
   background:
     linear-gradient(
+      180deg,
+      rgba(8, 8, 8, 0.12) 0%,
+      rgba(8, 8, 8, 0.32) 48%,
+      var(--page-bg) 100%
+    ),
+    linear-gradient(
       90deg,
       rgba(0, 0, 0, 0.86) 0%,
       rgba(0, 0, 0, 0.66) 34%,
       rgba(0, 0, 0, 0.28) 62%,
       rgba(0, 0, 0, 0.7) 100%
-    ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(0, 0, 0, 0.7) 100%);
+    );
   pointer-events: none;
 }
 
@@ -3170,6 +3174,51 @@ body.mobile-sidebar-open {
   }
 }
 
+@media (max-width: 767px) {
+  .collection-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 16px 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+  }
+
+  .collection-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .collection-item {
+    flex: 0 0 clamp(128px, 38vw, 154px);
+    width: auto;
+    border-radius: 11px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (hover: none) and (max-width: 767px) {
+  .collection-item__hover {
+    padding: 10px;
+    background: linear-gradient(180deg, transparent 35%, rgba(8, 10, 15, 0.84));
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .collection-item__title {
+    font-size: 0.76rem;
+  }
+
+  .collection-item__remove {
+    align-self: stretch;
+    justify-content: center;
+    padding: 7px 8px;
+    font-size: 0.72rem;
+  }
+}
+
 /* Compact mobile layout */
 @media (max-width: 520px) {
   .hero-banner {
@@ -3758,8 +3807,8 @@ body.mobile-sidebar-open {
   }
 
   .what-to-watch__rail > * {
-    flex-basis: min(190px, 54vw);
-    min-width: min(190px, 54vw);
+    flex-basis: min(154px, 42vw);
+    min-width: min(154px, 42vw);
   }
 
   .what-to-watch {
@@ -3776,8 +3825,8 @@ body.mobile-sidebar-open {
   }
 
   .what-to-watch__rail > * {
-    flex-basis: min(190px, 54vw);
-    min-width: min(190px, 54vw);
+    flex-basis: min(154px, 42vw);
+    min-width: min(154px, 42vw);
   }
 
   
@@ -3881,6 +3930,10 @@ body.mobile-sidebar-open {
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
   margin-top: 14px;
+}
+
+.top-10-section__mobile-rail {
+  display: none;
 }
 
 .top-10-section__see-all {
@@ -4276,38 +4329,32 @@ body.mobile-sidebar-open {
     padding-top: var(--section-spacing);
   }
 
-  .top-10-section__featured {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .top-10-section__featured--medium {
-    display: none;
-  }
-
+  .top-10-section__featured,
+  .top-10-section__featured--medium,
   .top-10-section__compact {
     display: none;
   }
 
-  .top-ranked-card--featured {
-    grid-template-columns: 86px minmax(0, 1fr);
-    padding: 8px 8px 11px;
-    column-gap: 10px;
-    row-gap: 4px;
+  .top-10-section__mobile-rail {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px 16px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
   }
 
-  .top-ranked-card__title {
-    font-size: 0.84rem;
-  }
-
-  .top-ranked-card__meta,
-  .top-ranked-card__rating {
-    font-size: 0.72rem;
-  }
-
-  .top-ranked-card__overview {
+  .top-10-section__mobile-rail::-webkit-scrollbar {
     display: none;
+  }
+
+  .top-10-section__mobile-rail > * {
+    flex: 0 0 clamp(128px, 38vw, 154px);
+    min-width: clamp(128px, 38vw, 154px);
+    scroll-snap-align: start;
   }
 
   .top-10-section__see-all {

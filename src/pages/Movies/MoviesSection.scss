@@ -41,6 +41,31 @@
   padding: 4px 0 1.25rem;
 }
 
+/* Phone rails keep movie browsing compact and swipeable instead of stacking cards. */
+@media (max-width: 767px) {
+  .movies-section__list {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 0 16px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-inline: contain;
+  }
+
+  .movies-section__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .movies-section__list > * {
+    flex: 0 0 clamp(128px, 38vw, 154px);
+    min-width: clamp(128px, 38vw, 154px);
+    scroll-snap-align: start;
+  }
+}
+
 /* Small phones */
 @media (min-width: 380px) {
   .movies-section__list {

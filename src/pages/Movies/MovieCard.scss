@@ -264,6 +264,10 @@
     cursor: default;
   }
 
+  .movies-card__poster-frame {
+    aspect-ratio: 0.69;
+  }
+
   .movies-card:hover,
   .movies-card:focus-visible {
     transform: none; /* no lift on touch devices */
@@ -275,7 +279,7 @@
   }
 
   .movies-card__title {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     line-height: 1.22;
   }
 
@@ -284,8 +288,8 @@
   }
 
   .movies-card__details {
-    gap: 5px;
-    font-size: 0.68rem;
+    gap: 3px;
+    font-size: 0.64rem;
   }
 
   .movies-card__genres {
@@ -306,8 +310,8 @@
   }
 
   .movies-card__body {
-    padding: 10px 9px 12px;
-    gap: 7px;
+    padding: 8px 8px 10px;
+    gap: 5px;
   }
 }
 

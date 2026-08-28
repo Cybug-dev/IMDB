@@ -1,14 +1,14 @@
 :root {
-  --page-bg: #050505;
-  --page-bg-accent: #1a1a1a;
-  --surface: #060606;
-  --surface-elevated: #121a2e;
+  --page-bg: #080808;
+  --page-bg-accent: #080808;
+  --surface: #0d0d0d;
+  --surface-elevated: #171717;
   --border-subtle: rgba(255, 255, 255, 0.1);
   --text-primary: #ffffff;
   --text-dark: #050505;
-  --dark-bg-color: linear-gradient(180deg, #1f1f1f 0%, #171717 100%);
-  --text-secondary: #93a0bd;
-  --text-tertiary: #7e8da9;
+  --dark-bg-color: linear-gradient(180deg, #1b1b1b 0%, #111111 100%);
+  --text-secondary: #a3a3a3;
+  --text-tertiary: #7d7d7d;
   --imdb-yellow: #f5c518;
   --heart-color: #ff3a3a;
   --content-width: 1180px;
@@ -41,7 +41,7 @@
   --font-display: "Sora", "Plus Jakarta Sans", "Segoe UI", sans-serif;
   font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
   color: var(--text-primary);
-  background: var(--page-bg-accent);
+  background: var(--page-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

@@ -18,7 +18,7 @@ import SectionState from "../../components/Section State/SectionState";
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
 const TRANSITION_MS = 560;
-const AUTO_ADVANCE_ENABLED = false;
+const AUTO_ADVANCE_ENABLED = true;
 
 function HeroBanner({
   movies,
