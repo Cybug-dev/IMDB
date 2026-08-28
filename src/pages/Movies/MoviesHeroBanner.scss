@@ -40,8 +40,8 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
 main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::before {
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.52) 42%, rgba(5, 5, 5, 0.16) 100%),
-    linear-gradient(180deg, rgba(5, 5, 5, 0.14) 0%, rgba(5, 5, 5, 0.1) 44%, var(--page-bg) 100%);
+    linear-gradient(180deg, rgba(5, 5, 5, 0.14) 0%, rgba(5, 5, 5, 0.1) 44%, var(--page-bg) 100%),
+    linear-gradient(90deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0.52) 42%, rgba(5, 5, 5, 0.16) 100%);
 }
 
 main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article::after {

@@ -6,27 +6,8 @@
 }
 
 @mixin background {
-  background-color: #050507;
-
-  background-image:
-    /* Large cinematic neon glow - top right */
-    radial-gradient(
-      ellipse at 82% 18%,
-      rgba(245, 197, 24, 0.105) 0%,
-      rgba(245, 197, 24, 0.038) 36%,
-      transparent 58%
-    ),
-    
-    /* Secondary soft bloom for balance */
-    radial-gradient(
-      circle at 22% 78%,
-      rgba(245, 197, 24, 0.065) 0%,
-      transparent 52%
-    );
-
-  background-size: 100% 100%, 100% 100%;
-  background-position: 0 0;
-  background-attachment: scroll;
+  background-color: var(--page-bg);
+  background-image: none;
 }
 
 @mixin neon-button($primary-color: #f5c518, $dark-text: #050507) {

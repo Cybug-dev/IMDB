@@ -5,6 +5,7 @@
 .app-shell {
   min-height: 100vh;
   width: 100%;
+  background: var(--page-bg);
 }
 
 .app-shell--home {
@@ -637,9 +638,7 @@ body.mobile-sidebar-open {
 .media-placeholder {
   min-height: 100vh;
   padding: calc(var(--runtime-header-height) + 44px) var(--content-rail) 72px;
-  background:
-    linear-gradient(180deg, rgba(245, 197, 24, 0.08), transparent 220px),
-    #080808;
+  background: var(--page-bg);
 }
 
 .search-page__inner,
@@ -977,7 +976,7 @@ body.mobile-sidebar-open {
   width: 100%;
   min-height: 100vh;
   padding: calc(var(--runtime-header-height) + 20px) 0 72px;
-  background: #050505;
+  background: var(--page-bg);
   overflow: hidden;
 }
 
@@ -995,17 +994,17 @@ body.mobile-sidebar-open {
   inset: 0;
   background:
     linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.34) 0%,
+      rgba(0, 0, 0, 0.12) 36%,
+      var(--page-bg) 100%
+    ),
+    linear-gradient(
       90deg,
       rgba(0, 0, 0, 0.94) 0%,
       rgba(0, 0, 0, 0.78) 28%,
       rgba(0, 0, 0, 0.46) 58%,
       rgba(0, 0, 0, 0.86) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.34) 0%,
-      rgba(0, 0, 0, 0.12) 36%,
-      rgba(0, 0, 0, 0.88) 100%
     );
 }
 
@@ -1719,7 +1718,7 @@ body.mobile-sidebar-open {
 .movie-hero-section {
   min-height: auto;
   padding: calc(var(--runtime-header-height) + 46px) 0 68px;
-  background: #080808;
+  background: var(--page-bg);
 }
 
 .movie-hero-section__backdrop {
@@ -1732,17 +1731,17 @@ body.mobile-sidebar-open {
 .movie-hero-section__backdrop::after {
   background:
     linear-gradient(
+      180deg,
+      rgba(5, 5, 5, 0.34) 0%,
+      rgba(5, 5, 5, 0.72) 58%,
+      var(--page-bg) 100%
+    ),
+    linear-gradient(
       90deg,
       rgba(5, 5, 5, 0.98) 0%,
       rgba(5, 5, 5, 0.88) 34%,
       rgba(5, 5, 5, 0.58) 68%,
       rgba(5, 5, 5, 0.9) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(5, 5, 5, 0.34) 0%,
-      rgba(5, 5, 5, 0.72) 58%,
-      #080808 100%
     );
 }
 
@@ -1898,7 +1897,7 @@ body.mobile-sidebar-open {
   display: flex;
   align-items: center;
   justify-content: start;
-  background-color: #0d0d0d;
+  background-color: var(--page-bg);
   overflow: hidden;
   isolation: isolate;
 }
