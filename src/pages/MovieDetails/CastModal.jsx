@@ -1,119 +1,103 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { Search, X } from "lucide-react";
 import { getInitials } from "../../utils/stringUtils";
 
 const getCastKey = (actor) =>
-  actor.credit_id ?? `${actor.id}-${actor.order ?? actor.character ?? ""}`;
+  actor.credit_id ?? String(actor.id) + "-" + (actor.order ?? actor.character ?? "");
 
-const CastModal = ({ cast, onClose }) => {
+function CastModal({ cast, onClose }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredCast = useMemo(() => {
     const castList = Array.isArray(cast) ? cast : [];
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const term = searchTerm.trim().toLowerCase();
 
-    if (!normalizedSearch) return castList;
+    if (!term) return castList;
 
-    return castList.filter((actor) => {
-      const actorName = actor.name?.toLowerCase() ?? "";
-      const characterName = actor.character?.toLowerCase() ?? "";
-
-      return (
-        actorName.includes(normalizedSearch) ||
-        characterName.includes(normalizedSearch)
-      );
-    });
+    return castList.filter((actor) =>
+      [actor.name, actor.character]
+        .filter(Boolean)
+        .some((value) => value.toLowerCase().includes(term)),
+    );
   }, [cast, searchTerm]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
+      if (event.key === "Escape") onClose();
     };
 
     document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const handleBackdropMouseDown = (event) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
-
   return createPortal(
-    <div 
-    className="cast-modal"
-    role="presentation"
-    onMouseDown={handleBackdropMouseDown}
+    <div
+      className="movie-cast-modal"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
     >
-      <div
-        className="cast-modal__container"
+      <section
+        className="movie-cast-modal__dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="cast-modal-title"
+        aria-labelledby="full-cast-title"
       >
-        <header className="cast-modal__header">
-        <h2 id="cast-modal-title" className="heading">
-          Full Cast
-        </h2>
-      <button
-      type="button"
-      onClick={onClose}
-      className="cast-modal__close ui-icon-button"
-      aria-label="Close Cast Modal">
-        <FontAwesomeIcon icon={faXmark} />
-      </button>
-      </header>
+        <header className="movie-cast-modal__header">
+          <div>
+            <p>Meet the cast</p>
+            <h2 id="full-cast-title">Full cast</h2>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close full cast">
+            <X aria-hidden="true" size={20} />
+          </button>
+        </header>
 
-      <label className="cast-modal__search">
-        <span className="sr-only">Search Cast</span>
-          <input 
-          type="search" 
-          placeholder="Search by actor or character" 
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-          autoFocus
-        />
+        <label className="movie-cast-modal__search">
+          <Search aria-hidden="true" size={17} />
+          <span className="sr-only">Search cast</span>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Search actor or character"
+            autoFocus
+          />
         </label>
-        <div className="cast-modal__body">
+
+        <div className="movie-cast-modal__body">
           {filteredCast.length > 0 ? (
-            <div className="cast-modal__grid">
+            <div className="movie-cast-modal__grid">
               {filteredCast.map((actor) => (
-                <article key={getCastKey(actor)} className="cast-card">
+                <article key={getCastKey(actor)} className="movie-cast-modal__person">
                   {actor.profile_path ? (
                     <img
-                      src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
+                      src={"https://image.tmdb.org/t/p/w185" + actor.profile_path}
                       alt={actor.name}
-                      className="cast-card__image"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="cast-card__initials" aria-hidden="true">
+                    <div className="movie-cast-modal__initials" aria-hidden="true">
                       {getInitials(actor.name)}
                     </div>
                   )}
-                  <h3 className="cast-card__name">{actor.name}</h3>
-                  <p className="cast-card__character">{actor.character}</p>
+                  <h3>{actor.name}</h3>
+                  <p>{actor.character || "Cast"}</p>
                 </article>
               ))}
             </div>
           ) : (
-            <div className="cast-modal__empty">
+            <p className="movie-cast-modal__empty">
               No cast members match your search.
-            </div>
+            </p>
           )}
         </div>
-      </div>
+      </section>
     </div>,
     document.body,
   );
-};
+}
 
 export default CastModal;
