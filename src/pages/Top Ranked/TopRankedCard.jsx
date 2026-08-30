@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPlus, faStar } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
@@ -21,6 +22,7 @@ const formatRuntime = (minutes) => {
 };
 
 function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
+  const navigate = useNavigate();
   const posterPath = movie.poster_path
     ? `${IMG_BASE}${movie.poster_path}`
     : null;
@@ -42,9 +44,26 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   const overview = movie.overview || "No description available.";
   const cardClassName = `top-ranked-card top-ranked-card--${variant}`;
 
+  const goToDetails = () => {
+    navigate(`/movie/${movie.id}`);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      goToDetails();
+    }
+  };
+
   if (variant === "compact") {
     return (
-      <article className={cardClassName}>
+      <article
+        className={cardClassName}
+        role="button"
+        tabIndex={0}
+        onClick={goToDetails}
+        onKeyDown={handleKeyDown}
+      >
         <div className="top-ranked-card__poster">
           <span className="top-ranked-card__badge">#{rank}</span>
           {posterPath ? (
@@ -62,9 +81,20 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   }
 
   return (
-    <article className={cardClassName}>
+    <article
+      className={cardClassName}
+      role="button"
+      tabIndex={0}
+      onClick={goToDetails}
+      onKeyDown={handleKeyDown}
+    >
       <div className="top-ranked-card__poster">
-        <button type="button" className="top-ranked-card__add" aria-label={`Add ${title}`}>
+        <button
+          type="button"
+          className="top-ranked-card__add"
+          aria-label={`Add ${title}`}
+          onClick={(event) => event.stopPropagation()}
+        >
           <FontAwesomeIcon icon={faPlus} />
         </button>
         {posterPath ? (
@@ -91,13 +121,21 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
             <span>({formatVotes(movie.vote_count)})</span>
           </span>
 
-          <button type="button" className="top-ranked-card__rate">
+          <button
+            type="button"
+            className="top-ranked-card__rate"
+            onClick={(event) => event.stopPropagation()}
+          >
             <FontAwesomeIcon icon={faStar} />
             <span>Rate</span>
           </button>
         </div>
 
-        <button type="button" className="top-ranked-card__watched">
+        <button
+          type="button"
+          className="top-ranked-card__watched"
+          onClick={(event) => event.stopPropagation()}
+        >
           <FontAwesomeIcon icon={faEye} />
           <span>Mark as watched</span>
         </button>

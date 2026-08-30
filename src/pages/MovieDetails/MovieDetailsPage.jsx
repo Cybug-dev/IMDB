@@ -1,9 +1,7 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useMediaDetails } from "../../queries/movieQueries";
-import MovieHeroSection from "./MovieHeroSection";
-import CastSection from "./CastSection";
-import CastModal from "./CastModal";
+import MovieDetailsContent from "./MovieDetailsContent";
+import MovieDetailsState from "./MovieDetailsState";
+import useMovieDetailsPage from "./useMovieDetailsPage";
+import "./MovieDetails.scss";
 
 function MovieDetailsPage({
   mediaType = "movie",
@@ -12,48 +10,49 @@ function MovieDetailsPage({
   watchlist,
   favorites,
 }) {
-  const { id } = useParams();
-  const [isCastModalOpen, setIsCastModalOpen] = useState(false);
-  const { data: movie, error, isPending, refetch } = useMediaDetails(mediaType, id);
-  const isLoading = Boolean(isPending);
-  const currentError = error?.message ?? null;
-  const hasData = Boolean(movie);
+  const page = useMovieDetailsPage({
+    mediaType,
+    onToggleWatchlist,
+    onToggleFavorite,
+    watchlist,
+    favorites,
+  });
 
-  if (!id) return <div className="page-error">Movie ID not found.</div>;
+  if (!page.id) {
+    return (
+      <MovieDetailsState
+        type="empty"
+        title="Movie ID not found"
+        message="Choose a movie to view its details."
+      />
+    );
+  }
 
-  return (
-    <div className="movie-details-page">
-      {isLoading || currentError || !hasData ? (
-        <MovieHeroSection
-          loading={isLoading}
-          error={currentError}
-          onRetry={refetch}
-        />
-      ) : (
-        <>
-          <MovieHeroSection
-            movie={movie}
-            onToggleWatchlist={() => onToggleWatchlist(movie)}
-            onToggleFavorite={() => onToggleFavorite(movie)}
-            isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-            isInFavorites={favorites.some((m) => m.id === movie.id)}
-          />
-          <CastSection
-            cast={movie.cast}
-            onViewFullCast={() => setIsCastModalOpen(true)}
-            isCastModalOpen={isCastModalOpen}
-          />
+  if (page.isLoading) {
+    return <MovieDetailsState type="loading" />;
+  }
 
-          {isCastModalOpen && (
-            <CastModal
-              cast={movie.cast}
-              onClose={() => setIsCastModalOpen(false)}
-            />
-          )}
-        </>
-      )}
-    </div>
-  );
+  if (page.error) {
+    return (
+      <MovieDetailsState
+        type="error"
+        message={page.error}
+        onRetry={page.retry}
+      />
+    );
+  }
+
+  if (!page.movie) {
+    return (
+      <MovieDetailsState
+        type="empty"
+        title="Movie not found"
+        message="This title is not available right now."
+      />
+    );
+  }
+
+  return <MovieDetailsContent {...page} />;
 }
 
 export default MovieDetailsPage;

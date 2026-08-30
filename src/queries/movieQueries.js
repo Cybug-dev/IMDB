@@ -172,6 +172,7 @@ export const movieQueryKeys = {
     "media",
     mediaType,
     String(mediaId),
+    "extended",
   ],
   genreMoviePage: (genreId, page) => [
     ...movieQueryKeys.all,
@@ -228,7 +229,9 @@ export const movieQueryOptions = {
     return {
       queryKey: movieQueryKeys.mediaDetails(resolvedMediaType, mediaId),
       queryFn: () =>
-        requestTMDB(`/${resolvedMediaType}/${mediaId}?append_to_response=credits`),
+        requestTMDB(
+          `/${resolvedMediaType}/${mediaId}?append_to_response=credits,videos,recommendations,reviews`,
+        ),
       enabled: Boolean(mediaId),
       staleTime: MOVIE_DETAIL_STALE_TIME,
     };
