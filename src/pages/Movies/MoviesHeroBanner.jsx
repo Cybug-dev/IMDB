@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useHeroCarousel } from "./useHeroCarousel";
 import SectionState from "../../components/Section State/SectionState";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 import "./MoviesHeroBanner.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
@@ -113,7 +114,13 @@ function MoviesHeroBanner({
       key={activeItemKey} onClick={handleSlideClick}>
 
         {backdropUrl && (
-          <img src={backdropUrl} alt="" aria-hidden="true" loading="eager" />
+          <ImageWithSkeleton
+            variant="hero"
+            className="movies-hero-banner__image"
+            src={backdropUrl}
+            alt=""
+            loading="eager"
+          />
         )}
 
         <div className="hero-banner__content">

@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { Bookmark, Heart } from "lucide-react";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 import "./MovieCard.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780";
@@ -75,7 +76,7 @@ function MovieCard({
       onKeyDown={handleKeyDown}
     >
       <div className="movies-card__poster-frame">
-        <img
+        <ImageWithSkeleton
           className="movies-card__poster"
           src={posterPath ? `${IMAGE_BASE_URL}${posterPath}` : FALLBACK_POSTER}
           alt={title}

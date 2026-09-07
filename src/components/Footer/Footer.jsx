@@ -4,6 +4,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import SectionState from "../Section State/SectionState";
 import ComingSoon from "../ComingSoon/ComingSoon";
 import { useFooterMovies } from "./useFooterMovies";
+import ImageWithSkeleton from "../ImageWithSkeleton/ImageWithSkeleton";
 import "./Footer.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w342";
@@ -54,7 +55,12 @@ function FooterMovieGrid() {
           onClick={() => navigate(`/movie/${movie.id}`)}
           aria-label={`View ${movie.title}`}
         >
-          <img src={`${IMAGE_BASE_URL}${movie.poster_path}`} alt="" loading="lazy" />
+          <ImageWithSkeleton
+            src={movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : undefined}
+            alt=""
+            loading="lazy"
+            fallbackLabel={"Poster unavailable for " + movie.title}
+          />
         </button>
       ))}
     </div>

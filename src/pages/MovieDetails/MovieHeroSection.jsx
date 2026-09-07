@@ -1,4 +1,5 @@
 import { ArrowLeft, Bookmark, Check, Heart, Play, Star } from "lucide-react";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 function MovieHeroSection({
   movie,
@@ -29,10 +30,11 @@ function MovieHeroSection({
         <div className="movie-detail-hero__layout">
           <div className="movie-detail-hero__poster-wrap">
             {movie.posterUrl ? (
-              <img
+              <ImageWithSkeleton
                 className="movie-detail-hero__poster"
                 src={movie.posterUrl}
                 alt={movie.title + " poster"}
+                loading="eager"
               />
             ) : (
               <div

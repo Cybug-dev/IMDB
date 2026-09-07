@@ -1,4 +1,5 @@
 import { ArrowUpRight, Star } from "lucide-react";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 function SimilarTitles({ titles, onOpenTitle }) {
   return (
@@ -24,7 +25,7 @@ function SimilarTitles({ titles, onOpenTitle }) {
               aria-label={"View " + title.title}
             >
               {title.posterUrl ? (
-                <img src={title.posterUrl} alt={title.title + " poster"} loading="lazy" />
+                <ImageWithSkeleton src={title.posterUrl} alt={title.title + " poster"} loading="lazy" />
               ) : (
                 <span className="movie-similar-title__fallback" aria-hidden="true">
                   {title.title}

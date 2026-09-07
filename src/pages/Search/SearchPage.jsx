@@ -5,6 +5,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../../components/searchEngine/searchApi";
 import { useSearchResults } from "../../components/searchEngine/useSearch";
 import SectionState from "../../components/Section State/SectionState";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 function SearchPage() {
   const [searchParams] = useSearchParams();
@@ -51,7 +52,7 @@ function SearchPage() {
               >
                 <span className="search-page__poster" aria-hidden="true">
                   {result.posterUrl ? (
-                    <img src={result.posterUrl} alt="" loading="lazy" />
+                    <ImageWithSkeleton src={result.posterUrl} alt="" loading="lazy" />
                   ) : (
                     <span>{result.title.charAt(0)}</span>
                   )}

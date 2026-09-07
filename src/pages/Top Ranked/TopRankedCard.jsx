@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faPlus, faStar } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
@@ -67,7 +68,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
         <div className="top-ranked-card__poster">
           <span className="top-ranked-card__badge">#{rank}</span>
           {posterPath ? (
-            <img src={posterPath} alt={title} />
+            <ImageWithSkeleton src={posterPath} alt={title} />
           ) : (
             <div className="top-ranked-card__poster-fallback">No Image</div>
           )}
@@ -98,7 +99,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
           <FontAwesomeIcon icon={faPlus} />
         </button>
         {posterPath ? (
-          <img src={posterPath} alt={title} />
+          <ImageWithSkeleton src={posterPath} alt={title} />
         ) : (
           <div className="top-ranked-card__poster-fallback">No Image</div>
         )}

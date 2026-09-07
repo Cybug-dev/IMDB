@@ -49,10 +49,16 @@ main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured
   background: var(--surface);
 }
 
-main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] img {
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] > article > .movies-hero-banner__image {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+}
+
+main:has(> section[aria-label="Featured movies"]) > section[aria-label="Featured movies"] .movies-hero-banner__image .image-with-skeleton__image {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: 1;
   width: 100%;
   height: 100%;
   display: block;

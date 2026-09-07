@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 // import { faBookMark } from "@fortawesome/free-regular-svg-icons";
 // import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
@@ -18,7 +19,7 @@ function CollectionItem({ movie, type, onToggleWatchlist, onToggleFavorite }) {
 
   return (
     <div className="collection-item">
-      <img
+      <ImageWithSkeleton
         src={posterSrc}
         alt={movie.title}
         className="collection-item__poster"

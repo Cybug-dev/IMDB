@@ -14,6 +14,7 @@ import {
 import { Check, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SectionState from "../../components/Section State/SectionState";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
@@ -178,18 +179,22 @@ function HeroBanner({
     <section className="hero-banner">
       <div className="hero-banner__media" aria-hidden="true">
         {previousBackdropPath ? (
-          <div
+          <ImageWithSkeleton
+            variant="hero"
             className="hero-banner__backdrop hero-banner__backdrop--previous"
-            style={{
-              backgroundImage: `url(${IMG_BASE}${previousBackdropPath})`,
-            }}
+            src={IMG_BASE + previousBackdropPath}
+            alt=""
+            loading="eager"
           />
         ) : null}
-        <div
+        <ImageWithSkeleton
+          variant="hero"
           className={`hero-banner__backdrop hero-banner__backdrop--current${
             isTransitioning ? " is-entering" : ""
           }`}
-          style={{ backgroundImage: `url(${IMG_BASE}${backdropPath})` }}
+          src={backdropPath ? IMG_BASE + backdropPath : undefined}
+          alt=""
+          loading="eager"
         />
       </div>
 
