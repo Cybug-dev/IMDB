@@ -1,5 +1,5 @@
 import "./App.scss";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Navigate,
   Route,
@@ -17,9 +17,8 @@ import GenrePage from "./pages/Genre/GenrePage";
 import MovieDetailsPage from "./pages/MovieDetails/MovieDetailsPage";
 import MoviesPage from "./pages/Movies/MoviesPage";
 import SearchPage from "./pages/Search/SearchPage";
-import { showCollectionToast } from "./utils/collectionToast";
-
-const COLLECTION_TOGGLE_DEBOUNCE_MS = 260;
+import useStoredMovieCollections from "./hooks/useStoredMovieCollections";
+import { MovieCollectionsContext } from "./context/MovieCollectionsContext";
 
 const getPageFromPath = (pathname) => {
   if (pathname.startsWith("/movies")) return "movies";
@@ -37,11 +36,13 @@ function App() {
   const navigate = useNavigate();
   const currentPage = getPageFromPath(location.pathname);
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [watchlist, setWatchlist] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-  const watchlistRef = useRef(watchlist);
-  const favoritesRef = useRef(favorites);
-  const collectionActionTimersRef = useRef({});
+  const collections = useStoredMovieCollections();
+  const {
+    watchlist, favorites,
+    onToggleWatchlist: handleToggleWatchlist,
+    onToggleFavorite: handleToggleFavorite,
+    onClearCollection: handleClearCollection,
+  } = collections;
   const [isHeaderGlass, setIsHeaderGlass] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [heroContentBoundaryNode, setHeroContentBoundaryNode] = useState(null);
@@ -106,83 +107,11 @@ function App() {
     navigate(paths[page] ?? "/");
   }, [navigate]);
 
-  useEffect(() => {
-    watchlistRef.current = watchlist;
-  }, [watchlist]);
-
-  useEffect(() => {
-    favoritesRef.current = favorites;
-  }, [favorites]);
-
-  useEffect(() => {
-    const actionTimers = collectionActionTimersRef.current;
-
-    return () => {
-      Object.values(actionTimers).forEach((timer) => clearTimeout(timer));
-    };
-  }, []);
-
-  const toggleCollection = useCallback((type, movie) => {
-    if (!movie?.id) return;
-
-    const timerKey = `${type}-${movie.id}`;
-
-    if (collectionActionTimersRef.current[timerKey]) {
-      clearTimeout(collectionActionTimersRef.current[timerKey]);
-    }
-
-    collectionActionTimersRef.current[timerKey] = setTimeout(() => {
-      const isWatchlist = type === "watchlist";
-      const collectionRef = isWatchlist ? watchlistRef : favoritesRef;
-      const setCollection = isWatchlist ? setWatchlist : setFavorites;
-      const exists = collectionRef.current.some((item) => item.id === movie.id);
-      const nextCollection = exists
-        ? collectionRef.current.filter((item) => item.id !== movie.id)
-        : [...collectionRef.current, movie];
-
-      collectionRef.current = nextCollection;
-      setCollection(nextCollection);
-      showCollectionToast({
-        movie,
-        type,
-        action: exists ? "removed" : "added",
-      });
-
-      delete collectionActionTimersRef.current[timerKey];
-    }, COLLECTION_TOGGLE_DEBOUNCE_MS);
-  }, []);
-
-  const handleToggleWatchlist = useCallback((movie) => {
-    toggleCollection("watchlist", movie);
-  }, [toggleCollection]);
-
-  const handleToggleFavorite = useCallback((movie) => {
-    toggleCollection("favorite", movie);
-  }, [toggleCollection]);
-
-  const handleClearCollection = useCallback((type) => {
-    const actionType = type === "favorites" ? "favorite" : type;
-
-    Object.entries(collectionActionTimersRef.current).forEach(([key, timer]) => {
-      if (key.startsWith(`${actionType}-`)) {
-        clearTimeout(timer);
-        delete collectionActionTimersRef.current[key];
-      }
-    });
-
-    if (type === "watchlist") {
-      watchlistRef.current = [];
-      setWatchlist([]);
-      return;
-    }
-
-    favoritesRef.current = [];
-    setFavorites([]);
-  }, []);
   const shouldUseGlassHeader = currentPage !== "home" || isHeaderGlass;
   const shouldUsePageBackground = currentPage === "home";
 
   return (
+    <MovieCollectionsContext.Provider value={collections}>
     <div className={`app-shell${shouldUsePageBackground ? " app-shell--home" : ""}`}>
       <Toaster
         position="bottom-center"
@@ -299,6 +228,7 @@ function App() {
       </Routes>
       <Footer />
     </div>
+    </MovieCollectionsContext.Provider>
   );
 }
 

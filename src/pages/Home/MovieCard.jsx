@@ -8,6 +8,7 @@ import {
 import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const FALLBACK_POSTER =
@@ -47,7 +48,7 @@ function MovieCard({
       onKeyDown={handleKeyDown}
     >
       <div className="movie-card__poster-wrap">
-        <img
+        <ImageWithSkeleton
           src={posterPath ? `${IMG_BASE}${posterPath}` : FALLBACK_POSTER}
           alt={movie.title}
           className="movie-card__poster"

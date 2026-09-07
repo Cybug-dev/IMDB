@@ -1,6 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faPlus, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faEye, faPlus, faStar } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
+import MovieCardActions from "../../components/MovieCardActions/MovieCardActions";
+import MovieCardWithCollections from "../../components/MovieCardWithCollections";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w500";
 
@@ -21,7 +24,7 @@ const formatRuntime = (minutes) => {
   return `${remaining}m`;
 };
 
-function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
+function TopRankedCard({ movie = {}, rank, variant = "featured", ...actions }) {
   const navigate = useNavigate();
   const posterPath = movie.poster_path
     ? `${IMG_BASE}${movie.poster_path}`
@@ -49,6 +52,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   };
 
   const handleKeyDown = (event) => {
+    if (event.target !== event.currentTarget) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       goToDetails();
@@ -59,6 +63,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
     return (
       <article
         className={cardClassName}
+        data-movie-actions
         role="button"
         tabIndex={0}
         onClick={goToDetails}
@@ -67,10 +72,11 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
         <div className="top-ranked-card__poster">
           <span className="top-ranked-card__badge">#{rank}</span>
           {posterPath ? (
-            <img src={posterPath} alt={title} />
+            <ImageWithSkeleton src={posterPath} alt={title} />
           ) : (
             <div className="top-ranked-card__poster-fallback">No Image</div>
           )}
+          <MovieCardActions movie={movie} {...actions} />
         </div>
 
         <div className="top-ranked-card__body">
@@ -83,6 +89,7 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   return (
     <article
       className={cardClassName}
+      data-movie-actions
       role="button"
       tabIndex={0}
       onClick={goToDetails}
@@ -92,16 +99,21 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
         <button
           type="button"
           className="top-ranked-card__add"
-          aria-label={`Add ${title}`}
-          onClick={(event) => event.stopPropagation()}
+          aria-label={`${actions.isInWatchlist ? "Remove from" : "Add to"} watchlist: ${title}`}
+          aria-pressed={actions.isInWatchlist}
+          onClick={(event) => {
+            event.stopPropagation();
+            actions.onToggleWatchlist(movie);
+          }}
         >
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon icon={actions.isInWatchlist ? faCheck : faPlus} />
         </button>
         {posterPath ? (
-          <img src={posterPath} alt={title} />
+          <ImageWithSkeleton src={posterPath} alt={title} />
         ) : (
           <div className="top-ranked-card__poster-fallback">No Image</div>
         )}
+        <MovieCardActions movie={movie} {...actions} onToggleWatchlist={undefined} />
       </div>
 
       <div className="top-ranked-card__body">
@@ -146,4 +158,6 @@ function TopRankedCard({ movie = {}, rank, variant = "featured" }) {
   );
 }
 
-export default TopRankedCard;
+export default function ConnectedTopRankedCard(props) {
+  return <MovieCardWithCollections {...props} component={TopRankedCard} />;
+}

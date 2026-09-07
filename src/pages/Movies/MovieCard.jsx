@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { Bookmark, Heart } from "lucide-react";
+import MovieCardActions from "../../components/MovieCardActions/MovieCardActions";
+import { getMoviePath } from "../../utils/movieCollections";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 import "./MovieCard.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w780";
@@ -45,37 +47,30 @@ function MovieCard({
   const genres = (movie.genres ?? []).slice(0, 3).map((genre) => genre.name);
   const notableLabel = getNotableLabel(movie);
   const posterPath = movie.poster_path || movie.backdrop_path;
-  const hasCollectionActions =
-    typeof onToggleWatchlist === "function" ||
-    typeof onToggleFavorite === "function";
 
   const goToDetails = () => {
-    navigate(`/movie/${movie.id}`);
+    navigate(getMoviePath(movie));
   };
 
   const handleKeyDown = (event) => {
+    if (event.target !== event.currentTarget) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       goToDetails();
     }
   };
 
-  const handleCollectionAction = (event, toggle) => {
-    event.preventDefault();
-    event.stopPropagation();
-    toggle?.(movie);
-  };
-
   return (
     <article
       className="movies-card"
+      data-movie-actions
       role="button"
       tabIndex={0}
       onClick={goToDetails}
       onKeyDown={handleKeyDown}
     >
       <div className="movies-card__poster-frame">
-        <img
+        <ImageWithSkeleton
           className="movies-card__poster"
           src={posterPath ? `${IMAGE_BASE_URL}${posterPath}` : FALLBACK_POSTER}
           alt={title}
@@ -86,49 +81,13 @@ function MovieCard({
           <span className="movies-card__badge">{notableLabel}</span>
         )}
 
-        {hasCollectionActions && (
-          <div className="movies-card__action-panel" aria-label="Movie actions">
-            {typeof onToggleWatchlist === "function" && (
-              <button
-                type="button"
-                className={`movies-card__action${
-                  isInWatchlist ? " is-active movies-card__action--watchlist" : ""
-                }`}
-                aria-label={
-                  isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
-                }
-                title={
-                  isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
-                }
-                onClick={(event) =>
-                  handleCollectionAction(event, onToggleWatchlist)
-                }
-              >
-                <Bookmark aria-hidden="true" size={17} />
-              </button>
-            )}
-
-            {typeof onToggleFavorite === "function" && (
-              <button
-                type="button"
-                className={`movies-card__action${
-                  isInFavorites ? " is-active movies-card__action--favorite" : ""
-                }`}
-                aria-label={
-                  isInFavorites ? "Remove from favourites" : "Add to favourites"
-                }
-                title={
-                  isInFavorites ? "Remove from favourites" : "Add to favourites"
-                }
-                onClick={(event) =>
-                  handleCollectionAction(event, onToggleFavorite)
-                }
-              >
-                <Heart aria-hidden="true" size={17} />
-              </button>
-            )}
-          </div>
-        )}
+        <MovieCardActions
+          movie={movie}
+          onToggleWatchlist={onToggleWatchlist}
+          onToggleFavorite={onToggleFavorite}
+          isInWatchlist={isInWatchlist}
+          isInFavorites={isInFavorites}
+        />
       </div>
 
       <div className="movies-card__body">

@@ -2,7 +2,9 @@ import { memo, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useHeroCarousel } from "./useHeroCarousel";
+import { getMovieKey } from "../../utils/movieCollections";
 import SectionState from "../../components/Section State/SectionState";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 import "./MoviesHeroBanner.scss";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original";
@@ -39,12 +41,12 @@ function MoviesHeroBanner({
   const activeItemKey = `${activeItem?.media_type ?? "media"}-${activeItem?.id}`;
 
   const watchlistIds = useMemo(
-    () => new Set(watchlist.map((item) => item.id)),
+    () => new Set(watchlist.map(getMovieKey)),
     [watchlist],
   );
 
   const favoriteIds = useMemo(
-    () => new Set(favorites.map((item) => item.id)),
+    () => new Set(favorites.map(getMovieKey)),
     [favorites],
   );
 
@@ -93,8 +95,8 @@ function MoviesHeroBanner({
     activeItem.backdrop_path || activeItem.poster_path,
   );
   const genreNames = (activeItem.genres ?? []).map((genre) => genre.name);
-  const isInWatchlist = watchlistIds.has(activeItem.id);
-  const isInFavorites = favoriteIds.has(activeItem.id);
+  const isInWatchlist = watchlistIds.has(getMovieKey(activeItem));
+  const isInFavorites = favoriteIds.has(getMovieKey(activeItem));
   const handleSlideClick = () => {
     onPlay?.(activeItem);
   };
@@ -113,7 +115,13 @@ function MoviesHeroBanner({
       key={activeItemKey} onClick={handleSlideClick}>
 
         {backdropUrl && (
-          <img src={backdropUrl} alt="" aria-hidden="true" loading="eager" />
+          <ImageWithSkeleton
+            variant="hero"
+            className="movies-hero-banner__image"
+            src={backdropUrl}
+            alt=""
+            loading="eager"
+          />
         )}
 
         <div className="hero-banner__content">

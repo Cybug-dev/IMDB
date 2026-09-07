@@ -13,7 +13,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Check, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { getMovieKey } from "../../utils/movieCollections";
 import SectionState from "../../components/Section State/SectionState";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/original";
 const INTERVAL_MS = 7000;
@@ -107,8 +109,8 @@ function HeroBanner({
   }
   const movie = movies[safeActiveIndex] ?? movies[0];
 
-  const isInWatchlist = watchlist.some((item) => item.id === movie.id);
-  const isInFavorites = favorites.some((item) => item.id === movie.id);
+  const isInWatchlist = watchlist.some((item) => getMovieKey(item) === getMovieKey(movie));
+  const isInFavorites = favorites.some((item) => getMovieKey(item) === getMovieKey(movie));
 
   const backdropPath = movie.backdrop_path || movie.poster_path;
   const previousBackdropPath =
@@ -178,18 +180,22 @@ function HeroBanner({
     <section className="hero-banner">
       <div className="hero-banner__media" aria-hidden="true">
         {previousBackdropPath ? (
-          <div
+          <ImageWithSkeleton
+            variant="hero"
             className="hero-banner__backdrop hero-banner__backdrop--previous"
-            style={{
-              backgroundImage: `url(${IMG_BASE}${previousBackdropPath})`,
-            }}
+            src={IMG_BASE + previousBackdropPath}
+            alt=""
+            loading="eager"
           />
         ) : null}
-        <div
+        <ImageWithSkeleton
+          variant="hero"
           className={`hero-banner__backdrop hero-banner__backdrop--current${
             isTransitioning ? " is-entering" : ""
           }`}
-          style={{ backgroundImage: `url(${IMG_BASE}${backdropPath})` }}
+          src={backdropPath ? IMG_BASE + backdropPath : undefined}
+          alt=""
+          loading="eager"
         />
       </div>
 

@@ -1,0 +1,125 @@
+@use "../../styles/mixins" as *;
+
+.movie-category-row {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  isolation: isolate;
+}
+
+.movie-category-row > .movie-category-row__viewport {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+}
+
+.movie-category-row__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-category-row__viewport:focus-visible {
+  outline: 2px solid var(--imdb-yellow);
+  outline-offset: 2px;
+}
+
+.movie-category-row__viewport > * {
+  scroll-snap-align: start;
+}
+
+// Preserve the original four/six-column card widths when extending the row.
+// Existing phone and What to Watch card widths continue to come from their styles.
+@media (min-width: 768px) {
+  .movie-category-row > .movies-section__list > * {
+    flex: 0 0 calc((100% - 48px) / 4);
+  }
+}
+
+@media (min-width: 1081px) {
+  .movie-category-row > .movies-section__list > * {
+    flex-basis: calc((100% - 90px) / 6);
+  }
+}
+
+.movie-category-row::before,
+.movie-category-row::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 4px;
+  bottom: 20px;
+  width: clamp(16px, 3vw, 40px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.movie-category-row::before {
+  left: 0;
+  background: linear-gradient(to right, var(--page-bg), transparent);
+}
+
+.movie-category-row::after {
+  right: 0;
+  background: linear-gradient(to left, var(--page-bg), transparent);
+}
+
+.movie-category-row[data-can-scroll-left="true"]::before,
+.movie-category-row[data-can-scroll-right="true"]::after {
+  opacity: 0.8;
+}
+
+.movie-category-row__arrow {
+  @include floating-control(38px);
+  position: absolute;
+  z-index: 2;
+  top: calc(50% - 10px);
+  transform: translateY(-50%);
+  display: none;
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &--left { left: -14px; }
+  &--right { right: -14px; }
+
+  &:disabled {
+    opacity: 0.25;
+    cursor: default;
+  }
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: var(--imdb-yellow);
+    border-color: var(--imdb-yellow);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--imdb-yellow);
+    outline-offset: 2px;
+  }
+}
+
+@media (min-width: 1081px) and (hover: hover) and (pointer: fine) {
+  .movie-category-row[data-scrollable="true"] > .movie-category-row__arrow {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .movie-category-row > .movie-category-row__viewport {
+    scroll-behavior: auto;
+  }
+
+  .movie-category-row::before,
+  .movie-category-row::after,
+  .movie-category-row__arrow {
+    transition: none;
+  }
+}

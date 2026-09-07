@@ -5,6 +5,7 @@ import { faMagnifyingGlass, faStar } from "@fortawesome/free-solid-svg-icons";
 import { getSearchResultPath } from "../searchEngine/searchApi";
 import { useHeaderSearch, useSearchHistory } from "../searchEngine/useSearch";
 import SectionState from "../Section State/SectionState";
+import ImageWithSkeleton from "../ImageWithSkeleton/ImageWithSkeleton";
 
 function HeaderSearch({ className = "", inputId }) {
   const [query, setQuery] = useState("");
@@ -183,7 +184,7 @@ function HeaderSearch({ className = "", inputId }) {
                   >
                     <span className="header-search__poster" aria-hidden="true">
                       {result.posterUrl ? (
-                        <img src={result.posterUrl} alt="" loading="lazy" />
+                        <ImageWithSkeleton src={result.posterUrl} alt="" loading="lazy" />
                       ) : (
                         <span>{result.title.charAt(0)}</span>
                       )}

@@ -1,9 +1,10 @@
 import { MessageSquareQuote, Star } from "lucide-react";
+import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 import { getInitials } from "../../utils/stringUtils";
 
 function ReviewAvatar({ review }) {
   if (review.avatarUrl) {
-    return <img src={review.avatarUrl} alt="" loading="lazy" />;
+    return <ImageWithSkeleton src={review.avatarUrl} alt="" loading="lazy" />;
   }
 
   return <span aria-hidden="true">{getInitials(review.author)}</span>;

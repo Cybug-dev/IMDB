@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import MovieCard from "../Movies/MovieCard";
+import MovieCard from "../../components/MovieCardWithCollections";
 import SectionState from "../../components/Section State/SectionState";
+import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
 import "../Movies/MoviesSection.scss";
 
 function FeaturedMovies({
@@ -9,10 +10,6 @@ function FeaturedMovies({
   movies,
   LeftIcon,
   RightIcon,
-  onToggleWatchlist,
-  onToggleFavorite,
-  watchlist,
-  favorites,
   loading = false,
   error = null,
   onRetry,
@@ -70,18 +67,14 @@ function FeaturedMovies({
           onRetry={onRetry}
         />
       ) : (
-        <div className="movies-section__list">
+        <MovieCategoryRow label={title} className="movies-section__list">
           {visibleMovies.map((movie) => (
             <MovieCard
               key={movie.id}
               movie={movie}
-              onToggleWatchlist={onToggleWatchlist}
-              onToggleFavorite={onToggleFavorite}
-              isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-              isInFavorites={favorites.some((m) => m.id === movie.id)}
             />
           ))}
-        </div>
+        </MovieCategoryRow>
       )}
     </section>
   );
