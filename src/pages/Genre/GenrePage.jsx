@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import MovieCard from "../Movies/MovieCard";
+import MovieCard from "../../components/MovieCardWithCollections";
 import GenrePagination from "./GenrePagination";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useGenreMovies } from "./useGenreMovies";

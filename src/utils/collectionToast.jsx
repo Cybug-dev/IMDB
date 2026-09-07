@@ -1,5 +1,6 @@
 import { Bookmark, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { getMovieKey } from "./movieCollections";
 
 const TOAST_DURATION_MS = 3600;
 
@@ -26,7 +27,7 @@ export function showCollectionToast({ movie, type, action }) {
     ),
     {
       duration: TOAST_DURATION_MS,
-      id: `${type}-${movie.id}`,
+      id: `${type}-${getMovieKey(movie)}`,
       position: "bottom-center",
     },
   );

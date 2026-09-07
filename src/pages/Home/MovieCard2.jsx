@@ -10,6 +10,7 @@ import {
 import { Plus, Check } from "lucide-react";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { getMoviePath } from "../../utils/movieCollections";
 import ImageWithSkeleton from "../../components/ImageWithSkeleton/ImageWithSkeleton";
 
 const IMG_BASE = "https://image.tmdb.org/t/p/w780";
@@ -42,8 +43,9 @@ function MovieCard2({
       : "N/A";
   const displayGenres = (movie.genres ?? []).slice(0, 2).map((g) => g.name);
   const isSectionVariant = variant === "section";
-  const goToDetails = () => navigate(`/movie/${movie.id}`);
+  const goToDetails = () => navigate(getMoviePath(movie));
   const handleKeyDown = (event) => {
+    if (event.target !== event.currentTarget) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       goToDetails();
@@ -53,6 +55,7 @@ function MovieCard2({
   return (
     <article
       className={`movie-card2 movie-card2--${variant} ui-surface-card`}
+      data-movie-actions
       role="button"
       tabIndex={0}
       onClick={goToDetails}
@@ -76,6 +79,7 @@ function MovieCard2({
             aria-label={
               isInWatchlist ? "Remove from watchlist" : "Add to watchlist"
             }
+            aria-pressed={isInWatchlist}
             onClick={(event) => {
               event.stopPropagation();
               onToggleWatchlist(movie);
@@ -92,6 +96,7 @@ function MovieCard2({
             aria-label={
               isInFavorites ? "Remove from favorites" : "Add to favorites"
             }
+            aria-pressed={isInFavorites}
             onClick={(event) => {
               event.stopPropagation();
               onToggleFavorite(movie);

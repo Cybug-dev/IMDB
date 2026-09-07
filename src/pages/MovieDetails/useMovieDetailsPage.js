@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMediaDetails } from "../../queries/movieQueries";
 import { createMovieDetailsViewModel } from "./MovieDetailsViewModel";
+import { getMovieKey } from "../../utils/movieCollections";
 
 function useMovieDetailsPage({
   mediaType,
@@ -22,10 +23,10 @@ function useMovieDetailsPage({
 
   const movieId = movie?.raw?.id;
   const isInWatchlist = Boolean(
-    movieId && watchlist.some((item) => item.id === movieId),
+    movieId && watchlist.some((item) => getMovieKey(item) === getMovieKey(movie.raw)),
   );
   const isInFavorites = Boolean(
-    movieId && favorites.some((item) => item.id === movieId),
+    movieId && favorites.some((item) => getMovieKey(item) === getMovieKey(movie.raw)),
   );
 
   const toggleWatchlist = useCallback(() => {

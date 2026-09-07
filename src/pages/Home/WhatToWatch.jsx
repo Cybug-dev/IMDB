@@ -3,15 +3,12 @@ import FilterTabs from "../../components/FilterTabs";
 import { useWhatToWatchDataset } from "../../queries/movieQueries";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
 import MovieCard2 from "./MovieCard2";
+import MovieCardWithCollections from "../../components/MovieCardWithCollections";
+import { getMovieKey } from "../../utils/movieCollections";
 import SectionState from "../../components/Section State/SectionState";
 import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
 
-function WhatToWatch({
-  onToggleWatchlist,
-  onToggleFavorite,
-  watchlist,
-  favorites,
-}) {
+function WhatToWatch() {
   const railRef = useRef(null);
   const [activeTab, setActiveTab] = useState(WATCH_FILTERS[0].id);
   const { data: movies = [], error, isFetching, isPending, refetch } =
@@ -62,13 +59,10 @@ function WhatToWatch({
             viewportRef={railRef}
           >
             {visibleMovies.map((movie) => (
-              <MovieCard2
-                key={movie.id}
+              <MovieCardWithCollections
+                component={MovieCard2}
+                key={getMovieKey(movie)}
                 movie={movie}
-                onToggleWatchlist={onToggleWatchlist}
-                onToggleFavorite={onToggleFavorite}
-                isInWatchlist={watchlist.some((m) => m.id === movie.id)}
-                isInFavorites={favorites.some((m) => m.id === movie.id)}
               />
             ))}
           </MovieCategoryRow>

@@ -668,6 +668,22 @@ export const useHomePageMovies = () =>
     staleTime: DEFAULT_STALE_TIME,
   });
 
+// Independent genre queries keep one slow/failed category from blocking the others.
+export const fetchHomeCategoryMovies = async (genreName, limit = 12) => {
+  const genres = await fetchGenresListOnly();
+  const genre = genres.find((item) => item.name === genreName);
+  if (!genre) return [];
+  const movies = await fetchMoviesByGenre(genre.id, 1);
+  return getMovieCardDetails(withMediaType(movies, "movie"), limit);
+};
+
+export const useHomeCategoryMovies = (genreName, limit = 12) =>
+  useQuery({
+    queryKey: [...movieQueryKeys.all, "homeCategory", genreName, limit],
+    queryFn: () => fetchHomeCategoryMovies(genreName, limit),
+    staleTime: DEFAULT_STALE_TIME,
+  });
+
 export const useMoviesPageSections = () =>
   useQuery({
     queryKey: movieQueryKeys.moviesPageSections(),

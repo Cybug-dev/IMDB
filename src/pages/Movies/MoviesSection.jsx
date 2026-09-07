@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SectionState from "../../components/Section State/SectionState";
 import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
-import MovieCard from "./MovieCard";
+import MovieCard from "../../components/MovieCardWithCollections";
 import "./MoviesSection.scss";
 
 function MoviesSection({

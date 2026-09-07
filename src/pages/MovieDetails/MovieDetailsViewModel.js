@@ -74,6 +74,7 @@ const normalizeRecommendations = (recommendations, mediaType) =>
 
       return {
         id: title.id,
+        raw: { ...title, media_type: mediaType },
         title: title.title || title.name || "Untitled movie",
         releaseYear: releaseDate ? releaseDate.slice(0, 4) : "TBA",
         posterUrl: getImageUrl(title.poster_path || title.backdrop_path),
@@ -97,7 +98,7 @@ export const createMovieDetailsViewModel = (movie, mediaType) => {
     : "N/A";
 
   return {
-    raw: movie,
+    raw: { ...movie, media_type: mediaType },
     title,
     tagline: movie.tagline,
     summary:

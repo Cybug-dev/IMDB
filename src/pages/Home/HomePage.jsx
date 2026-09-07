@@ -2,6 +2,7 @@ import { Award, TrendingUp, Star, Sparkles } from "lucide-react";
 import HeroBanner from "./HeroBanner";
 import WhatToWatch from "./WhatToWatch";
 import FeaturedMovies from "./FeatureMovies";
+import HomeMovieCategories from "./HomeMovieCategories";
 import TopRanked from "../Top Ranked/TopRanked";
 import BrowseByGenre from "./BrowseByGenre";
 import { useHomePageMovies } from "../../queries/movieQueries";
@@ -90,6 +91,7 @@ function HomePage({
             onRetry={refetch}
           />
         ))}
+        <HomeMovieCategories />
         <TopRanked movies={topRankedMovies} 
         loading={loading} 
         error={errorMessage}

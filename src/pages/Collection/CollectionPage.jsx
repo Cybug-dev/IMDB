@@ -4,6 +4,7 @@ import { faStar, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import CollectionEmpty from "./CollectionEmpty";
 import CollectionItem from "./CollectionItem";
+import { getMovieKey } from "../../utils/movieCollections";
 
 const config = {
   watchlist: {
@@ -95,7 +96,7 @@ function CollectionPage({
             <div className="collection-grid">
               {visibleItems.map((movie) => (
                 <CollectionItem
-                  key={movie.id}
+                  key={getMovieKey(movie)}
                   movie={movie}
                   type={type}
                   onToggleWatchlist={onToggleWatchlist}
