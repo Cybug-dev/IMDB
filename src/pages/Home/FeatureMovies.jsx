@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import MovieCard from "../Movies/MovieCard";
 import SectionState from "../../components/Section State/SectionState";
+import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
 import "../Movies/MoviesSection.scss";
 
 function FeaturedMovies({
@@ -70,7 +71,7 @@ function FeaturedMovies({
           onRetry={onRetry}
         />
       ) : (
-        <div className="movies-section__list">
+        <MovieCategoryRow label={title} className="movies-section__list">
           {visibleMovies.map((movie) => (
             <MovieCard
               key={movie.id}
@@ -81,7 +82,7 @@ function FeaturedMovies({
               isInFavorites={favorites.some((m) => m.id === movie.id)}
             />
           ))}
-        </div>
+        </MovieCategoryRow>
       )}
     </section>
   );

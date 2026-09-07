@@ -4,6 +4,7 @@ import { useWhatToWatchDataset } from "../../queries/movieQueries";
 import { WATCH_FILTERS } from "../../utils/movieFilters";
 import MovieCard2 from "./MovieCard2";
 import SectionState from "../../components/Section State/SectionState";
+import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
 
 function WhatToWatch({
   onToggleWatchlist,
@@ -55,7 +56,11 @@ function WhatToWatch({
             onRetry={refetch}
           />
         ) : (
-          <div className="what-to-watch__rail" ref={railRef}>
+          <MovieCategoryRow
+            label="What to Watch"
+            className="what-to-watch__rail"
+            viewportRef={railRef}
+          >
             {visibleMovies.map((movie) => (
               <MovieCard2
                 key={movie.id}
@@ -66,7 +71,7 @@ function WhatToWatch({
                 isInFavorites={favorites.some((m) => m.id === movie.id)}
               />
             ))}
-          </div>
+          </MovieCategoryRow>
         )}
       </div>
     </section>

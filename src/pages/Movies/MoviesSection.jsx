@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SectionState from "../../components/Section State/SectionState";
+import MovieCategoryRow from "../../components/MovieCategoryRow/MovieCategoryRow";
 import MovieCard from "./MovieCard";
 import "./MoviesSection.scss";
 
@@ -73,11 +74,11 @@ function MoviesSection({
       />
 
       {!currentState.loading && !currentState.error && hasMovies && (
-        <div className="movies-section__list">
+        <MovieCategoryRow label={title} className="movies-section__list">
           {currentState.movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
-        </div>
+        </MovieCategoryRow>
       )}
     </section>
   );
